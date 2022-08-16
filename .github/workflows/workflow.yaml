@@ -3,4 +3,7 @@ on: push
 
 jobs:
   build:
-    uses: VeryGoodOpenSource/very_good_workflows/.github/workflows/flutter_package.yml@v1
+    runs-on: self-hosted
+    steps:
+      - name: 📚 Git Checkout
+        uses: actions/checkout@v2
