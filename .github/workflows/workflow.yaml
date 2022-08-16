@@ -3,6 +3,4 @@ on: pull_request
 
 jobs:
   build:
-    runs-on: self-hosted
-    steps:
-      - uses: VeryGoodOpenSource/very_good_workflows/.github/workflows/flutter_package.yml@v1
+    uses: VeryGoodOpenSource/very_good_workflows/.github/workflows/flutter_package.yml@v1
