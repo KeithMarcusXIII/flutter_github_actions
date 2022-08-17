@@ -6,7 +6,7 @@ on:
 
 jobs:
   build:
-    uses: ./.github/workflows/flutter_package.yml
+    uses: ./.github/workflows/flutter_package.yaml
     with:
       coverage_excludes: "*.g.dart *.freezed.dart"
       flutter_channel: beta
