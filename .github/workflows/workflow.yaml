@@ -1,9 +1,12 @@
 name: github_actions
-on: push
+on:
+  push:
+    branches:
+      - master
 
 jobs:
   build:
-    uses: VeryGoodOpenSource/very_good_workflows/.github/workflows/flutter_package.yml@v1
+    uses: ./.github/workflows/flutter_package.yml
     with:
       coverage_excludes: "*.g.dart *.freezed.dart"
       flutter_channel: beta
