@@ -9,6 +9,6 @@ jobs:
     uses: ./.github/workflows/flutter_package.yaml
     with:
       coverage_excludes: "*.g.dart *.freezed.dart"
-      flutter_channel: beta
-      flutter_version: 3.1.0
+      flutter_channel: stable
+      flutter_version: 3.0.5
       runs_on: self-hosted
