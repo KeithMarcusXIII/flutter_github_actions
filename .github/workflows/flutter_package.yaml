@@ -57,7 +57,7 @@ jobs:
         with:
           flutter-version: ${{inputs.flutter_version}}
           channel: ${{inputs.flutter_channel}}
-          cache: true
+          cache: false
 
       - name: 📦 Install Dependencies
         run: |
