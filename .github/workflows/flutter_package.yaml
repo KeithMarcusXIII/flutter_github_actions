@@ -49,6 +49,8 @@ jobs:
     runs-on: ${{inputs.runs_on}}
 
     steps:
+      - name: keith debug
+        run: echo $RUNNER_OS
       - name: 📚 Git Checkout
         uses: actions/checkout@v2
 
@@ -57,7 +59,7 @@ jobs:
         with:
           flutter-version: ${{inputs.flutter_version}}
           channel: ${{inputs.flutter_channel}}
-          cache: false
+          cache: true
 
       - name: 📦 Install Dependencies
         run: |
