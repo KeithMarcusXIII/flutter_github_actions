@@ -3,7 +3,9 @@ on: push
 
 jobs:
   build:
-    runs-on: self-hosted
-    steps:
-      - name: 📚 Git Checkout
-        uses: actions/checkout@v2
+    uses: VeryGoodOpenSource/very_good_workflows/.github/workflows/flutter_package.yml@v1
+    with:
+      coverage_excludes: "*.g.dart *.freezed.dart"
+      flutter_channel: beta
+      flutter_version: 3.1.0
+      runs_on: self-hosted
