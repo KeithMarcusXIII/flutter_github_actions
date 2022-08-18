@@ -49,6 +49,9 @@ jobs:
     steps:
       - name: 📚 Git Checkout
         uses: actions/checkout@v2
+      - name: Set ownership
+        run: |
+          chown -R $(id -u):$(id -g) ${{inputs.working_directory}}
       - name: 🐦 Setup Flutter
         uses: subosito/flutter-action@v2
         # uses: ../workflows/flutter-action/.github/workflows/workflow.yml
