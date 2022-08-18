@@ -51,8 +51,8 @@ jobs:
         uses: actions/checkout@v2
       - name: 🐦 Setup Flutter
         # uses: subosito/flutter-action@v2
-        uses: ../workflows/flutter-action/.github/workflows/workflow.yml
-        # uses: /Users/keith/dev/workflows/flutter-action/.github/workflows/workflow.yml
+        # uses: ../workflows/flutter-action/.github/workflows/workflow.yml
+        uses: /Users/keith/dev/workflows/flutter-action/.github/workflows/workflow.yml
         with:
           flutter-version: ${{inputs.flutter_version}}
           channel: ${{inputs.flutter_channel}}
