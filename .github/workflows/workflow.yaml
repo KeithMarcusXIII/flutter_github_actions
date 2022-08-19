@@ -105,7 +105,7 @@ jobs:
     needs:
       - setup
       - analyze
-      - test
+      # - test
     steps:
       - name: Build appbundle
         run: flutter build appbundle --flavor staging --obfuscate --split-debug-info=debug_info --dart-define=DART_DEFINED_VAR1={{secrets.DART_DEFINED_VAR1}}
