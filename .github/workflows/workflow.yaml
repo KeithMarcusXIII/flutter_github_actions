@@ -74,6 +74,7 @@ jobs:
 
   analyze:
     runs-on: self-hosted
+    needs: setup
     steps:
       - name: Check formatting
         run: flutter format --set-exit-if-changed lib test
@@ -82,6 +83,7 @@ jobs:
 
   test:
     runs-on: self-hosted
+    needs: setup
     steps:
       - name: Run Tests
         run: very_good test -j ${{inputs.concurrency}} ${{(inputs.test_recursion && '--recursive') || ''}} ${{(inputs.test_optimization && '--optimization') || '--no-optimization'}} --coverage --test-randomize-ordering-seed random
@@ -89,6 +91,10 @@ jobs:
   build:
     runs-on: self-hosted
     environment: staging
+    needs:
+      - setup
+      - analyze
+      - test
     steps:
       - name: Build appbundle
         run: flutter build appbundle --flavor staging --obfuscate --split-debug-info=debug_info --dart-define=DART_DEFINED_VAR1={{secrets.DART_DEFINED_VAR1}}
