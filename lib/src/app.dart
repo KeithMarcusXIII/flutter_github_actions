@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -40,6 +42,24 @@ class MyApp extends StatelessWidget {
             return MaterialPageRoute<void>(
               settings: routeSettings,
               builder: (BuildContext context) {
+                final definitions = Platform.environment.entries.toList();
+
+                return Scaffold(
+                  body: ListView.builder(
+                    itemCount: definitions.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      final entry = definitions[index];
+                      final key = entry.key;
+                      final value = entry.value;
+
+                      return ListTile(
+                        title: Text(key),
+                        subtitle: Text(value),
+                      );
+                    },
+                  ),
+                );
+
                 switch (routeSettings.name) {
                   case SettingsView.routeName:
                     return SettingsView(controller: settingsController);

@@ -1,14 +1,99 @@
 name: github_actions
 on:
+  workflow_call:
+    secrets:
+      DART_DEFINED_VAR1:
+        required: true
+    inputs:
+      concurrency:
+        required: false
+        type: number
+        default: 4
+      coverage_excludes:
+        required: false
+        type: string
+        default: ""
+      flutter_channel:
+        required: false
+        type: string
+        default: "stable"
+      flutter_version:
+        required: false
+        type: string
+        default: ""
+      working_directory:
+        required: false
+        type: string
+        default: "."
+      min_coverage:
+        required: false
+        type: number
+        default: 100
+      test_optimization:
+        required: false
+        type: boolean
+        default: true
+      test_recursion:
+        required: false
+        type: boolean
+        default: false
+      runs_on:
+        required: false
+        type: string
+        default: "self-hosted"
+      build_env:
+        required: true
+        type: string
+
   push:
     branches:
       - master
 
 jobs:
+  setup:
+    runs-on: self-hosted
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup jdk
+        uses: actions/setup-java@v3
+        with:
+          distribution: "adopt"
+          java-version: "11"
+      - name: Setup flutter sdk
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{inputs.flutter_version}}
+          channel: ${{inputs.flutter_channel}}
+          cache: true
+      - name: Install dependencies
+        run: |
+          flutter pub global activate very_good_cli
+          very_good --analytics false
+          very_good packages get --recursive
+
+  analyze:
+    runs-on: self-hosted
+    steps:
+      - name: Check formatting
+        run: flutter format --set-exit-if-changed lib test
+      - name: Analyze
+        run: flutter analyze lib test
+
+  test:
+    runs-on: self-hosted
+    steps:
+      - name: Run Tests
+        run: very_good test -j ${{inputs.concurrency}} ${{(inputs.test_recursion && '--recursive') || ''}} ${{(inputs.test_optimization && '--optimization') || '--no-optimization'}} --coverage --test-randomize-ordering-seed random
+
   build:
-    uses: ./.github/workflows/flutter_package.yaml
-    with:
-      coverage_excludes: "*.g.dart *.freezed.dart"
-      flutter_channel: beta
-      flutter_version: 3.1.0
-      runs_on: self-hosted
+    runs-on: self-hosted
+    environment: staging
+    steps:
+      - name: Build appbundle
+        run: flutter build appbundle --flavor staging --obfuscate --split-debug-info=debug_info --dart-define=DART_DEFINED_VAR1={{secrets.DART_DEFINED_VAR1}}
+# with:
+#   coverage_excludes: "*.g.dart *.freezed.dart"
+#   flutter_channel: beta
+#   flutter_version: 3.1.0
+#   runs_on: self-hosted
