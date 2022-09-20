@@ -93,7 +93,7 @@ jobs:
         with:
           flutter-version: ${{inputs.flutter_version || '3.3.2'}}
           channel: ${{inputs.flutter_channel || 'stable'}}
-          cache: true
+          cache: false
       - name: Install dependencies
         run: |
           flutter pub global activate very_good_cli
