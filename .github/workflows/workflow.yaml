@@ -78,8 +78,6 @@ jobs:
     steps:
       - name: Print paths
         run: |
-          echo "$SDK_CACHE"
-          echo "$SDK_CACHE"
           echo "$GITHUB_PATH"
       - name: Checkout
         uses: actions/checkout@v3
@@ -109,11 +107,9 @@ jobs:
     runs-on: self-hosted
     needs: setup
     steps:
-      - name: Check flutter sdk
+      - name: Print paths
         run: |
-          echo "$FLUTTER_ROOT"
-          which flutter
-          flutter doctor
+          echo "$GITHUB_PATH"
       - name: Check formatting
         run: flutter format --set-exit-if-changed lib test
       - name: Analyze
