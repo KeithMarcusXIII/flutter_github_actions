@@ -1,5 +1,29 @@
 name: github_actions
 on:
+  push:
+    branches:
+      - master
+      - develop
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Environment"
+        type: environment
+        required: true
+      flutter_channel:
+        description: "Flutter channel"
+        type: choice
+        default: stable
+        required: false
+        options:
+          - master
+          - beta
+          - stable
+      flutter_version:
+        description: "Flutter version"
+        type: string
+        default: "3.3.2"
+        required: false
   workflow_call:
     secrets:
       DART_DEFINED_VAR1:
@@ -47,10 +71,6 @@ on:
       build_env:
         required: true
         type: string
-
-  push:
-    branches:
-      - master
 
 jobs:
   setup:
