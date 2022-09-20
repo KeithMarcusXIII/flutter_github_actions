@@ -76,11 +76,6 @@ jobs:
   setup:
     runs-on: self-hosted
     steps:
-      - name: Print paths
-        run: |
-          echo "$GITHUB_PATH"
-      - name: Checkout
-        uses: actions/checkout@v3
       - name: Setup flutter
         uses: ./.github/actions/setup-flutter
       - name: Check flutter sdk
