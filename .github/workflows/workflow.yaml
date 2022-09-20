@@ -1,60 +1,52 @@
 name: github_actions
 on:
-  workflow_dispatch:
+  workflow_call:
     secrets:
       DART_DEFINED_VAR1:
         required: true
     inputs:
       environment:
-        description: "Select an environment"
-        type: environment
         required: true
-      flutter_version:
-        description: "Select flutter version"
-        required: true
+        type: string
+      concurrency:
+        required: false
+        type: number
+        default: 4
+      coverage_excludes:
+        required: false
+        type: string
+        default: ""
       flutter_channel:
-        description: "Select flutter channel"
+        required: false
+        type: string
+        default: "stable"
+      flutter_version:
+        required: false
+        type: string
+        default: ""
+      working_directory:
+        required: false
+        type: string
+        default: "."
+      min_coverage:
+        required: false
+        type: number
+        default: 100
+      test_optimization:
+        required: false
+        type: boolean
+        default: true
+      test_recursion:
+        required: false
+        type: boolean
+        default: false
+      runs_on:
+        required: false
+        type: string
+        default: "self-hosted"
+      build_env:
         required: true
-    # inputs:
-    #   concurrency:
-    #     required: false
-    #     type: number
-    #     default: 4
-    #   coverage_excludes:
-    #     required: false
-    #     type: string
-    #     default: ""
-    #   flutter_channel:
-    #     required: false
-    #     type: string
-    #     default: "stable"
-    #   flutter_version:
-    #     required: false
-    #     type: string
-    #     default: ""
-    #   working_directory:
-    #     required: false
-    #     type: string
-    #     default: "."
-    #   min_coverage:
-    #     required: false
-    #     type: number
-    #     default: 100
-    #   test_optimization:
-    #     required: false
-    #     type: boolean
-    #     default: true
-    #   test_recursion:
-    #     required: false
-    #     type: boolean
-    #     default: false
-    #   runs_on:
-    #     required: false
-    #     type: string
-    #     default: "self-hosted"
-    #   build_env:
-    #     required: true
-    #     type: string
+        type: string
 
   push:
     branches:
