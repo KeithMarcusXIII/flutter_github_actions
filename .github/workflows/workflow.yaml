@@ -76,6 +76,10 @@ jobs:
   setup:
     runs-on: self-hosted
     steps:
+      - name: Print inputs
+        run: |
+          echo ${{inputs.flutter_channel}}
+          echo ${{inputs.flutter_version}}
       - name: Checkout
         uses: actions/checkout@v3
       - name: Setup jdk
