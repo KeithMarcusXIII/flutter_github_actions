@@ -81,22 +81,8 @@ jobs:
           echo "$GITHUB_PATH"
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Setup jdk
-        uses: actions/setup-java@v3
-        with:
-          distribution: "adopt"
-          java-version: "11"
-      - name: Setup flutter sdk
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: ${{inputs.flutter_version || '3.3.2'}}
-          channel: ${{inputs.flutter_channel || 'stable'}}
-          cache: false
-      - name: Install dependencies
-        run: |
-          flutter pub global activate very_good_cli
-          very_good --analytics false
-          very_good packages get --recursive
+      - name: Setup flutter
+        uses: ./.github/actions/setup-flutter
       - name: Check flutter sdk
         run: |
           echo "$FLUTTER_ROOT"
@@ -107,9 +93,6 @@ jobs:
     runs-on: self-hosted
     needs: setup
     steps:
-      - name: Print paths
-        run: |
-          echo "$GITHUB_PATH"
       - name: Check formatting
         run: flutter format --set-exit-if-changed lib test
       - name: Analyze

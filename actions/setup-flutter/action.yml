@@ -1,0 +1,22 @@
+name: "Setup flutter"
+description: "Setup flutter sdk and tools"
+runs:
+  using: "composite"
+  steps:
+    - name: Setup jdk
+      uses: actions/setup-java@v3
+      with:
+        distribution: "adopt"
+        java-version: "11"
+    - name: Setup flutter sdk
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: ${{inputs.flutter_version || '3.3.2'}}
+        channel: ${{inputs.flutter_channel || 'stable'}}
+        cache: false
+    - name: Install dependencies
+      run: |
+        flutter pub global activate very_good_cli
+        very_good --analytics false
+        very_good packages get --recursive
+      shell: bash
