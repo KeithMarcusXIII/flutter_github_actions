@@ -23,7 +23,7 @@ on:
       flutter_version:
         required: false
         type: string
-        default: ""
+        default: "3.3.2"
       working_directory:
         required: false
         type: string
@@ -85,6 +85,7 @@ jobs:
     steps:
       - name: Check flutter sdk
         run: |
+          which flutter
           flutter doctor
       - name: Check formatting
         run: flutter format --set-exit-if-changed lib test
