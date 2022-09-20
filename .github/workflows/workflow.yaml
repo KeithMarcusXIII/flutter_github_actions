@@ -74,11 +74,18 @@ jobs:
           flutter pub global activate very_good_cli
           very_good --analytics false
           very_good packages get --recursive
+      - name: Check flutter sdk
+        run: |
+          which flutter
+          flutter doctor
 
   analyze:
     runs-on: self-hosted
     needs: setup
     steps:
+      - name: Check flutter sdk
+        run: |
+          flutter doctor
       - name: Check formatting
         run: flutter format --set-exit-if-changed lib test
       - name: Analyze
