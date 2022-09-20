@@ -111,6 +111,7 @@ jobs:
     steps:
       - name: Check flutter sdk
         run: |
+          echo "$FLUTTER_ROOT"
           which flutter
           flutter doctor
       - name: Check formatting
