@@ -66,8 +66,8 @@ jobs:
       - name: Setup flutter sdk
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: ${{github.event.inputs.flutter_version}}
-          channel: ${{github.event.inputs.flutter_channel}}
+          flutter-version: ${{inputs.flutter_version}}
+          channel: ${{inputs.flutter_channel}}
           cache: true
       - name: Install dependencies
         run: |
@@ -101,7 +101,7 @@ jobs:
 
   build:
     runs-on: self-hosted
-    environment: github.event.inputs.environment
+    environment: inputs.environment
     needs:
       - setup
       - analyze
