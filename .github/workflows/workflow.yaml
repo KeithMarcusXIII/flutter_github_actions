@@ -86,9 +86,9 @@ jobs:
     needs: setup
     steps:
       - name: Print outputs
-        run: echo ${{ needs.setup.steps.flutter-sdk-setup.steps.flutter-action-cache-path-builder.outputs.cache-path }}
-      - name: Setup flutter
-        uses: ./.github/actions/setup-flutter
+        run: echo ${{needs.setup.outputs}}
+      # - name: Setup flutter
+      #   uses: ./.github/actions/setup-flutter
       - name: Check formatting
         # run: flutter format --set-exit-if-changed lib test
         run: flutter format lib test
