@@ -6,8 +6,10 @@ runs:
     - name: Setup jdk
       uses: actions/setup-java@v3
       with:
-        distribution: "zulu"
+        distribution: "adopt"
         java-version: "11"
+    - name: Setup Android SDK
+      uses: android-actions/setup-android@v2
     - name: Setup flutter sdk
       uses: subosito/flutter-action@v2
       with:
