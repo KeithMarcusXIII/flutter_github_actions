@@ -25,9 +25,6 @@ on:
         default: "3.3.2"
         required: false
   workflow_call:
-    # secrets:
-    #   DART_DEFINED_VAR1:
-    #     required: true
     inputs:
       environment:
         required: true
@@ -49,13 +46,14 @@ env:
 jobs:
   setup:
     runs-on: self-hosted
+    environment: staging
     steps:
-      - name: Print env
-        run: echo ${{toJSON(env)}}
-      - name: Print env
-        run: printenv
       - name: Checkout
         uses: actions/checkout@v3
+      - name: Print env
+        run: echo "${{toJSON(env)}}"
+      - name: Print secrets
+        run: echo "${{toJSON(secrets)}}"
       # - name: Setup flutter
       #   uses: ./.github/actions/setup-flutter
       # - name: Check flutter sdk
@@ -91,7 +89,16 @@ jobs:
   #     - name: Setup flutter
   #       uses: ./.github/actions/setup-flutter
   #     - name: Build appbundle
-  #       run: flutter build appbundle --flavor staging --obfuscate --split-debug-info=debug_info --dart-define=DART_DEFINED_VAR1={{env.DART_DEFINED_VAR1}}
+  #       run: |
+  #         flutter build appbundle \
+  #         --flavor staging \
+  #         --obfuscate \
+  #         --split-debug-info=debug_info \
+  #         --dart-define=MONGODB_USERNAME={{secrets.MONGODB_USERNAME}} \
+  #         --dart-define=MONGODB_PASSWORD={{secrets.MONGODB_PASSWORD}} \
+  #         --dart-define=MAPBOX_TOKEN={{secrets.MAPBOX_TOKEN}} \
+  #         --dart-define=DEEPLINK_CHECKSUM={{secrets.DEEPLINK_CHECKSUM}} \
+  #         --dart-define=ONE_SIGNAL_APP_ID={{secrets.ONE_SIGNAL_APP_ID}} \
 # with:
 #   coverage_excludes: "*.g.dart *.freezed.dart"
 #   flutter_channel: beta
