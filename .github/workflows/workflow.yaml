@@ -32,14 +32,7 @@ on:
       environment:
         required: true
         type: string
-      concurrency:
-        required: false
-        type: number
-        default: 4
-      coverage_excludes:
-        required: false
-        type: string
-        default: ""
+
       flutter_channel:
         required: false
         type: string
@@ -48,43 +41,23 @@ on:
         required: false
         type: string
         default: "3.3.2"
-      working_directory:
-        required: false
-        type: string
-        default: "."
-      min_coverage:
-        required: false
-        type: number
-        default: 100
-      test_optimization:
-        required: false
-        type: boolean
-        default: true
-      test_recursion:
-        required: false
-        type: boolean
-        default: false
-      runs_on:
-        required: false
-        type: string
-        default: "self-hosted"
-      build_env:
-        required: true
-        type: string
+
+env:
+  DART_DEFINED_VAR1: "var1"
+  DART_DEFINED_VAR2: "var2"
 
 jobs:
   setup:
     runs-on: self-hosted
     steps:
+      - name: Print env
+        run: printenv
       - name: Checkout
         uses: actions/checkout@v3
       - name: Setup flutter
         uses: ./.github/actions/setup-flutter
       - name: Check flutter sdk
-        run: |
-          echo "$FLUTTER_ROOT"
-          which flutter
-          flutter doctor
+        run: flutter doctor
 
   analyze:
     runs-on: self-hosted
@@ -93,7 +66,8 @@ jobs:
       - name: Setup flutter
         uses: ./.github/actions/setup-flutter
       - name: Check formatting
-        run: flutter format --set-exit-if-changed lib test
+        # run: flutter format --set-exit-if-changed lib test
+        run: flutter format lib test
       - name: Analyze
         run: flutter analyze lib test
 
@@ -115,7 +89,7 @@ jobs:
       - name: Setup flutter
         uses: ./.github/actions/setup-flutter
       - name: Build appbundle
-        run: flutter build appbundle --flavor staging --obfuscate --split-debug-info=debug_info --dart-define=DART_DEFINED_VAR1={{secrets.DART_DEFINED_VAR1}}
+        run: flutter build appbundle --flavor staging --obfuscate --split-debug-info=debug_info --dart-define=DART_DEFINED_VAR1={{env.DART_DEFINED_VAR1}}
 # with:
 #   coverage_excludes: "*.g.dart *.freezed.dart"
 #   flutter_channel: beta
