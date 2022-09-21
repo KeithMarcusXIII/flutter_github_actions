@@ -47,6 +47,8 @@ jobs:
   setup:
     runs-on: self-hosted
     # environment: staging
+    outputs:
+      sdk_path: ${{ steps.flutter-sdk-setup.outputs }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -68,9 +70,10 @@ jobs:
         name: Setup flutter sdk
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: ${{inputs.flutter_version || '3.3.2'}}
           channel: ${{inputs.flutter_channel || 'stable'}}
+          flutter-version: ${{inputs.flutter_version || '3.3.2'}}
           cache: true
+          cache-key: "flutter-:os:-:${{inputs.flutter_channel || 'stable'}}:-:${{inputs.flutter_version || '3.3.2'}}:-:arch:-:hash:"
       - name: Install dependencies
         run: |
           flutter pub global activate very_good_cli
@@ -86,7 +89,7 @@ jobs:
     needs: setup
     steps:
       - name: Print outputs
-        run: echo ${{needs.setup.outputs}}
+        run: echo ${{needs.setup.outputs.sdk_path}}
       # - name: Setup flutter
       #   uses: ./.github/actions/setup-flutter
       - name: Check formatting
