@@ -64,7 +64,8 @@ jobs:
           java-version: "11"
       - name: Setup Android SDK
         uses: android-actions/setup-android@v2
-      - name: Setup flutter sdk
+      - id: flutter-sdk-setup
+        name: Setup flutter sdk
         uses: subosito/flutter-action@v2
         with:
           flutter-version: ${{inputs.flutter_version || '3.3.2'}}
@@ -85,10 +86,10 @@ jobs:
     needs: setup
     steps:
       - name: Print outputs
-        run: echo "${{toJSON(needs.setup.outputs)}}"
-      # - name: Setup flutter
-      #   uses: ./.github/actions/setup-flutter
-      # - name: Check formatting
+        run: echo ${{ needs.setup.steps.flutter-sdk-setup.steps.flutter-action-cache-path-builder.outputs.cache-path }}
+      - name: Setup flutter
+        uses: ./.github/actions/setup-flutter
+      - name: Check formatting
       #   # run: flutter format --set-exit-if-changed lib test
       #   run: flutter format lib test
       # - name: Analyze
