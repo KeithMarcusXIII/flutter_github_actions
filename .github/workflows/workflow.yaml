@@ -25,9 +25,9 @@ on:
         default: "3.3.2"
         required: false
   workflow_call:
-    secrets:
-      DART_DEFINED_VAR1:
-        required: true
+    # secrets:
+    #   DART_DEFINED_VAR1:
+    #     required: true
     inputs:
       environment:
         required: true
@@ -51,25 +51,27 @@ jobs:
     runs-on: self-hosted
     steps:
       - name: Print env
+        run: echo "${{toJSON(env)}}"
+      - name: Print env
         run: printenv
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Setup flutter
-        uses: ./.github/actions/setup-flutter
-      - name: Check flutter sdk
-        run: flutter doctor
+      # - name: Setup flutter
+      #   uses: ./.github/actions/setup-flutter
+      # - name: Check flutter sdk
+      #   run: flutter doctor
 
-  analyze:
-    runs-on: self-hosted
-    needs: setup
-    steps:
-      - name: Setup flutter
-        uses: ./.github/actions/setup-flutter
-      - name: Check formatting
-        # run: flutter format --set-exit-if-changed lib test
-        run: flutter format lib test
-      - name: Analyze
-        run: flutter analyze lib test
+  # analyze:
+  #   runs-on: self-hosted
+  #   needs: setup
+  #   steps:
+  #     - name: Setup flutter
+  #       uses: ./.github/actions/setup-flutter
+  #     - name: Check formatting
+  #       # run: flutter format --set-exit-if-changed lib test
+  #       run: flutter format lib test
+  #     - name: Analyze
+  #       run: flutter analyze lib test
 
   # test:
   #   runs-on: self-hosted
@@ -78,18 +80,18 @@ jobs:
   #     - name: Run Tests
   #       run: very_good test -j ${{inputs.concurrency}} ${{(inputs.test_recursion && '--recursive') || ''}} ${{(inputs.test_optimization && '--optimization') || '--no-optimization'}} --coverage --test-randomize-ordering-seed random
 
-  build:
-    runs-on: self-hosted
-    environment: inputs.environment
-    needs:
-      - setup
-      - analyze
-      # - test
-    steps:
-      - name: Setup flutter
-        uses: ./.github/actions/setup-flutter
-      - name: Build appbundle
-        run: flutter build appbundle --flavor staging --obfuscate --split-debug-info=debug_info --dart-define=DART_DEFINED_VAR1={{env.DART_DEFINED_VAR1}}
+  # build:
+  #   runs-on: self-hosted
+  #   environment: inputs.environment
+  #   needs:
+  #     - setup
+  #     - analyze
+  #     # - test
+  #   steps:
+  #     - name: Setup flutter
+  #       uses: ./.github/actions/setup-flutter
+  #     - name: Build appbundle
+  #       run: flutter build appbundle --flavor staging --obfuscate --split-debug-info=debug_info --dart-define=DART_DEFINED_VAR1={{env.DART_DEFINED_VAR1}}
 # with:
 #   coverage_excludes: "*.g.dart *.freezed.dart"
 #   flutter_channel: beta
