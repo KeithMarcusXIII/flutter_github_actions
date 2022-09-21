@@ -84,8 +84,8 @@ jobs:
     runs-on: self-hosted
     needs: setup
     steps:
-      - name: Setup flutter
-        uses: ./.github/actions/setup-flutter
+      # - name: Setup flutter
+      #   uses: ./.github/actions/setup-flutter
       - name: Check formatting
         # run: flutter format --set-exit-if-changed lib test
         run: flutter format lib test
