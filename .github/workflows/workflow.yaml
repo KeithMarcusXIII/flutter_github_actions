@@ -56,8 +56,29 @@ jobs:
         run: echo "${{toJSON(secrets)}}"
       # - name: Setup flutter
       #   uses: ./.github/actions/setup-flutter
-      # - name: Check flutter sdk
-      #   run: flutter doctor
+      # start setup action
+      - name: Setup jdk
+        uses: actions/setup-java@v3
+        with:
+          distribution: "adopt"
+          java-version: "11"
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v2
+      - name: Setup flutter sdk
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{inputs.flutter_version || '3.3.2'}}
+          channel: ${{inputs.flutter_channel || 'stable'}}
+          cache: false
+      - name: Install dependencies
+        run: |
+          flutter pub global activate very_good_cli
+          very_good --analytics false
+          very_good packages get --recursive
+        shell: bash
+      # end setup action
+      - name: Check flutter sdk
+        run: flutter doctor
 
   # analyze:
   #   runs-on: self-hosted
