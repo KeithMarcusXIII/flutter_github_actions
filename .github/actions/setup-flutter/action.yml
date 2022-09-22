@@ -1,24 +1,58 @@
 name: "Setup flutter"
 description: "Setup flutter sdk and tools"
+branding:
+  icon: "maximize"
+  color: "blue"
+inputs:
+  flutter-version:
+    description: "The Flutter version to make available on the path"
+    required: false
+    default: "any"
+  channel:
+    description: "The Flutter build release channel"
+    required: false
+    default: "stable"
+  cache:
+    description: "Cache the Flutter SDK"
+    required: false
+  cache-key:
+    description: "Identifier for the Flutter SDK cache"
+    required: false
+    default: "flutter-:os:-:channel:-:version:-:arch:-:hash:"
+  cache-path:
+    description: "Flutter SDK cache path"
+    required: false
+    default: "${{ runner.tool_cache }}/flutter/:channel:-:version:-:arch:"
+  architecture:
+    description: "The architecture of Flutter SDK executable (x64 or arm64)"
+    required: false
+    default: ${{ runner.arch }}
 runs:
   using: "composite"
   steps:
-    - name: Setup jdk
-      uses: actions/setup-java@v3
-      with:
-        distribution: "adopt"
-        java-version: "11"
-    - name: Setup Android SDK
-      uses: android-actions/setup-android@v2
-    - name: Setup flutter sdk
-      uses: subosito/flutter-action@v2
-      with:
-        flutter-version: ${{inputs.flutter_version || '3.3.2'}}
-        channel: ${{inputs.flutter_channel || 'stable'}}
-        cache: false
-    - name: Install dependencies
-      run: |
-        flutter pub global activate very_good_cli
-        very_good --analytics false
-        very_good packages get --recursive
+    - id: flutter-action-cache-path-builder
+      run: echo "::set-output name=cache-path::$($GITHUB_ACTION_PATH/setup.sh -p cache-path -c '${{ inputs.cache-path }}' ${{ inputs.channel }} ${{ inputs.flutter-version }} ${{ inputs.architecture }})"
       shell: bash
+    - if: ${{ inputs.cache == 'true' }}
+      id: flutter-action-cache-key-builder
+      run: echo "::set-output name=cache-key::$($GITHUB_ACTION_PATH/setup.sh -p cache-key -k ${{ inputs.cache-key }} ${{ inputs.channel }} ${{ inputs.flutter-version }} ${{ inputs.architecture }})"
+      shell: bash
+    # - name: Setup jdk
+    #   uses: actions/setup-java@v3
+    #   with:
+    #     distribution: "adopt"
+    #     java-version: "11"
+    # - name: Setup Android SDK
+    #   uses: android-actions/setup-android@v2
+    # - name: Setup flutter sdk
+    #   uses: subosito/flutter-action@v2
+    #   with:
+    #     flutter-version: ${{inputs.flutter_version || '3.3.2'}}
+    #     channel: ${{inputs.flutter_channel || 'stable'}}
+    #     cache: false
+    # - name: Install dependencies
+    #   run: |
+    #     flutter pub global activate very_good_cli
+    #     very_good --analytics false
+    #     very_good packages get --recursive
+    #   shell: bash
