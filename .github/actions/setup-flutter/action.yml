@@ -43,6 +43,10 @@ runs:
     - id: flutter-action-cache-key-builder
       run: echo "::set-output name=cache-key::my-new-key"
       shell: bash
+    - name: Verify input
+      run: |
+        echo "flutter-:os:-:channel:-:version:-:arch:-:hash:"
+      shell: bash
     - name: Verify output
       run: |
         echo "${{ steps.flutter-action-cache-path-builder.outputs.cache-path }}"

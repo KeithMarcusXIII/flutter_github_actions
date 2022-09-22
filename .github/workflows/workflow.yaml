@@ -37,11 +37,6 @@ on:
         required: false
         type: string
         default: "3.3.2"
-      test_input:
-        description: "Identifier for the Flutter SDK cache"
-        required: false
-        type: string
-        default: "flutter-:os:-:channel:-:version:-:arch:-:hash:"
 
 env:
   DART_DEFINED_VAR1: "var1"
@@ -63,7 +58,6 @@ jobs:
       - name: Print wth is this
         run: |
           echo "flutter-:os:-:${{inputs.flutter_channel || 'stable'}}:-:${{inputs.flutter_version || '3.3.2'}}:-:arch:"
-          echo "${{ inputs.test_input }}"
       # # start setup action
       # - name: Setup jdk
       #   uses: actions/setup-java@v3
