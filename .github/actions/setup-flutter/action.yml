@@ -33,8 +33,7 @@ runs:
     - id: flutter-action-cache-path-builder
       run: echo "::set-output name=cache-path::my-new-path"
       shell: bash
-    - if: ${{ inputs.cache == 'true' }}
-      id: flutter-action-cache-key-builder
+    - id: flutter-action-cache-key-builder
       run: echo "::set-output name=cache-key::my-new-key"
       shell: bash
     - name: Verify output
