@@ -57,10 +57,8 @@ jobs:
         run: echo '${{ toJSON(secrets) }}'
       - id: parse-var
         run: |
-          echo "::set-output name=version::${{ inputs.flutter_version || 3.3.2 }}"
-          echo "::set-output name=version::${{ inputs.flutter_version || 3.3.2 }}"
-          # echo "::set-output name=cache-path::my-new-path"
-          # echo "::set-output name=cache-key::my-new-key"
+          echo "::set-output name=version::${{ inputs.flutter_version || '3.3.2' }}"
+          echo "::set-output name=version::${{ inputs.flutter_channel || 'stable' }}"
         shell: bash
       - name: Print output variables
         run: echo "${{ toJSON(steps.parse-var.outputs) }}"
