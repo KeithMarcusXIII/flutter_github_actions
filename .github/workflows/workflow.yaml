@@ -59,11 +59,13 @@ jobs:
         run: |
           version="::set-output name=version::${{ inputs.flutter_version || '3.3.2' }}"
           channel="::set-output name=channel::${{ inputs.flutter_channel || 'stable' }}"
-          cache-key="flutter-${{ runner.os }}-$channel-$version-${{ runner.arch }}"
-          cache-path="${{ runner.tool_cache }}/flutter/channel-$version-${{ runner.arch }}"
 
           echo $version
           echo $channel
+
+          cache-key="flutter-${{ runner.os }}-$channel-$version-${{ runner.arch }}"
+          cache-path="${{ runner.tool_cache }}/flutter/channel-$version-${{ runner.arch }}"
+
           echo $cache-key
           echo $cache-path
         shell: bash
