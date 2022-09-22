@@ -39,8 +39,8 @@ runs:
       shell: bash
     - name: Verify output
       run: |
-        echo ${{ steps.flutter-action-cache-path-builder.outputs.cache-path }}
-        echo ${{ steps.flutter-action-cache-path-builder.outputs.cache-key }}
+        echo "${{ steps.flutter-action-cache-path-builder.outputs.cache-path }}"
+        echo "${{ steps.flutter-action-cache-key-builder.outputs.cache-key }}"
       shell: bash
     # - name: Setup jdk
     #   uses: actions/setup-java@v3
