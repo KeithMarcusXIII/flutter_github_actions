@@ -64,7 +64,7 @@ jobs:
         with:
           distribution: "adopt"
           java-version: "11"
-      - name: Setup Android SDK
+      - name: Setup android SDK
         uses: android-actions/setup-android@v2
       - id: flutter-sdk-setup
         name: Setup flutter sdk
@@ -73,7 +73,9 @@ jobs:
           channel: ${{inputs.flutter_channel || 'stable'}}
           flutter-version: ${{inputs.flutter_version || '3.3.2'}}
           cache: true
-          cache-key: "flutter-:os:-:${{inputs.flutter_channel || 'stable'}}:-:${{inputs.flutter_version || '3.3.2'}}:-:arch:-:hash:"
+          # cache-key: "flutter-:os:-:${{inputs.flutter_channel || 'stable'}}:-:${{inputs.flutter_version || '3.3.2'}}:-:arch:-:hash:"
+      - name: Print outputs
+        run: echo ${{ steps.flutter-sdk-setup.outputs.cache-keys }}
       - name: Install dependencies
         run: |
           flutter pub global activate very_good_cli
