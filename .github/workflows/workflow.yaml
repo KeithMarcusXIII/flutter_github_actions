@@ -69,40 +69,40 @@ jobs:
           cache_key=$(echo "flutter-${{ runner.os }}-$channel-$version-${{ runner.arch }}" | awk '{print tolower($0)}')
           cache_path=$(echo "${{ runner.tool_cache }}/flutter/channel-$version-${{ runner.arch }}" | awk '{print tolower($0)}')
 
-          echo $cache_key
-          echo $cache_path
-
           echo "::set-output name=cache-key::$cache_key"
           echo "::set-output name=cache-path::$cache_path"
+
+          echo $cache_key
+          echo $cache_path
         shell: bash
       - name: Print output variables
         run: echo "${{ toJSON(steps.parse-var.outputs) }}"
       # start setup action
-      # - name: Setup jdk
-      #   uses: actions/setup-java@v3
-      #   with:
-      #     distribution: "adopt"
-      #     java-version: "11"
-      # - name: Setup android sdk
-      #   uses: android-actions/setup-android@v2
-      # - id: flutter-sdk-setup
-      #   name: Setup flutter sdk
-      #   uses: subosito/flutter-action@v2
-      #   with:
-      #     channel: ${{ inputs.flutter_channel }}
-      #     flutter-version: ${{ inputs.flutter_version }}
-      #     cache: true
-      #     cache-key: "flutter-${{ runner.os }}-${{ inputs.flutter_channel }}-${{inputs.flutter_version }}-${{ runner.arch }}"
-      #     cache-path: "${{ runner.tool_cache }}/flutter/${{ inputs.flutter_channel }}-${{inputs.flutter_version }}-${{ runner.arch }}"
-      # - name: Install dependencies
-      #   run: |
-      #     flutter pub global activate very_good_cli
-      #     very_good --analytics false
-      #     very_good packages get --recursive
-      #   shell: bash
-      # # end setup action
-      # - name: Check flutter sdk
-      #   run: flutter doctor
+      - name: Setup jdk
+        uses: actions/setup-java@v3
+        with:
+          distribution: "adopt"
+          java-version: "11"
+      - name: Setup android sdk
+        uses: android-actions/setup-android@v2
+      - id: flutter-sdk-setup
+        name: Setup flutter sdk
+        uses: subosito/flutter-action@v2
+        with:
+          channel: ${{ steps.parse-var.channel }}
+          flutter-version: ${{ steps.parse-var.version }}
+          cache: true
+          cache-key: ${{ steps.parse-var.cache-key }}
+          cache-path: ${{ steps.parse-var.cache-path }}
+      - name: Install dependencies
+        run: |
+          flutter pub global activate very_good_cli
+          very_good --analytics false
+          very_good packages get --recursive
+        shell: bash
+      # end setup action
+      - name: Check flutter sdk
+        run: flutter doctor
 
   analyze:
     runs-on: self-hosted
