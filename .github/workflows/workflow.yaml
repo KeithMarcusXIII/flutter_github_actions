@@ -66,8 +66,8 @@ jobs:
           echo $version
           echo $channel
 
-          cache_key=$(echo "flutter-${{ runner.os }}-$channel-$version-${{ runner.arch }}" | awk "{print tolower($0)}")
-          cache_path=$(echo "${{ runner.tool_cache }}/flutter/channel-$version-${{ runner.arch }}" | awk "{print tolower($0)}")
+          cache_key=$(echo "flutter-${{ runner.os }}-$channel-$version-${{ runner.arch }}" | awk '{print tolower($0)}')
+          cache_path=$(echo "${{ runner.tool_cache }}/flutter/channel-$version-${{ runner.arch }}" | awk '{print tolower($0)}')
 
           echo $cache_key
           echo $cache_path
