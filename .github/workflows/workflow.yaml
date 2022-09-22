@@ -70,14 +70,14 @@ jobs:
           echo ${{ runner.arch }}
           echo ${{ runner.tool_cache }}
 
-          # cache-key="flutter-${{ runner.os }}-$channel-$version-${{ runner.arch }}"
-          # cache-path="${{ runner.tool_cache }}/flutter/channel-$version-${{ runner.arch }}"
+          cache_key="flutter-${{ runner.os }}-$channel-$version-${{ runner.arch }}"
+          cache_path="${{ runner.tool_cache }}/flutter/channel-$version-${{ runner.arch }}"
 
-          # echo "::set-output name=cache-key::$cache-key"
-          # echo "::set-output name=cache-path::$cache-path"
+          # echo "::set-output name=cache-key::$cache_key"
+          # echo "::set-output name=cache-path::$cache_path"
 
-          # echo $cache-key
-          # echo $cache-path
+          echo $cache_key
+          echo $cache_path
         shell: bash
       - name: Print output variables
         run: echo "${{ toJSON(steps.parse-var.outputs) }}"
