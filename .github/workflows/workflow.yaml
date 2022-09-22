@@ -56,16 +56,9 @@ jobs:
         run: echo "${{toJSON(env)}}"
       - name: Print secrets
         run: echo "${{toJSON(secrets)}}"
-      - id: flutter-sdk-setup
-        name: Setup flutter
-        uses: ./.github/actions/setup-flutter
-      - name: Print outputs
-        run: |
-          echo ${{ steps.flutter-sdk-setup.steps.flutter-action-cache-path-builder.outputs.cache-path }}
-          echo ${{ steps.flutter-sdk-setup.steps.flutter-action-cache-key-builder.outputs.cache-key }}
-          echo ${{ steps.flutter-sdk-setup.outputs.cache-path-output }}
-          echo ${{ steps.flutter-sdk-setup.outputs.cache-key-output }}
-      # start setup action
+      - name: Print wth is this
+        run: echo "flutter-:os:-:${{inputs.flutter_channel || 'stable'}}:-:${{inputs.flutter_version || '3.3.2'}}:-:arch:"
+      # # start setup action
       # - name: Setup jdk
       #   uses: actions/setup-java@v3
       #   with:
