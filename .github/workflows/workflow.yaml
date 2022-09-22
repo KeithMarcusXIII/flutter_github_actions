@@ -55,9 +55,8 @@ jobs:
         run: echo "${{toJSON(env)}}"
       - name: Print secrets
         run: echo "${{toJSON(secrets)}}"
-      - name: Print wth is this
-        run: |
-          echo "flutter-:os:-:${{inputs.flutter_channel || 'stable'}}:-:${{inputs.flutter_version || '3.3.2'}}:-:arch:"
+      - name: Setup flutter
+        uses: ./.github/actions/setup-flutter
       # # start setup action
       # - name: Setup jdk
       #   uses: actions/setup-java@v3
