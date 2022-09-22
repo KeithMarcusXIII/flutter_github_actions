@@ -85,8 +85,7 @@ jobs:
           java-version: "11"
       - name: Setup android sdk
         uses: android-actions/setup-android@v2
-      - id: flutter-sdk-setup
-        name: Setup flutter sdk
+      - name: Setup flutter sdk
         uses: subosito/flutter-action@v2
         with:
           channel: ${{ steps.parse-var.channel }}
