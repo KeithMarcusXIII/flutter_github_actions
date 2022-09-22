@@ -31,11 +31,11 @@ runs:
   using: "composite"
   steps:
     - id: flutter-action-cache-path-builder
-      run: echo "::set-output name=cache-path::$($GITHUB_ACTION_PATH/setup.sh -p cache-path -c '${{ inputs.cache-path }}' ${{ inputs.channel }} ${{ inputs.flutter-version }} ${{ inputs.architecture }})"
+      run: echo "::set-output name=cache-path::'my-new-path'"
       shell: bash
     - if: ${{ inputs.cache == 'true' }}
       id: flutter-action-cache-key-builder
-      run: echo "::set-output name=cache-key::$($GITHUB_ACTION_PATH/setup.sh -p cache-key -k ${{ inputs.cache-key }} ${{ inputs.channel }} ${{ inputs.flutter-version }} ${{ inputs.architecture }})"
+      run: echo "::set-output name=cache-key::'my-new-key'"
       shell: bash
     - name: Verify output
       run: |
