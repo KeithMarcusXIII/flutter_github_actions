@@ -46,6 +46,7 @@ runs:
     - name: Verify input
       run: |
         echo "flutter-:os:-:channel:-:version:-:arch:-:hash:"
+        echo "${{ inputs.cache-path }}"
       shell: bash
     - name: Verify output
       run: |
