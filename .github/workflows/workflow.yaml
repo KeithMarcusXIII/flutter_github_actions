@@ -57,8 +57,15 @@ jobs:
         run: echo '${{ toJSON(secrets) }}'
       - id: parse-var
         run: |
-          echo "::set-output name=version::${{ inputs.flutter_version || '3.3.2' }}"
-          echo "::set-output name=channel::${{ inputs.flutter_channel || 'stable' }}"
+          version="::set-output name=version::${{ inputs.flutter_version || '3.3.2' }}"
+          channel="::set-output name=channel::${{ inputs.flutter_channel || 'stable' }}"
+          cache-key="flutter-${{ runner.os }}-$channel-$version-${{ runner.arch }}"
+          cache-path="${{ runner.tool_cache }}/flutter/channel-$version-${{ runner.arch }}"
+
+          echo $version
+          echo $channel
+          echo $cache-key
+          echo $cache-path
         shell: bash
       - name: Print output variables
         run: echo "${{ toJSON(steps.parse-var.outputs) }}"
