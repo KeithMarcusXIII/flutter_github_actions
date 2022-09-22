@@ -54,7 +54,7 @@ jobs:
       - name: Print env
         run: echo '${{ toJSON(env) }}'
       - name: Print secrets
-        run: echo '${{ toJSON(secrets) }}''
+        run: echo '${{ toJSON(secrets) }}'
       # start setup action
       - name: Setup jdk
         uses: actions/setup-java@v3
