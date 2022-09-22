@@ -52,37 +52,35 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Print env
-        run: echo "${{toJSON(env)}}"
+        run: echo '${{ toJSON(env) }}'
       - name: Print secrets
-        run: echo "${{toJSON(secrets)}}"
-      - name: Setup flutter
-        uses: ./.github/actions/setup-flutter
-      # # start setup action
-      # - name: Setup jdk
-      #   uses: actions/setup-java@v3
-      #   with:
-      #     distribution: "adopt"
-      #     java-version: "11"
-      # - name: Setup android SDK
-      #   uses: android-actions/setup-android@v2
-      # - id: flutter-sdk-setup
-      #   name: Setup flutter sdk
-      #   uses: subosito/flutter-action@v2
-      #   with:
-      #     channel: ${{inputs.flutter_channel || 'stable'}}
-      #     flutter-version: ${{inputs.flutter_version || '3.3.2'}}
-      #     cache: true
-      #     cache-key: "flutter-:os:-:${{inputs.flutter_channel || 'stable'}}:-:${{inputs.flutter_version || '3.3.2'}}:-:arch:"
-
-      # - name: Install dependencies
-      #   run: |
-      #     flutter pub global activate very_good_cli
-      #     very_good --analytics false
-      #     very_good packages get --recursive
-      #   shell: bash
-      # # end setup action
-      # - name: Check flutter sdk
-      #   run: flutter doctor
+        run: echo '${{ toJSON(secrets) }}''
+      # start setup action
+      - name: Setup jdk
+        uses: actions/setup-java@v3
+        with:
+          distribution: "adopt"
+          java-version: "11"
+      - name: Setup android sdk
+        uses: android-actions/setup-android@v2
+      - id: flutter-sdk-setup
+        name: Setup flutter sdk
+        uses: subosito/flutter-action@v2
+        with:
+          channel: ${{ inputs.flutter_channel }}
+          flutter-version: ${{ inputs.flutter_version }}
+          cache: true
+          # cache-key: "flutter-${{ runner.os }}-${{ inputs.flutter_channel }}-${{inputs.flutter_version }}-${{ runner.arch }}"
+          # cache-path: "${{ runner.tool_cache }}/flutter/${{ inputs.flutter_channel }}-${{inputs.flutter_version }}-${{ runner.arch }}"
+      - name: Install dependencies
+        run: |
+          flutter pub global activate very_good_cli
+          very_good --analytics false
+          very_good packages get --recursive
+        shell: bash
+      # end setup action
+      - name: Check flutter sdk
+        run: flutter doctor
 
   analyze:
     runs-on: self-hosted
