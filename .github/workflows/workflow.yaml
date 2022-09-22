@@ -70,8 +70,8 @@ jobs:
           channel: ${{ inputs.flutter_channel }}
           flutter-version: ${{ inputs.flutter_version }}
           cache: true
-          # cache-key: "flutter-${{ runner.os }}-${{ inputs.flutter_channel }}-${{inputs.flutter_version }}-${{ runner.arch }}"
-          # cache-path: "${{ runner.tool_cache }}/flutter/${{ inputs.flutter_channel }}-${{inputs.flutter_version }}-${{ runner.arch }}"
+          cache-key: "flutter-${{ runner.os }}-${{ inputs.flutter_channel }}-${{inputs.flutter_version }}-${{ runner.arch }}"
+          cache-path: "${{ runner.tool_cache }}/flutter/${{ inputs.flutter_channel }}-${{inputs.flutter_version }}-${{ runner.arch }}"
       - name: Install dependencies
         run: |
           flutter pub global activate very_good_cli
