@@ -28,10 +28,10 @@ inputs:
     required: false
     default: ${{ runner.arch }}
 outputs:
-  cache-path:
+  cache-path-output:
     description: "output path"
     value: ${{ steps.flutter-action-cache-path-builder.outputs.cache-path }}
-  cache-key:
+  cache-key-output:
     description: "output key"
     value: ${{ steps.flutter-action-cache-key-builder.outputs.cache-key }}
 runs:
