@@ -57,12 +57,14 @@ jobs:
         run: echo '${{ toJSON(secrets) }}'
       - id: parse-var
         run: |
-          version="::set-output name=version::${{ inputs.flutter_version || '3.3.2' }}"
-          channel="::set-output name=channel::${{ inputs.flutter_channel || 'stable' }}"
+          version="${{ inputs.flutter_version || '3.3.2' }}"
+          channel="${{ inputs.flutter_channel || 'stable' }}"
+
+          echo "::set-output name=version::$version"
+          echo "::set-output name=channel::$channel"
 
           echo $version
           echo $channel
-
         shell: bash
       - name: Print output variables
         run: echo "${{ toJSON(steps.parse-var.outputs) }}"
