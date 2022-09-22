@@ -37,6 +37,11 @@ runs:
       id: flutter-action-cache-key-builder
       run: echo "::set-output name=cache-key::$($GITHUB_ACTION_PATH/setup.sh -p cache-key -k ${{ inputs.cache-key }} ${{ inputs.channel }} ${{ inputs.flutter-version }} ${{ inputs.architecture }})"
       shell: bash
+    - name: Verify output
+      run: |
+        echo ${{ steps.flutter-action-cache-path-builder.outputs.cache-path }}
+        echo ${{ steps.flutter-action-cache-path-builder.outputs.cache-key }}
+      shell: bash
     # - name: Setup jdk
     #   uses: actions/setup-java@v3
     #   with:

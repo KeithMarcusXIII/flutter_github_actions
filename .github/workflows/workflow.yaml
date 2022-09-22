@@ -60,7 +60,9 @@ jobs:
         name: Setup flutter
         uses: ./.github/actions/setup-flutter
       - name: Print outputs
-        run: echo ${{ steps.flutter-sdk-setup.steps.flutter-action-cache-path-builder }}
+        run: |
+          echo ${{ steps.flutter-sdk-setup.outputs.cache-path }}
+          echo ${{ steps.flutter-sdk-setup.outputs.cache-key }}
       # start setup action
       # - name: Setup jdk
       #   uses: actions/setup-java@v3
