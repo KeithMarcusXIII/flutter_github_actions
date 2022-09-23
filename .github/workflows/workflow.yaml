@@ -91,14 +91,14 @@ jobs:
     steps:
       - name: Print setup outputs
         run: echo ${{ toJSON(needs.setup.outputs) }}
-      - id: flutter-sdk-setup
-        name: Setup flutter sdk
-        uses: .github/actions/setup-flutter
-      - name: Check formatting
-        # run: flutter format --set-exit-if-changed lib test
-        run: flutter format lib test
-      - name: Analyze
-        run: flutter analyze lib test
+      # - id: flutter-sdk-setup
+      #   name: Setup flutter sdk
+      #   uses: .github/actions/setup-flutter
+      # - name: Check formatting
+      #   # run: flutter format --set-exit-if-changed lib test
+      #   run: flutter format lib test
+      # - name: Analyze
+      #   run: flutter analyze lib test
 
   # test:
   #   runs-on: self-hosted
