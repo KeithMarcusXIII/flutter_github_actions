@@ -116,16 +116,16 @@ jobs:
       - name: Print previous jobs outputs
         run: |
           echo '${{ toJSON(needs.setup.outputs) }}'
-      # - name: Cache flutter sdk
-      #   uses: actions/cache@v3
-      #   with:
-      #     path: ,
-      #     key:
+      - name: Restore flutter sdk
+        uses: actions/cache@v3
+        with:
+          path: needs.setup.outputs.cache-path
+          key: needs.setup.outputs.cache-key
       - name: Check formatting
         # run: flutter format --set-exit-if-changed lib test
         run: flutter format lib test
-      # - name: Analyze
-      #   run: flutter analyze lib test
+      - name: Analyze
+        run: flutter analyze lib test
 
   # test:
   #   runs-on: self-hosted
