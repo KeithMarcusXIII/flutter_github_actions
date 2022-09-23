@@ -99,7 +99,7 @@ jobs:
         uses: ./.github/actions/setup-flutter
         with:
           flutter-channel: ${{ needs.setup.outputs.flutter-channel }}
-          flutter-version: ${{ needs.setup.outputs.flutter-version s}}
+          flutter-version: ${{ needs.setup.outputs.flutter-version }}
       - name: Check formatting
         # run: flutter format --set-exit-if-changed lib test
         run: flutter format lib test
