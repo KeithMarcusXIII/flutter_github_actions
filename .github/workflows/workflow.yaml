@@ -85,20 +85,20 @@ jobs:
       - name: Print parse-var variables
         run: echo "${{ toJSON(steps.parse-var.outputs) }}"
 
-  # analyze:
-  #   runs-on: self-hosted
-  #   needs: setup
-  #   steps:
-  #     - name: Print setup outputs
-  #       run: echo ${{ toJSON(needs.setup.outputs) }}
-  #     - id: flutter-sdk-setup
-  #       name: Setup flutter sdk
-  #       uses: .github/actions/setup-flutter
-  #     - name: Check formatting
-  #       # run: flutter format --set-exit-if-changed lib test
-  #       run: flutter format lib test
-  #     - name: Analyze
-  #       run: flutter analyze lib test
+  analyze:
+    runs-on: self-hosted
+    needs: setup
+    steps:
+      - name: Print setup outputs
+        run: echo ${{ toJSON(needs.setup.outputs) }}
+      - id: flutter-sdk-setup
+        name: Setup flutter sdk
+        uses: .github/actions/setup-flutter
+      - name: Check formatting
+        # run: flutter format --set-exit-if-changed lib test
+        run: flutter format lib test
+      - name: Analyze
+        run: flutter analyze lib test
 
   # test:
   #   runs-on: self-hosted
