@@ -46,9 +46,11 @@ jobs:
   setup:
     runs-on: self-hosted
     environment: staging
-    # outputs:
-    #   cache-key: ${{ steps.parse-var.outputs.cache-key }}
-    #   cache-path: ${{ steps.parse-var.outputs.cache-path }}
+    outputs:
+      # cache-key: ${{ steps.parse-var.outputs.cache-key }}
+      # cache-path: ${{ steps.parse-var.outputs.cache-path }}
+      cache-key: ${{ steps.flutter-setup-sdk.outputs.cache-key }}
+      cache-path: ${{ steps.flutter-setup-sdk.outputs.cache-path }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
