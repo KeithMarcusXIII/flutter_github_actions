@@ -46,19 +46,13 @@ on:
         type: string
         default: "3.3.2"
       jdk-dist:
-        description: "JDK distribution"
         required: false
         type: string
         default: "adopt"
       jdk-version:
-        description: "JDK version"
         required: false
         type: string
         default: "11"
-
-env:
-  DART_DEFINED_VAR1: "var1"
-  DART_DEFINED_VAR2: "var2"
 
 jobs:
   setup:
