@@ -10,7 +10,7 @@ on:
         description: "Environment"
         type: environment
         required: true
-      flutter_channel:
+      flutter-channel:
         description: "Flutter channel"
         type: choice
         default: stable
@@ -19,24 +19,42 @@ on:
           - master
           - beta
           - stable
-      flutter_version:
+      flutter-version:
         description: "Flutter version"
         type: string
         default: "3.3.2"
         required: false
+      jdk-dist:
+        description: "JDK distribution"
+        required: false
+        default: "adopt"
+      jdk-version:
+        description: "JDK version"
+        required: false
+        default: "11"
   workflow_call:
     inputs:
       environment:
         required: true
         type: string
-      flutter_channel:
+      flutter-channel:
         required: false
         type: string
         default: "stable"
-      flutter_version:
+      flutter-version:
         required: false
         type: string
         default: "3.3.2"
+      jdk-dist:
+        description: "JDK distribution"
+        required: false
+        type: string
+        default: "adopt"
+      jdk-version:
+        description: "JDK version"
+        required: false
+        type: string
+        default: "11"
 
 env:
   DART_DEFINED_VAR1: "var1"
@@ -45,12 +63,6 @@ env:
 jobs:
   setup:
     runs-on: self-hosted
-    environment: staging
-    outputs:
-      # cache-key: ${{ steps.parse-var.outputs.cache-key }}
-      # cache-path: ${{ steps.parse-var.outputs.cache-path }}
-      cache-key: ${{ steps.flutter-setup-sdk.outputs.cache-key }}
-      cache-path: ${{ steps.flutter-setup-sdk.outputs.cache-path }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -60,67 +72,33 @@ jobs:
         run: echo '${{ toJSON(secrets) }}'
       - id: parse-var
         run: |
-          version="${{ inputs.flutter_version || '3.3.2' }}"
-          channel="${{ inputs.flutter_channel || 'stable' }}"
+          flutter_channel="${{ inputs.flutter-channel || 'stable' }}"
+          flutter_version="${{ inputs.flutter-version || '3.3.2' }}"
+          jdk_dist="${{ inputs.jdk-dist || 'adopt' }}"
+          jdk_version="${{ inputs.jdk-version || '11' }}"
 
-          echo "::set-output name=version::$version"
-          echo "::set-output name=channel::$channel"
+          echo "::set-output name=flutter-channel::$flutter_channel"
+          echo "::set-output name=flutter-version::$flutter_version"
+          echo "::set-output name=jdk-dist::$jdk_dist"
+          echo "::set-output name=jdk-version::$jdk_version"
 
-          echo $version
-          echo $channel
-
-          # cache_key=$(echo "flutter-${{ runner.os }}-$channel-$version-${{ runner.arch }}" | awk '{print tolower($0)}')
-          # cache_path=$(echo "${{ runner.tool_cache }}/flutter/channel-$version-${{ runner.arch }}" | awk '{print tolower($0)}')
-
-          # echo "::set-output name=cache-key::$cache_key"
-          # echo "::set-output name=cache-path::$cache_path"
-
-          # echo $cache_key
-          # echo $cache_path
+          echo $flutter_channel
+          echo $flutter_version
+          echo $jdk_dist
+          echo $jdk_version
         shell: bash
       - name: Print parse-var variables
         run: echo "${{ toJSON(steps.parse-var.outputs) }}"
-      # start setup action
-      - name: Setup jdk
-        uses: actions/setup-java@v3
-        with:
-          distribution: "adopt"
-          java-version: "11"
-      - name: Setup android sdk
-        uses: android-actions/setup-android@v2
-      - id: flutter-setup-sdk
-        name: Setup flutter sdk
-        uses: subosito/flutter-action@v2
-        with:
-          channel: ${{ steps.parse-var.channel }}
-          flutter-version: ${{ steps.parse-var.version }}
-          cache: true
-          # cache-key: ${{ steps.parse-var.cache-key }}
-          # cache-path: ${{ steps.parse-var.cache-path }}
-      - name: Print flutter-action variables
-        run: echo "${{ toJSON(steps.flutter-setup-sdk.outputs) }}"
-      - name: Install dependencies
-        run: |
-          flutter pub global activate very_good_cli
-          very_good --analytics false
-          very_good packages get --recursive
-        shell: bash
-      # end setup action
-      - name: Check flutter sdk
-        run: flutter doctor
 
   analyze:
     runs-on: self-hosted
     needs: setup
     steps:
-      - name: Print previous jobs outputs
-        run: |
-          echo '${{ toJSON(needs.setup.outputs) }}'
-      - name: Restore flutter sdk
-        uses: actions/cache@v3
-        with:
-          path: ${{ needs.setup.outputs.cache-path }}
-          key: ${{ needs.setup.outputs.cache-key }}
+      - name: Print setup outputs
+        run: echo ${{ toJSON(needs.setup.outputs) }}
+      - id: flutter-sdk-setup
+        name: Setup flutter sdk
+        uses: .github/actions/setup-flutter
       - name: Check formatting
         # run: flutter format --set-exit-if-changed lib test
         run: flutter format lib test
@@ -136,14 +114,21 @@ jobs:
 
   # build:
   #   runs-on: self-hosted
-  #   environment: inputs.environment
+  #   # environment: inputs.environment
   #   needs:
   #     - setup
   #     - analyze
   #     # - test
   #   steps:
-  #     - name: Setup flutter
-  #       uses: ./.github/actions/setup-flutter
+  #     - name: Print setup outputs
+  #       run: echo ${{ toJSON(needs.setup.outputs) }}
+  #     - name: Setup jdk
+  #       uses: actions/setup-java@v3
+  #       with:
+  #         distribution: ${{ needs.setup.outputs.jdk-dist }}
+  #         java-version: ${{ needs.setup.outputs.jdk-version }}
+  #     - name: Setup android SDK
+  #       uses: android-actions/setup-android@v2
   #     - name: Build appbundle
   #       run: |
   #         flutter build appbundle \
@@ -157,7 +142,7 @@ jobs:
   #         --dart-define=ONE_SIGNAL_APP_ID={{secrets.ONE_SIGNAL_APP_ID}} \
 # with:
 #   coverage_excludes: "*.g.dart *.freezed.dart"
-#   flutter_channel: beta
-#   flutter_version: 3.1.0
+#   flutter-channel: beta
+#   flutter-version: 3.1.0
 #   runs_on: self-hosted
 #

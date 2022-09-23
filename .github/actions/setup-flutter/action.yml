@@ -1,74 +1,58 @@
-name: "Setup flutter"
-description: "Setup flutter sdk and tools"
+name: "Setup flutter sdk"
+description: "Setup flutter sdk"
 branding:
   icon: "maximize"
   color: "blue"
 inputs:
-  flutter-version:
-    description: "The Flutter version to make available on the path"
-    required: false
-    default: "any"
-  channel:
-    description: "The Flutter build release channel"
+  flutter-channel:
+    description: "Flutter channel"
     required: false
     default: "stable"
-  cache:
-    description: "Cache the Flutter SDK"
+  flutter-version:
+    description: "Flutter version"
     required: false
-  cache-key:
-    description: "Identifier for the Flutter SDK cache"
-    required: false
-    default: "flutter-:os:-:channel:-:version:-:arch:-:hash:"
-  cache-path:
-    description: "Flutter SDK cache path"
-    required: false
-    default: "${{ runner.tool_cache }}/flutter/:channel:-:version:-:arch:"
-  architecture:
-    description: "The architecture of Flutter SDK executable (x64 or arm64)"
-    required: false
-    default: ${{ runner.arch }}
+    default: "any"
+  # jdk-dist:
+  #   description: "JDK distribution"
+  #   required: false
+  #   default: "adopt"
+  # jdk-version:
+  #   description: "JDK version"
+  #   required: false
+  #   default: "stable"
 outputs:
-  cache-path-output:
-    description: "output path"
-    value: ${{ steps.flutter-action-cache-path-builder.outputs.cache-path }}
-  cache-key-output:
-    description: "output key"
-    value: ${{ steps.flutter-action-cache-key-builder.outputs.cache-key }}
+  flutter-cache-key:
+    description: "Flutter sdk cache key"
+    value: ${{ steps.flutter-sdk-setup.outputs.cache-key }}
+  flutter-cache-path:
+    description: "Flutter sdk cache path"
+    value: ${{ steps.flutter-sdk-setup.outputs.cache-path }}
 runs:
   using: "composite"
   steps:
-    - id: flutter-action-cache-path-builder
-      run: echo "::set-output name=cache-path::my-new-path"
-      shell: bash
-    - id: flutter-action-cache-key-builder
-      run: echo "::set-output name=cache-key::my-new-key"
-      shell: bash
-    - name: Verify input
-      run: |
-        echo "flutter-:os:-:channel:-:version:-:arch:-:hash:"
-        echo "${{ inputs.cache-path }}"
-      shell: bash
-    - name: Verify output
-      run: |
-        echo "${{ steps.flutter-action-cache-path-builder.outputs.cache-path }}"
-        echo "${{ steps.flutter-action-cache-key-builder.outputs.cache-key }}"
-      shell: bash
     # - name: Setup jdk
     #   uses: actions/setup-java@v3
     #   with:
-    #     distribution: "adopt"
-    #     java-version: "11"
-    # - name: Setup Android SDK
+    #     distribution: ${{ inputs.jdk-dist }}
+    #     java-version: ${{ inputs.jdk-version }}
+    # - name: Setup android SDK
     #   uses: android-actions/setup-android@v2
-    # - name: Setup flutter sdk
-    #   uses: subosito/flutter-action@v2
-    #   with:
-    #     flutter-version: ${{inputs.flutter_version || '3.3.2'}}
-    #     channel: ${{inputs.flutter_channel || 'stable'}}
-    #     cache: false
-    # - name: Install dependencies
-    #   run: |
-    #     flutter pub global activate very_good_cli
-    #     very_good --analytics false
-    #     very_good packages get --recursive
-    #   shell: bash
+    - id: flutter-sdk-setup
+      name: Setup flutter sdk
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: ${{ inputs.flutter-version }}
+        channel: ${{ inputs.flutter-channel }}
+        cache: false
+    - name: Print flutter-sdk-setup outputs
+      run: echo ${{ toJSON(steps.flutter-sdk-setup.outputs) }}
+      shell: bash
+    - name: Install dependencies
+      run: |
+        flutter pub global activate very_good_cli
+        very_good --analytics false
+        very_good packages get --recursive
+      shell: bash
+    - name: Check flutter sdk
+      run: flutter doctor -v
+      shell: bash
