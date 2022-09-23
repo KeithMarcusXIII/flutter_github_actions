@@ -119,8 +119,8 @@ jobs:
       - name: Restore flutter sdk
         uses: actions/cache@v3
         with:
-          path: needs.setup.outputs.cache-path
-          key: needs.setup.outputs.cache-key
+          path: ${{ needs.setup.outputs.cache-path }}
+          key: ${{ needs.setup.outputs.cache-key }}
       - name: Check formatting
         # run: flutter format --set-exit-if-changed lib test
         run: flutter format lib test
