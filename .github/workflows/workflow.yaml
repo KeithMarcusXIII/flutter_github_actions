@@ -58,31 +58,32 @@ jobs:
   setup:
     runs-on: self-hosted
     steps:
+      - name: Print env
+        run: echo "${{ toJSON(env) }}"
+      - name: Print secrets
+        run: echo "${{ toJSON(secrets) }}"
       - name: Checkout
         uses: actions/checkout@v3
-      # - name: Print env
-      #   run: echo '${{ toJSON(env) }}'
-      # - name: Print secrets
-      #   run: echo '${{ toJSON(secrets) }}'
-      # - id: parse-var
-      #   run: |
-      #     flutter_channel="${{ inputs.flutter-channel || 'stable' }}"
-      #     flutter_version="${{ inputs.flutter-version || '3.3.2' }}"
-      #     jdk_dist="${{ inputs.jdk-dist || 'adopt' }}"
-      #     jdk_version="${{ inputs.jdk-version || '11' }}"
+      - id: parse-var
+        name: Parse variables
+        run: |
+          flutter_channel="${{ inputs.flutter-channel || 'stable' }}"
+          flutter_version="${{ inputs.flutter-version || '3.3.2' }}"
+          jdk_dist="${{ inputs.jdk-dist || 'adopt' }}"
+          jdk_version="${{ inputs.jdk-version || '11' }}"
 
-      #     echo "::set-output name=flutter-channel::$flutter_channel"
-      #     echo "::set-output name=flutter-version::$flutter_version"
-      #     echo "::set-output name=jdk-dist::$jdk_dist"
-      #     echo "::set-output name=jdk-version::$jdk_version"
+          echo "::set-output name=flutter-channel::$flutter_channel"
+          echo "::set-output name=flutter-version::$flutter_version"
+          echo "::set-output name=jdk-dist::$jdk_dist"
+          echo "::set-output name=jdk-version::$jdk_version"
 
-      #     echo $flutter_channel
-      #     echo $flutter_version
-      #     echo $jdk_dist
-      #     echo $jdk_version
-      #   shell: bash
-      # - name: Print parse-var variables
-      #   run: echo "${{ toJSON(steps.parse-var.outputs) }}"
+          echo $flutter_channel
+          echo $flutter_version
+          echo $jdk_dist
+          echo $jdk_version
+        shell: bash
+      - name: Print parse-var variables
+        run: echo "${{ toJSON(steps.parse-var.outputs) }}"
 
   # analyze:
   #   runs-on: self-hosted
