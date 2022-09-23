@@ -47,8 +47,8 @@ jobs:
     runs-on: self-hosted
     environment: staging
     outputs:
-      cache-key: ${{ steps.flutter-sdk-setup.outputs.cache-keys }}
-      cache-path: ${{ steps.flutter-sdk-setup.outputs.cache-path }}
+      cache-key: ${{ steps.parse-var.outputs.cache-key }}
+      cache-path: ${{ steps.v.outputs.cache-path }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -86,8 +86,7 @@ jobs:
           java-version: "11"
       - name: Setup android sdk
         uses: android-actions/setup-android@v2
-      - id: flutter-sdk-setup
-        name: Setup flutter sdk
+      - name: Setup flutter sdk
         uses: subosito/flutter-action@v2
         with:
           channel: ${{ steps.parse-var.channel }}
@@ -111,7 +110,7 @@ jobs:
     steps:
       - name: Print previous jobs outputs
         run: |
-          echo ${{ toJSON(needs.setup.outputs) }}
+          echo '${{ toJSON(needs.setup.outputs) }}'
       # - name: Setup flutter
       #   uses: ./.github/actions/setup-flutter
       - name: Check formatting
