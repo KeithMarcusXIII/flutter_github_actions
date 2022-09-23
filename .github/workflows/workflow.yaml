@@ -86,7 +86,8 @@ jobs:
           java-version: "11"
       - name: Setup android sdk
         uses: android-actions/setup-android@v2
-      - name: Setup flutter sdk
+      - id: flutter-setup-sdk
+        name: Setup flutter sdk
         uses: subosito/flutter-action@v2
         with:
           channel: ${{ steps.parse-var.channel }}
@@ -95,7 +96,7 @@ jobs:
           # cache-key: ${{ steps.parse-var.cache-key }}
           # cache-path: ${{ steps.parse-var.cache-path }}
       - name: Print flutter-action variables
-        run: echo "${{ toJSON(steps.flutter-action.outputs) }}"
+        run: echo "${{ toJSON(steps.flutter-setup-sdk.outputs) }}"
       - name: Install dependencies
         run: |
           flutter pub global activate very_good_cli
