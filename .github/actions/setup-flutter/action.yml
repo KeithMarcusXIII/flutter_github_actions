@@ -38,7 +38,7 @@ runs:
     # - name: Setup android SDK
     #   uses: android-actions/setup-android@v2
     - name: Print inputs
-      run: echo "${{ toJSON(v) }}"
+      run: echo "${{ toJSON(inputs) }}"
       shell: bashs
     - id: flutter-sdk-setup
       name: Setup flutter sdk
