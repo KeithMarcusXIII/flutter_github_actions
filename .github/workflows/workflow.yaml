@@ -93,7 +93,7 @@ jobs:
     needs: setup
     steps:
       - name: Print setup outputs
-        run: echo ${{ toJSON(needs.setup.outputs) }}
+        run: echo "${{ toJSON(needs.setup.outputs) }}"
       - id: flutter-sdk-setup
         name: Setup flutter sdk
         uses: ./.github/actions/setup-flutter
