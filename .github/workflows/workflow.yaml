@@ -46,9 +46,9 @@ jobs:
   setup:
     runs-on: self-hosted
     environment: staging
-    outputs:
-      cache-key: ${{ steps.parse-var.outputs.cache-key }}
-      cache-path: ${{ steps.v.outputs.cache-path }}
+    # outputs:
+    #   cache-key: ${{ steps.parse-var.outputs.cache-key }}
+    #   cache-path: ${{ steps.parse-var.outputs.cache-path }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -67,16 +67,16 @@ jobs:
           echo $version
           echo $channel
 
-          cache_key=$(echo "flutter-${{ runner.os }}-$channel-$version-${{ runner.arch }}" | awk '{print tolower($0)}')
-          cache_path=$(echo "${{ runner.tool_cache }}/flutter/channel-$version-${{ runner.arch }}" | awk '{print tolower($0)}')
+          # cache_key=$(echo "flutter-${{ runner.os }}-$channel-$version-${{ runner.arch }}" | awk '{print tolower($0)}')
+          # cache_path=$(echo "${{ runner.tool_cache }}/flutter/channel-$version-${{ runner.arch }}" | awk '{print tolower($0)}')
 
-          echo "::set-output name=cache-key::$cache_key"
-          echo "::set-output name=cache-path::$cache_path"
+          # echo "::set-output name=cache-key::$cache_key"
+          # echo "::set-output name=cache-path::$cache_path"
 
-          echo $cache_key
-          echo $cache_path
+          # echo $cache_key
+          # echo $cache_path
         shell: bash
-      - name: Print output variables
+      - name: Print parse-var variables
         run: echo "${{ toJSON(steps.parse-var.outputs) }}"
       # start setup action
       - name: Setup jdk
@@ -92,8 +92,10 @@ jobs:
           channel: ${{ steps.parse-var.channel }}
           flutter-version: ${{ steps.parse-var.version }}
           cache: true
-          cache-key: ${{ steps.parse-var.cache-key }}
-          cache-path: ${{ steps.parse-var.cache-path }}
+          # cache-key: ${{ steps.parse-var.cache-key }}
+          # cache-path: ${{ steps.parse-var.cache-path }}
+      - name: Print flutter-action variables
+        run: echo "${{ toJSON(steps.flutter-action.outputs) }}"
       - name: Install dependencies
         run: |
           flutter pub global activate very_good_cli
@@ -111,8 +113,11 @@ jobs:
       - name: Print previous jobs outputs
         run: |
           echo '${{ toJSON(needs.setup.outputs) }}'
-      # - name: Setup flutter
-      #   uses: ./.github/actions/setup-flutter
+      # - name: Cache flutter sdk
+      #   uses: actions/cache@v3
+      #   with:
+      #     path: ,
+      #     key:
       - name: Check formatting
         # run: flutter format --set-exit-if-changed lib test
         run: flutter format lib test
