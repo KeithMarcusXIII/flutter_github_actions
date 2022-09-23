@@ -48,7 +48,7 @@ runs:
         channel: ${{ inputs.flutter-channel }}
         cache: false
     - name: Print flutter-sdk-setup outputs
-      run: echo "${{ toJSON(steps.flutter-sdk-setup.outputs) }}""
+      run: echo "${{ toJSON(steps.flutter-sdk-setup.outputs) }}"
       shell: bash
     - name: Install dependencies
       run: |
