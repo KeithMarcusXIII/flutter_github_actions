@@ -98,8 +98,8 @@ jobs:
         name: Setup flutter sdk
         uses: ./.github/actions/setup-flutter
         with:
-          flutter-channel: needs.setup.outputs.flutter-channel
-          flutter-version: needs.setup.outputs.flutter-version
+          flutter-channel: ${{ needs.setup.outputs.flutter-channel }}
+          flutter-version: ${{ needs.setup.outputs.flutter-version s}}
       - name: Check formatting
         # run: flutter format --set-exit-if-changed lib test
         run: flutter format lib test
