@@ -60,6 +60,8 @@ jobs:
     outputs:
       flutter-channel: ${{ steps.parse-var.outputs.flutter-channel }}
       flutter-version: ${{ steps.parse-var.outputs.flutter-version }}
+      jdk-dist: ${{ steps.parse-var.outputs.jdk-dist }}
+      jdk-version: ${{ steps.parse-var.outputs.jdk-version }}
     steps:
       - name: Print env
         run: echo "${{ toJSON(env) }}"
