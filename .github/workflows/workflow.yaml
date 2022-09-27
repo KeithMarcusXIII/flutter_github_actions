@@ -141,7 +141,6 @@ jobs:
       - name: Build appbundle
         run: |
           flutter build appbundle \
-          --flavor staging \
           --obfuscate \
           --split-debug-info=debug_info \
           --dart-define=MONGODB_USERNAME={{secrets.MONGODB_USERNAME}} \
