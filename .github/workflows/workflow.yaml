@@ -132,6 +132,12 @@ jobs:
           java-version: ${{ needs.setup.outputs.jdk-version }}
       - name: Setup android SDK
         uses: android-actions/setup-android@v2
+      - id: flutter-sdk-setup
+        name: Setup flutter sdk
+        uses: ./.github/actions/setup-flutter
+        with:
+          flutter-channel: ${{ needs.setup.outputs.flutter-channel }}
+          flutter-version: ${{ needs.setup.outputs.flutter-version }}
       - name: Build appbundle
         run: |
           flutter build appbundle \
