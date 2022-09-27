@@ -35,7 +35,7 @@ runs:
     #   with:
     #     distribution: ${{ inputs.jdk-dist }}
     #     java-version: ${{ inputs.jdk-version }}
-    # - name: Setup android SDK
+    # - name: Setup android sdk
     #   uses: android-actions/setup-android@v2
     - name: Print inputs
       run: echo "${{ toJSON(inputs) }}"

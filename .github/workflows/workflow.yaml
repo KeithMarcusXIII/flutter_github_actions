@@ -117,7 +117,7 @@ jobs:
 
   build:
     runs-on: self-hosted
-    # environment: inputs.environment
+    environment: inputs.environment
     needs:
       - setup
       - analyze
@@ -130,7 +130,7 @@ jobs:
         with:
           distribution: ${{ needs.setup.outputs.jdk-dist }}
           java-version: ${{ needs.setup.outputs.jdk-version }}
-      - name: Setup android SDK
+      - name: Setup android sdk
         uses: android-actions/setup-android@v2
       - id: flutter-sdk-setup
         name: Setup flutter sdk
