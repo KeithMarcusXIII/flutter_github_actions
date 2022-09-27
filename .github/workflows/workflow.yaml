@@ -116,32 +116,28 @@ jobs:
   #       run: very_good test -j ${{inputs.concurrency}} ${{(inputs.test_recursion && '--recursive') || ''}} ${{(inputs.test_optimization && '--optimization') || '--no-optimization'}} --coverage --test-randomize-ordering-seed random
 
   build:
-    # strategy:
-    #   fail-fast: true
-    #   matrix:
-    #     platform: [android, ios]
-    #     environment: [staging, production]
-    #     include:
-    #       - build: apk
-    #         environment: staging
-    #       - build: appbundle
-    #         environment: staging
-    #       - build: appbundle
-    #         environment: production
-    #       - build: ipa
-    #         environment: staging
-    #       - build: ipa
-    #         environment: production
-    # environment: ${{ matrix.environment }}
-    runs-on: self-hosted
-    # runs-on: ${{ matrix.build == 'ipa' && 'macos-latest' || 'self-hosted' }}
+    strategy:
+      fail-fast: true
+      matrix:
+        include:
+          - build: apk
+            environment: staging
+          - build: appbundle
+            environment: staging
+          - build: appbundle
+            environment: production
+          - build: ipa
+            environment: staging
+          - build: ipa
+            environment: production
+    # runs-on: self-hosted
+    runs-on: ${{ matrix.build == 'ipa' && 'self-hosted-macos' || 'self-hosted' }}
+    environment: ${{ matrix.environment }}
     needs:
       - setup
       - analyze
       # - test
     steps:
-      - name: Echo ternery condition
-        run: echo "${{ 13 >= 11 && 11 || 8 }}"
       - name: Print setup outputs
         run: echo "${{ toJSON(needs.setup.outputs) }}"
       - name: Setup jdk
@@ -157,9 +153,9 @@ jobs:
         with:
           flutter-channel: ${{ needs.setup.outputs.flutter-channel }}
           flutter-version: ${{ needs.setup.outputs.flutter-version }}
-      - name: Build appbundle
+      - name: Build ${{ matrix.environment }} ${{ matrix.build }}
         run: |
-          flutter build appbundle \
+          flutter build ${{ matrix.build }} \
           --obfuscate \
           --split-debug-info=debug_info \
           --dart-define=MONGODB_USERNAME=${{secrets.MONGODB_USERNAME}} \
