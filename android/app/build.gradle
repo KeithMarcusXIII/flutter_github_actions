@@ -44,13 +44,29 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "com.example.flutter_github_actions"
+        applicationId "com.keith.flutter.actions"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-build-configuration.
         minSdkVersion flutter.minSdkVersion
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
+    }
+
+    flavorDimensions "env"
+
+    productFlavors {
+        development {
+            dimension "env"
+            applicationIdSuffix ".dev"
+        }
+        staging {
+            dimension "env"
+            applicationIdSuffix ".stag"
+        }
+        production {
+            dimension "env"
+        }
     }
 
     buildTypes {
