@@ -179,7 +179,8 @@ jobs:
         with:
           name: ${{ matrix.environment }}-${{ matrix.build }}
           path: |
-            ${{ github.workspace }}/build/app/outputs/bundle/${{ matrix.environment }}Release/app-${{ matrix.environment }}-release.${{ matrix.build == 'appbundle' && 'aab' || matrix.build }}
+            ${{ github.workspace }}/build/app/outputs/bundle/${{ matrix.environment }}Release/app-${{ matrix.environment }}-release.aab
+            ${{ github.workspace }}/build/app/outputs/app-${{ matrix.environment }}-release.apk
             ${{ github.workspace }}build/ios/ipa/*.ipa
           if-no-files-found: error
 
