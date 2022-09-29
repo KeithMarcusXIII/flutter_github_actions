@@ -215,9 +215,8 @@ jobs:
         with:
           name: ${{ matrix.environment }}-${{ matrix.build }}
       - if: ${{ matrix.environment == 'development' || matrix.environment == 'staging' }}
-        name: Deploy to firebase
-        run: |
-
+        name: Print artifact name
+        run: echo "${{ matrix.environment }}-${{ matrix.build }}"
 # with:
 #   coverage_excludes: "*.g.dart *.freezed.dart"
 #   flutter-channel: beta
