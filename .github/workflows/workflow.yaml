@@ -179,8 +179,8 @@ jobs:
         with:
           name: ${{ matrix.environment }}-${{ matrix.build }}
           path: |
-            build/app/outputs/bundle/${{ matrix.environment }}release/app-${{ matrix.environment }}-release.${{ matrix.build == 'appbundle' && 'aab' || matrix.build }}
-            build/ios/ipa/*.ipa
+            ./build/app/outputs/bundle/${{ matrix.environment }}release/app-${{ matrix.environment }}-release.${{ matrix.build == 'appbundle' && 'aab' || matrix.build }}
+            ./build/ios/ipa/*.ipa
 
   deploy:
     strategy:
