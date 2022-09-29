@@ -163,6 +163,8 @@ jobs:
         with:
           flutter-channel: ${{ needs.setup.outputs.flutter-channel }}
           flutter-version: ${{ needs.setup.outputs.flutter-version }}
+      - name: Print working directory
+        run: pwd
       - name: Build ${{ matrix.environment }} ${{ matrix.build }}
         run: |
           flutter build ${{ matrix.build }} \
