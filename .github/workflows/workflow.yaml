@@ -174,15 +174,13 @@ jobs:
           --dart-define=MAPBOX_TOKEN=${{secrets.MAPBOX_TOKEN}} \
           --dart-define=DEEPLINK_CHECKSUM=${{secrets.DEEPLINK_CHECKSUM}} \
           --dart-define=ONE_SIGNAL_APP_ID=${{secrets.ONE_SIGNAL_APP_ID}} \
-      - name: Print variable
-        run: echo $GITHUB_WORKSPACE
       - name: Upload ${{ matrix.environment }} ${{ matrix.build }} artifact
         uses: actions/upload-artifact@v3
         with:
           name: ${{ matrix.environment }}-${{ matrix.build }}
           path: |
-            build/app/outputs/bundle/${{ matrix.environment }}release/app-${{ matrix.environment }}-release.${{ matrix.build == 'appbundle' && 'aab' || matrix.build }}
-            build/ios/ipa/*.ipa
+            $GITHUB_WORKSPACE/build/app/outputs/bundle/${{ matrix.environment }}release/app-${{ matrix.environment }}-release.${{ matrix.build == 'appbundle' && 'aab' || matrix.build }}
+            $GITHUB_WORKSPACE/build/ios/ipa/*.ipa
           if-no-files-found: error
 
   deploy:
