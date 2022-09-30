@@ -163,8 +163,6 @@ jobs:
         with:
           flutter-channel: ${{ needs.setup.outputs.flutter-channel }}
           flutter-version: ${{ needs.setup.outputs.flutter-version }}
-      - name: Print working directory
-        run: pwd
       - name: Build ${{ matrix.environment }} ${{ matrix.build }}
         run: |
           flutter build ${{ matrix.build }} \
@@ -183,7 +181,7 @@ jobs:
           path: |
             ${{ github.workspace }}/build/app/outputs/bundle/${{ matrix.environment }}Release/app-${{ matrix.environment }}-release.aab
             ${{ github.workspace }}/build/app/outputs/flutter-apk/app-${{ matrix.environment }}-release.apk
-            ${{ github.workspace }}build/ios/ipa/*.ipa
+            ${{ github.workspace }}/build/ios/ipa/*.ipa
           if-no-files-found: error
 
   deploy:
