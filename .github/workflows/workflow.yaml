@@ -165,9 +165,18 @@ jobs:
           flutter-version: ${{ needs.setup.outputs.flutter-version }}
       - name: Create keystore
         run: |
-          pwd
-          echo "${{ secrets.KEYSTORE }}" > release.jks.asc
-          gpg -d --passphrase ${{ secrets.KEYSTORE_PASSPHRASE }} --batch release.jks.asc > release.jks
+          echo "${{ secrets.KEYSTORE }}" > android/release.jks.asc
+          gpg -d --passphrase ${{ secrets.KEYSTORE_PASSPHRASE }} --batch android/release.jks.asc > android/release.jks
+          ls -al
+      - name: Create key.properties
+        run: |
+          cat << EOF > android/key.properties
+          storePassword=${{ secrets.KEYSTORE_PASSWORD }}
+          keyPassword=${{ secrets.ALIAS_PASSWORD }}
+          keyAlias=${{ secrets.KEYSTORE_ALIAS }}
+          storeFile={{ github.workspace }}/android/release.keystore
+          EOF
+          ls -al
       - name: Build ${{ matrix.environment }} ${{ matrix.build }}
         run: |
           flutter build ${{ matrix.build }} \
