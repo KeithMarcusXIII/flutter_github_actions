@@ -222,6 +222,8 @@ jobs:
     needs:
       - build
     steps:
+      - name: Print runner context
+        run: echo "${{ toJSON(runner) }}"
       - name: Download artifacts
         uses: actions/download-artifact@v3
         with:
@@ -229,6 +231,10 @@ jobs:
       - if: ${{ matrix.environment == 'development' || matrix.environment == 'staging' }}
         name: Print artifact name
         run: echo "${{ matrix.environment }}-${{ matrix.build }}"
+      - if: ${{ matrix.build == 'ipa' }}
+        run: fastlane firebase_app_distribution_get_udids
+        env:
+          APP_ID: ${{ secrets.ANDROID_FIREBASE_APP_ID }}
 # build/app/outputs/bundle/release/app-release.aab
 # build/app/outputs/bundle/developmentRelease/app-development-release.aab
 # build/app/outputs/bundle/stagingRelease/app-staging-release.aab
