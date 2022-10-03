@@ -175,10 +175,10 @@ jobs:
           storePassword=${{ secrets.KEYSTORE_PASSWORD }}
           keyPassword=${{ secrets.ALIAS_PASSWORD }}
           keyAlias=${{ secrets.KEYSTORE_ALIAS }}
-          storeFile={{ github.workspace }}/android/release.keystore
+          storeFile=${{ github.workspace }}/android/release.keystore
           EOF
           ls -al android
-          cat key.properties
+          cat android/key.properties
       - name: Build ${{ matrix.environment }} ${{ matrix.build }}
         run: |
           flutter build ${{ matrix.build }} \
