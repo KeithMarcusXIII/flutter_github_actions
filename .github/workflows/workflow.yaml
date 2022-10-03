@@ -167,8 +167,6 @@ jobs:
         run: |
           echo "${{ secrets.KEYSTORE }}" > android/release.jks.asc
           gpg -d --passphrase ${{ secrets.KEYSTORE_PASSPHRASE }} --batch android/release.jks.asc > android/release.jks
-          ls -al android
-          cat android/release.jks.asc
       - name: Create key.properties
         run: |
           cat << EOF > android/key.properties
@@ -177,8 +175,6 @@ jobs:
           keyAlias=${{ secrets.KEYSTORE_ALIAS }}
           storeFile=${{ github.workspace }}/android/release.keystore
           EOF
-          ls -al android
-          cat android/key.properties
       - name: Build ${{ matrix.environment }} ${{ matrix.build }}
         run: |
           flutter build ${{ matrix.build }} \
