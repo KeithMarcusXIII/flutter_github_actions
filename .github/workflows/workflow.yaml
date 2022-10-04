@@ -232,6 +232,7 @@ jobs:
         run: echo "${{ matrix.environment }}-${{ matrix.build }}"
       - if: ${{ matrix.build == 'ipa' }}
         run: |
+          cd ${{ github.workspace }}/ios
           pwd
           fastlane export_udids
         env:

@@ -22,5 +22,6 @@ platform :ios do
         app: ENV["APP_ID"],
         output_file: "tester-udids.txt",
     )
+    sh "ls -l"
   end
 end
