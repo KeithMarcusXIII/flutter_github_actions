@@ -235,18 +235,15 @@ jobs:
           echo "::set-output name=platform::$platform"
 
           echo $platform
-      - if: ${{ matrix.environment == 'development' || matrix.environment == 'staging' }}
-        name: Print artifact name
-        run: echo "${{ matrix.environment }}-${{ matrix.build }}"
-      - name: Change fastlane directory
-        run: cd ${{ steps.parse-var.outputs.platform }}
       - if: ${{ steps.parse-var.outputs.platform == 'ios' }}
         name: Export Apple UDIDs
+        working-directory: ./${{ steps.parse-var.outputs.platform }}
         run: fastlane export_udids
         env:
           APP_ID: ${{ secrets.IOS_FIREBASE_APP_ID }}
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
       - if: ${{ steps.parse-var.outputs.platform == 'ios' }}
+        working-directory: ./${{ steps.parse-var.outputs.platform }}
         name: Register devices
         run: fastlane register_devices
 # build/app/outputs/bundle/release/app-release.aab
