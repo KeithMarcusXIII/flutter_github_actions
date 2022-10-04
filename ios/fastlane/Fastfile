@@ -22,7 +22,7 @@ platform :ios do
     firebase_app_distribution_get_udids(
         app: ENV["APP_ID"],
         firebase_cli_token: ENV["FIREBASE_TOKEN"],
-        output_file: "@path/tester-udids.txt",
+        output_file: "#{path}/tester-udids.txt",
     )
   end
 end
