@@ -18,11 +18,23 @@ default_platform(:ios)
 platform :ios do
   desc "Export Apple UDIDs"
   lane :export_udids do
-    path = Dir.pwd
+    root = Dir.pwd
+
     firebase_app_distribution_get_udids(
         app: ENV["APP_ID"],
         firebase_cli_token: ENV["FIREBASE_TOKEN"],
         output_file: "#{path}/tester-udids.txt",
     )
+  end
+
+  desc "Register devices"
+  lane: :register_devices do
+    root = Dir.pwd
+    file = "#{root}/tester-udids.txt"
+
+    if Dir.exist? file
+      register_devices(
+        devices_file: file
+      )
   end
 end
