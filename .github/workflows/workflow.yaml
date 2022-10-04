@@ -217,6 +217,8 @@ jobs:
             environment: staging
           # - build: ipa
           #   environment: production
+    outputs:
+      platform: ${{ matrix.build == 'ipa' && 'ios' || 'android'}}
     runs-on: ${{ matrix.build == 'ipa' && 'self-hosted-macos' || 'self-hosted' }}
     environment: ${{ matrix.environment }}
     needs:
@@ -230,13 +232,15 @@ jobs:
       - if: ${{ matrix.environment == 'development' || matrix.environment == 'staging' }}
         name: Print artifact name
         run: echo "${{ matrix.environment }}-${{ matrix.build }}"
-      - if: ${{ matrix.build == 'ipa' }}
+      - name: Change fastlane directory
+        run: cd ${{ outputs.platform }}
+      - if: ${{ outputs.platform == 'ios' }}
         name: Export Apple UDIDs
         run: fastlane export_udids
         env:
           APP_ID: ${{ secrets.IOS_FIREBASE_APP_ID }}
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
-      - if: ${{ matrix.build == 'ipa' }}
+      - if: ${{ outputs.platform == 'ios' }}
         name: Register devices
         run: fastlane register_devices
 # build/app/outputs/bundle/release/app-release.aab
