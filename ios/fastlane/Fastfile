@@ -28,7 +28,7 @@ platform :ios do
   end
 
   desc "Register devices"
-  lane :register_devices do
+  lane :import_udids do
     root = Dir.pwd
     file = "#{root}/tester-udids.txt"
 
