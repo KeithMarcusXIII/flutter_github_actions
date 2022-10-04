@@ -29,13 +29,18 @@ platform :ios do
 
   desc "Import Apple UDIDs"
   lane :import_udids do
-    root = Dir.pwd
-    file = "#{root}/tester-udids.txt"
+    register_device(
+      name: "C+ KL Siraj's iPhone 13 mini",
+      udid: "00008110-000544161413801E"
+    )
 
-    if Dir.exist? file
-      register_devices(
-        devices_file: file
-      )
-    end
+    # root = Dir.pwd
+    # file = "#{root}/tester-udids.txt"
+
+    # if Dir.exist? file
+    #   # register_devices(
+    #   #   devices_file: file
+    #   # )
+    # end
   end
 end
