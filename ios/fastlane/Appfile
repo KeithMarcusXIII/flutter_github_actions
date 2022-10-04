@@ -1,6 +1,8 @@
 app_identifier("com.chargeplus.actions") # The bundle identifier of your app
 apple_id("kmarcusxiii@gmail.com") # Your Apple Developer Portal username
-
+# team selection in case you're in multiple teams
+team_name "ChargePlus Pte Ltd"
+team_id "43TQ7X4TZK"
 
 # For more information about the Appfile, see:
 #     https://docs.fastlane.tools/advanced/#appfile
