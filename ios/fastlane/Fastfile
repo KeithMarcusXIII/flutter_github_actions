@@ -36,5 +36,6 @@ platform :ios do
       register_devices(
         devices_file: file
       )
+    end
   end
 end
