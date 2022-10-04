@@ -17,7 +17,7 @@ default_platform(:ios)
 
 platform :ios do
   desc "Export Apple UDIDs"
-  lane :download_udids do
+  lane :export_udids do
     firebase_app_distribution_get_udids(
         app: ENV["APP_ID"],
         output_file: "tester-udids.txt",
