@@ -21,8 +21,9 @@ platform :ios do
     firebase_app_distribution_get_udids(
         app: ENV["APP_ID"],
         firebase_cli_token: ENV["FIREBASE_TOKEN"],
-        output_file: "tester-udids.txt",
+        output_file: "./tester-udids.txt",
     )
     sh "ls -l"
+    sh "cat tester-udids.txt"
   end
 end
