@@ -230,7 +230,7 @@ jobs:
       #   with:
       #     name: ${{ matrix.environment }}-${{ matrix.build }}
       - name: Debug job outputs
-        run: echo "${{ toJSON(jobs.deploy) }}"
+        run: echo "${{ toJSON(steps) }}"
       - if: ${{ matrix.environment == 'development' || matrix.environment == 'staging' }}
         name: Print artifact name
         run: echo "${{ matrix.environment }}-${{ matrix.build }}"
