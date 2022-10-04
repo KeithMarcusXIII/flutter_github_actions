@@ -20,7 +20,7 @@ platform :ios do
   lane :export_udids do
     firebase_app_distribution_get_udids(
         app: ENV["APP_ID"],
-        firebase_cli_token: ENV["FIREBASE_TOKEN"]
+        firebase_cli_token: ENV["FIREBASE_TOKEN"],
         output_file: "tester-udids.txt",
     )
     sh "ls -l"
