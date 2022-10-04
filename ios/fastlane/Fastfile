@@ -27,15 +27,15 @@ platform :ios do
     )
   end
 
-  desc "Register devices"
-  lane :import_udids do
-    root = Dir.pwd
-    file = "#{root}/tester-udids.txt"
+  # desc "Import Apple UDIDs"
+  # lane :import_udids do
+  #   root = Dir.pwd
+  #   file = "#{root}/tester-udids.txt"
 
-    if Dir.exist? file
-      register_devices(
-        devices_file: file
-      )
-    end
-  end
+  #   if Dir.exist? file
+  #     register_devices(
+  #       devices_file: file
+  #     )
+  #   end
+  # end
 end
