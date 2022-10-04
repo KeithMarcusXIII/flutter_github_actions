@@ -219,8 +219,9 @@ jobs:
           #   environment: production
     runs-on: ${{ matrix.build == 'ipa' && 'self-hosted-macos' || 'self-hosted' }}
     environment: ${{ matrix.environment }}
-    # needs:
-    #   - build
+    needs:
+      - setup
+      # - build
     steps:
       # - name: Download artifacts
       #   uses: actions/download-artifact@v3
