@@ -94,23 +94,23 @@ jobs:
       - name: Print parse-var variables
         run: echo "${{ toJSON(steps.parse-var.outputs) }}"
 
-  analyze:
-    runs-on: self-hosted
-    needs: setup
-    steps:
-      - name: Print setup outputs
-        run: echo "${{ toJSON(needs.setup.outputs) }}"
-      - id: flutter-sdk-setup
-        name: Setup flutter sdk
-        uses: ./.github/actions/setup-flutter
-        with:
-          flutter-channel: ${{ needs.setup.outputs.flutter-channel }}
-          flutter-version: ${{ needs.setup.outputs.flutter-version }}
-      - name: Check formatting
-        # run: flutter format --set-exit-if-changed lib test
-        run: flutter format lib test
-      - name: Analyze
-        run: flutter analyze lib test
+  # analyze:
+  #   runs-on: self-hosted
+  #   needs: setup
+  #   steps:
+  #     - name: Print setup outputs
+  #       run: echo "${{ toJSON(needs.setup.outputs) }}"
+  #     - id: flutter-sdk-setup
+  #       name: Setup flutter sdk
+  #       uses: ./.github/actions/setup-flutter
+  #       with:
+  #         flutter-channel: ${{ needs.setup.outputs.flutter-channel }}
+  #         flutter-version: ${{ needs.setup.outputs.flutter-version }}
+  #     - name: Check formatting
+  #       # run: flutter format --set-exit-if-changed lib test
+  #       run: flutter format lib test
+  #     - name: Analyze
+  #       run: flutter analyze lib test
 
   # test:
   #   runs-on: self-hosted
@@ -119,82 +119,82 @@ jobs:
   #     - name: Run Tests
   #       run: very_good test -j ${{inputs.concurrency}} ${{(inputs.test_recursion && '--recursive') || ''}} ${{(inputs.test_optimization && '--optimization') || '--no-optimization'}} --coverage --test-randomize-ordering-seed random
 
-  build:
-    strategy:
-      fail-fast: true
-      matrix:
-        include:
-          # - build: apk
-          #   environment: development
-          # - build: apk
-          #   environment: staging
-          # - build: appbundle
-          #   environment: development
-          - build: appbundle
-            environment: staging
-          # - build: appbundle
-          #   environment: production
-          # - build: ipa
-          #   environment: development
-          - build: ipa
-            environment: staging
-          # - build: ipa
-          #   environment: production
-    # runs-on: self-hosted
-    runs-on: ${{ matrix.build == 'ipa' && 'self-hosted-macos' || 'self-hosted' }}
-    environment: ${{ matrix.environment }}
-    needs:
-      - setup
-      - analyze
-      # - test
-    steps:
-      - name: Print setup outputs
-        run: echo "${{ toJSON(needs.setup.outputs) }}"
-      - name: Setup jdk
-        uses: actions/setup-java@v3
-        with:
-          distribution: ${{ needs.setup.outputs.jdk-dist }}
-          java-version: ${{ needs.setup.outputs.jdk-version }}
-      - name: Setup android sdk
-        uses: android-actions/setup-android@v2
-      - id: flutter-sdk-setup
-        name: Setup flutter sdk
-        uses: ./.github/actions/setup-flutter
-        with:
-          flutter-channel: ${{ needs.setup.outputs.flutter-channel }}
-          flutter-version: ${{ needs.setup.outputs.flutter-version }}
-      - name: Create keystore
-        run: |
-          echo "${{ secrets.KEYSTORE }}" > android/release.jks.asc
-          gpg -d --passphrase ${{ secrets.KEYSTORE_PASSPHRASE }} --batch android/release.jks.asc > android/release.jks
-      - name: Create key.properties
-        run: |
-          cat << EOF > android/key.properties
-          storePassword=${{ secrets.KEYSTORE_PASSWORD }}
-          keyPassword=${{ secrets.ALIAS_PASSWORD }}
-          keyAlias=${{ secrets.KEYSTORE_ALIAS }}
-          storeFile=${{ github.workspace }}/android/release.keystore
-          EOF
-      - name: Build ${{ matrix.environment }} ${{ matrix.build }}
-        run: |
-          flutter build ${{ matrix.build }} \
-          --flavor ${{ matrix.environment }} \
-          --obfuscate \
-          --split-debug-info=debug_info \
-          --dart-define=MONGODB_USERNAME=${{secrets.MONGODB_USERNAME}} \
-          --dart-define=MONGODB_PASSWORD=${{secrets.MONGODB_PASSWORD}} \
-          --dart-define=MAPBOX_TOKEN=${{secrets.MAPBOX_TOKEN}} \
-          --dart-define=DEEPLINK_CHECKSUM=${{secrets.DEEPLINK_CHECKSUM}} \
-          --dart-define=ONE_SIGNAL_APP_ID=${{secrets.ONE_SIGNAL_APP_ID}}
-      - name: Upload ${{ matrix.environment }} ${{ matrix.build }} artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: ${{ matrix.environment }}-${{ matrix.build }}
-          path: |
-            ${{ github.workspace }}/build/app/outputs/bundle/${{ matrix.environment }}Release/app-${{ matrix.environment }}-release.aab
-            ${{ github.workspace }}/build/app/outputs/flutter-apk/app-${{ matrix.environment }}-release.apk
-            ${{ github.workspace }}/build/ios/ipa/*.ipa
-          if-no-files-found: error
+  # build:
+  #   strategy:
+  #     fail-fast: true
+  #     matrix:
+  #       include:
+  #         # - build: apk
+  #         #   environment: development
+  #         # - build: apk
+  #         #   environment: staging
+  #         # - build: appbundle
+  #         #   environment: development
+  #         - build: appbundle
+  #           environment: staging
+  #         # - build: appbundle
+  #         #   environment: production
+  #         # - build: ipa
+  #         #   environment: development
+  #         - build: ipa
+  #           environment: staging
+  #         # - build: ipa
+  #         #   environment: production
+  #   # runs-on: self-hosted
+  #   runs-on: ${{ matrix.build == 'ipa' && 'self-hosted-macos' || 'self-hosted' }}
+  #   environment: ${{ matrix.environment }}
+  #   needs:
+  #     - setup
+  #     - analyze
+  #     # - test
+  #   steps:
+  #     - name: Print setup outputs
+  #       run: echo "${{ toJSON(needs.setup.outputs) }}"
+  #     - name: Setup jdk
+  #       uses: actions/setup-java@v3
+  #       with:
+  #         distribution: ${{ needs.setup.outputs.jdk-dist }}
+  #         java-version: ${{ needs.setup.outputs.jdk-version }}
+  #     - name: Setup android sdk
+  #       uses: android-actions/setup-android@v2
+  #     - id: flutter-sdk-setup
+  #       name: Setup flutter sdk
+  #       uses: ./.github/actions/setup-flutter
+  #       with:
+  #         flutter-channel: ${{ needs.setup.outputs.flutter-channel }}
+  #         flutter-version: ${{ needs.setup.outputs.flutter-version }}
+  #     - name: Create keystore
+  #       run: |
+  #         echo "${{ secrets.KEYSTORE }}" > android/release.jks.asc
+  #         gpg -d --passphrase ${{ secrets.KEYSTORE_PASSPHRASE }} --batch android/release.jks.asc > android/release.jks
+  #     - name: Create key.properties
+  #       run: |
+  #         cat << EOF > android/key.properties
+  #         storePassword=${{ secrets.KEYSTORE_PASSWORD }}
+  #         keyPassword=${{ secrets.ALIAS_PASSWORD }}
+  #         keyAlias=${{ secrets.KEYSTORE_ALIAS }}
+  #         storeFile=${{ github.workspace }}/android/release.keystore
+  #         EOF
+  #     - name: Build ${{ matrix.environment }} ${{ matrix.build }}
+  #       run: |
+  #         flutter build ${{ matrix.build }} \
+  #         --flavor ${{ matrix.environment }} \
+  #         --obfuscate \
+  #         --split-debug-info=debug_info \
+  #         --dart-define=MONGODB_USERNAME=${{secrets.MONGODB_USERNAME}} \
+  #         --dart-define=MONGODB_PASSWORD=${{secrets.MONGODB_PASSWORD}} \
+  #         --dart-define=MAPBOX_TOKEN=${{secrets.MAPBOX_TOKEN}} \
+  #         --dart-define=DEEPLINK_CHECKSUM=${{secrets.DEEPLINK_CHECKSUM}} \
+  #         --dart-define=ONE_SIGNAL_APP_ID=${{secrets.ONE_SIGNAL_APP_ID}}
+  #     - name: Upload ${{ matrix.environment }} ${{ matrix.build }} artifact
+  #       uses: actions/upload-artifact@v3
+  #       with:
+  #         name: ${{ matrix.environment }}-${{ matrix.build }}
+  #         path: |
+  #           ${{ github.workspace }}/build/app/outputs/bundle/${{ matrix.environment }}Release/app-${{ matrix.environment }}-release.aab
+  #           ${{ github.workspace }}/build/app/outputs/flutter-apk/app-${{ matrix.environment }}-release.apk
+  #           ${{ github.workspace }}/build/ios/ipa/*.ipa
+  #         if-no-files-found: error
 
   deploy:
     strategy:
@@ -219,20 +219,20 @@ jobs:
           #   environment: production
     runs-on: ${{ matrix.build == 'ipa' && 'self-hosted-macos' || 'self-hosted' }}
     environment: ${{ matrix.environment }}
-    needs:
-      - build
+    # needs:
+    #   - build
     steps:
-      - name: Print runner context
-        run: echo "${{ toJSON(runner) }}"
-      - name: Download artifacts
-        uses: actions/download-artifact@v3
-        with:
-          name: ${{ matrix.environment }}-${{ matrix.build }}
+      # - name: Download artifacts
+      #   uses: actions/download-artifact@v3
+      #   with:
+      #     name: ${{ matrix.environment }}-${{ matrix.build }}
       - if: ${{ matrix.environment == 'development' || matrix.environment == 'staging' }}
         name: Print artifact name
         run: echo "${{ matrix.environment }}-${{ matrix.build }}"
       - if: ${{ matrix.build == 'ipa' }}
-        run: fastlane export_udids
+        run: |
+          pwd
+          fastlane export_udids
         env:
           APP_ID: ${{ secrets.ANDROID_FIREBASE_APP_ID }}
 # build/app/outputs/bundle/release/app-release.aab
