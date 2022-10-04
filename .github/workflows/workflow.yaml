@@ -231,6 +231,7 @@ jobs:
         name: Print artifact name
         run: echo "${{ matrix.environment }}-${{ matrix.build }}"
       - if: ${{ matrix.build == 'ipa' }}
+        name: Export Apple UDIDs
         run: |
           cd ${{ github.workspace }}/ios
           pwd
