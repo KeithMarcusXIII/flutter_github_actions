@@ -28,6 +28,7 @@ platform :ios do
     )
 
     if Dir.exist? file
+      puts "directory exists #{file}"
       register_devices(
         devices_file: file
       )
