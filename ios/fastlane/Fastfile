@@ -28,9 +28,9 @@ platform :ios do
     )
 
     sh "cat #{file}"
-    puts "file exists? #{File.file?(file)}"
 
     if File.file?(file)
+      puts "file exists"
       register_devices(
         devices_file: file,
         team_id: "43TQ7X4TZK"
