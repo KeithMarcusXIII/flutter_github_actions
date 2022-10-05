@@ -21,23 +21,19 @@ platform :ios do
     root = Dir.pwd
     file = "#{root}/tester-udids.txt"
 
-    # firebase_app_distribution_get_udids(
-    #     app: ENV["APP_ID"],
-    #     firebase_cli_token: ENV["FIREBASE_TOKEN"],
-    #     output_file: file,
-    # )
-
-    # sh "cat #{file}"
-
-    register_device(
-      name: "kmarcusxiii@gmail.com - iPhone XS",
-      udid: "00008020-000338293442002e"
+    firebase_app_distribution_get_udids(
+        app: ENV["APP_ID"],
+        firebase_cli_token: ENV["FIREBASE_TOKEN"],
+        output_file: file,
     )
 
-    # if File.file?(file)
-    #   register_devices(
-    #     devices_file: file
-    #   )
-    # end
+    sh "cat #{file}"
+
+    if File.file?(file)
+      register_devices(
+        devices_file: file,
+        team_id: "43TQ7X4TZK"
+      )
+    end
   end
 end
