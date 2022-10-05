@@ -21,16 +21,15 @@ platform :ios do
     root = Dir.pwd
     file = "#{root}/tester-udids.txt"
 
-    # firebase_app_distribution_get_udids(
-    #     app: ENV["APP_ID"],
-    #     firebase_cli_token: ENV["FIREBASE_TOKEN"],
-    #     output_file: file,
-    # )
+    firebase_app_distribution_get_udids(
+        app: ENV["APP_ID"],
+        firebase_cli_token: ENV["FIREBASE_TOKEN"],
+        output_file: file,
+    )
 
     sh "cat #{file}"
 
     if File.file?(file)
-      puts "directory exists #{file}"
       register_devices(
         devices_file: file
       )
