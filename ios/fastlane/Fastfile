@@ -30,7 +30,7 @@ platform :ios do
     # sh "cat #{file}"
 
     register_device(
-      name: "C+ KL Keith's iPhone XS",
+      name: "kmarcusxiii@gmail.com - iPhone XS",
       udid: "00008020-000338293442002e"
     )
 
