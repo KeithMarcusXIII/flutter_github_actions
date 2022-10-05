@@ -236,54 +236,12 @@ jobs:
 
           echo $platform
       - if: ${{ steps.parse-var.outputs.platform == 'ios' }}
-        name: Export Apple UDIDs
-        working-directory: ./${{ steps.parse-var.outputs.platform }}
-        env:
-          APP_ID: ${{ secrets.IOS_FIREBASE_APP_ID }}
-          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
-        run: fastlane export_udids
-      - if: ${{ steps.parse-var.outputs.platform == 'ios' }}
         working-directory: ./${{ steps.parse-var.outputs.platform }}
         name: Import Apple UDIDs
         env:
-          FASTLANE_SESSION: |
-            ---
-            - !ruby/object:HTTP::Cookie
-              name: myacinfo
-              value: DAWTKNV323952cf8084a204fb20ab2508441a07d02d31c54a95876368fa675f83d07ed67cf41464d83e7cdd9d2bbbb5dbdbd0b528b8df434885bebcf45522168fbdb439384127cf1b417983d168429f20a2929f242a761729589d04fd54767b53bb108bb2b5abd7ebd363a898e8498a153347d4468c5391ac692934bbaaac8ed9bf6557d8ae11a54cedf44cbe785bab0d6889019a9205aaf3b81e3d4bf4f51eba973addb2956ec7063f176481932127c4c6376723b970fd8e0fb171c915f13d2de24ff3ef86efd759e88040600f2d06f1e18b0608f4f0c048e1bc35a62e9bbd6fcc0b3d2ca01ca6eb2fd5df48080ffb45301c08d6439578f2e59ec0df81a0aa4787731a39e9591474b064fd134e6b60162b99bb26ccccf57ebc87a9071a71db9d4758a80b6b4ae15003f0a8ad5077dac6c08568bcaf5afcc635581d13eed4e001f9741cc67c064b7458f241d674eaf3c316633d3bbdbe731b3c8bbdd5e516dfa9200c8bbdc3c34591c5402ec24c3d9f3f15fd5a70b3eaf93541bb7fb13d27923cea028cfe1619914b8a5b723c22617192bfd4407de72adccd35c37df0db7abe82722d849ac884ff5b9919314d58f8a0f36eeff0ffcb6aae87c6cdefdaaa73a2b2dc48bc3abc75d042c9cc7bdd89f0e88609fb0e318d35b1040f469d0f0995b76736937bb603d6d3eb74d3f0a83fa71034ea944860c460d620f6aaf1149a7c2412d22d64dda0606d3508c1a24bd30b649b5f01ec242a54fe2c682ce7d9e8033723e6da9a7a24c85c27b456b2add577bac71a22d8a692fe8f8977460a62382a10b5a43ea9972e2fc8adae256baa6e5cb65ed6036f540b499c80d4dcb7e68f439706694d74a1f22b3ecfbfa4ed395329ab7812795b2c626585a47V3
-              domain: apple.com
-              for_domain: true
-              path: "/"
-              secure: true
-              httponly: true
-              expires:
-              max_age:
-              created_at: 2022-10-04 17:54:41.817085000 +08:00
-              accessed_at: 2022-10-04 17:54:41.819479000 +08:00
-            - !ruby/object:HTTP::Cookie
-              name: DES53ca0e727e6922988dc0e3b4da13ac29d
-              value: HSARMTKNSRVXWFlaWQHuYTDRhoNpgLbwtUdQHjkqCm0WuLCSg4c1zKdXIF9pf5mwbbqsd8MIh1yAy/wGHyGpDP5bS+eOy+EZXphTUcCIgNzJwdIz2WyPG13S4GWYzoI++Y0XfuvbPe58TTfFR6cO683tjFC9MJyEwYTXzgGjn5ForXLznDKftwpnaQN0UULJJw==SRVX
-              domain: idmsa.apple.com
-              for_domain: true
-              path: "/"
-              secure: true
-              httponly: true
-              expires:
-              max_age: 2592000
-              created_at: &1 2022-10-04 17:54:41.816994000 +08:00
-              accessed_at: *1
-            - !ruby/object:HTTP::Cookie
-              name: dqsid
-              value: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2NjQ4NzcyODIsImp0aSI6IlBYZFFnLXdMbTQ5dVZ2NjJSeVBOMGcifQ.wJOmqx7W9uRhY5RBjPBYSgs_nu8In0PsQEcynSwnnm4
-              domain: appstoreconnect.apple.com
-              for_domain: false
-              path: "/"
-              secure: true
-              httponly: true
-              expires:
-              max_age: 1800
-              created_at: &2 2022-10-04 17:54:42.828621000 +08:00
-              accessed_at: *2
+          APP_ID: ${{ secrets.IOS_FIREBASE_APP_ID }}
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+          FASTLANE_SESSION: ${{ secrets.FASTLANE_SESSION }}
         run: fastlane import_udids
 # build/app/outputs/bundle/release/app-release.aab
 # build/app/outputs/bundle/developmentRelease/app-development-release.aab

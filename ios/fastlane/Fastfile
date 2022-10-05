@@ -16,31 +16,21 @@
 default_platform(:ios)
 
 platform :ios do
-  desc "Export Apple UDIDs"
-  lane :export_udids do
+  desc "Import Apple UDIDs"
+  lane :import_udids do
     root = Dir.pwd
+    file = "#{root}/tester-udids.txt"
 
     firebase_app_distribution_get_udids(
         app: ENV["APP_ID"],
         firebase_cli_token: ENV["FIREBASE_TOKEN"],
-        output_file: "#{root}/tester-udids.txt",
-    )
-  end
-
-  desc "Import Apple UDIDs"
-  lane :import_udids do
-    register_device(
-      name: "C+ KL Siraj's iPhone 13 mini",
-      udid: "00008110-000544161413801E"
+        output_file: file,
     )
 
-    # root = Dir.pwd
-    # file = "#{root}/tester-udids.txt"
-
-    # if Dir.exist? file
-    #   # register_devices(
-    #   #   devices_file: file
-    #   # )
-    # end
+    if Dir.exist? file
+      register_devices(
+        devices_file: file
+      )
+    end
   end
 end
