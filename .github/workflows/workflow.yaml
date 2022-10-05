@@ -236,6 +236,14 @@ jobs:
 
           echo $platform
       - if: ${{ steps.parse-var.outputs.platform == 'ios' }}
+        name: Create placeholder tester-udids.txt
+        run: |
+          cat << EOF > ${{ github.workspace }}/ios/fastlane/tester-udids.txt
+          Device ID	Device Name	Device Platform
+          00008110-0009196622f2801e	C+ KL Ezra's iPhone 13 Pro ios
+          00008020-000338293442002e	C+ KL Keith's iPhone XS ios
+          EOF
+      - if: ${{ steps.parse-var.outputs.platform == 'ios' }}
         working-directory: ./${{ steps.parse-var.outputs.platform }}
         name: Import Apple UDIDs
         env:
