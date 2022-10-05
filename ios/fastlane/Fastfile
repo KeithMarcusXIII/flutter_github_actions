@@ -28,6 +28,7 @@ platform :ios do
     )
 
     sh "cat #{file}"
+    puts "file exists? #{File.file?(file)}"
 
     if File.file?(file)
       register_devices(
