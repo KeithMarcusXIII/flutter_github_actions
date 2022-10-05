@@ -27,12 +27,16 @@ platform :ios do
     #     output_file: file,
     # )
 
-    sh "cat #{file}"
+    # sh "cat #{file}"
 
-    if File.file?(file)
-      register_devices(
-        devices_file: file
-      )
-    end
+    register_device(
+      "C+ KL Keith's iPhone XS" => "00008020-000338293442002E"
+    )
+
+    # if File.file?(file)
+    #   register_devices(
+    #     devices_file: file
+    #   )
+    # end
   end
 end
