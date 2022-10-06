@@ -94,23 +94,23 @@ jobs:
       - name: Print parse-var variables
         run: echo "${{ toJSON(steps.parse-var.outputs) }}"
 
-  analyze:
-    runs-on: self-hosted
-    needs: setup
-    steps:
-      - name: Print setup outputs
-        run: echo "${{ toJSON(needs.setup.outputs) }}"
-      - id: flutter-sdk-setup
-        name: Setup flutter sdk
-        uses: ./.github/actions/setup-flutter
-        with:
-          flutter-channel: ${{ needs.setup.outputs.flutter-channel }}
-          flutter-version: ${{ needs.setup.outputs.flutter-version }}
-      - name: Check formatting
-        # run: flutter format --set-exit-if-changed lib test
-        run: flutter format lib test
-      - name: Analyze
-        run: flutter analyze lib test
+  # analyze:
+  #   runs-on: self-hosted
+  #   needs: setup
+  #   steps:
+  #     - name: Print setup outputs
+  #       run: echo "${{ toJSON(needs.setup.outputs) }}"
+  #     - id: flutter-sdk-setup
+  #       name: Setup flutter sdk
+  #       uses: ./.github/actions/setup-flutter
+  #       with:
+  #         flutter-channel: ${{ needs.setup.outputs.flutter-channel }}
+  #         flutter-version: ${{ needs.setup.outputs.flutter-version }}
+  #     - name: Check formatting
+  #       # run: flutter format --set-exit-if-changed lib test
+  #       run: flutter format lib test
+  #     - name: Analyze
+  #       run: flutter analyze lib test
 
   # test:
   #   runs-on: self-hosted
@@ -145,7 +145,7 @@ jobs:
     environment: ${{ matrix.environment }}
     needs:
       - setup
-      - analyze
+      # - analyze
       # - test
     steps:
       - name: Print setup outputs
@@ -175,7 +175,7 @@ jobs:
           storePassword=${{ secrets.KEYSTORE_PASSWORD }}
           keyPassword=${{ secrets.ALIAS_PASSWORD }}
           keyAlias=${{ secrets.KEYSTORE_ALIAS }}
-          storeFile=${{ github.workspace }}/android/release.keystore
+          storeFile=${{ github.workspace }}/android/release.jks
           EOF
       - name: Build ${{ matrix.environment }} ${{ matrix.build }}
         run: |
