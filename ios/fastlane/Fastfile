@@ -27,16 +27,10 @@ platform :ios do
         output_file: file,
     )
 
-    sh "cat #{file}"
-
     if File.file?(file)
       puts "file exists"
       register_devices(
-        # devices_file: file,
-        team_id: "43TQ7X4TZK",
-        devices: {
-          "kmarcusxiii@gmail.com - iPhone XS" => "00008020-000338293442002e"
-        }
+        devices_file: file
       )
     end
   end
