@@ -165,10 +165,12 @@ jobs:
           flutter-version: ${{ needs.setup.outputs.flutter-version }}
       - name: Create keystore
         run: |
+          pwd
           echo "${{ secrets.KEYSTORE }}" > android/release.jks.asc
           gpg -d --passphrase ${{ secrets.KEYSTORE_PASSPHRASE }} --batch android/release.jks.asc > android/release.jks
       - name: Create key.properties
         run: |
+          pwd
           cat << EOF > android/key.properties
           storePassword=${{ secrets.KEYSTORE_PASSWORD }}
           keyPassword=${{ secrets.ALIAS_PASSWORD }}
