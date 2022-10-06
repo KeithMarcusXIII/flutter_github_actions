@@ -221,7 +221,7 @@ jobs:
     environment: ${{ matrix.environment }}
     needs:
       - setup
-      # - build
+      - build
     steps:
       - id: parse-var
         name: Parse variables
