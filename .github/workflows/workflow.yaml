@@ -165,12 +165,10 @@ jobs:
           flutter-version: ${{ needs.setup.outputs.flutter-version }}
       - name: Create keystore
         run: |
-          pwd
           echo "${{ secrets.KEYSTORE }}" > android/release.jks.asc
           gpg -d --passphrase ${{ secrets.KEYSTORE_PASSPHRASE }} --batch android/release.jks.asc > android/release.jks
       - name: Create key.properties
         run: |
-          pwd
           cat << EOF > android/key.properties
           storePassword=${{ secrets.KEYSTORE_PASSWORD }}
           keyPassword=${{ secrets.ALIAS_PASSWORD }}
@@ -238,6 +236,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: ${{ matrix.environment }}-${{ matrix.build }}
+          path: ${{ github.workspace }}/${{ steps.parse-var.outputs.platform }}/artifacts
       - name: "Echo download path"
         run: echo ${{steps.download-artifact.outputs.download-path}}
       # - if: ${{ steps.parse-var.outputs.platform == 'ios' }}
