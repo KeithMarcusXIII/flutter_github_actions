@@ -230,17 +230,17 @@ jobs:
 
           case "${{ matrix.build }}" in
             "appbundle")
-              artifact_path = ${{ github.workspace }}/build/app/outputs/bundle/${{ matrix.environment }}Release/app-${{ matrix.environment }}-release.aab
+              artifact_path = ${{ github.workspace }}/build/app/outputs/bundle/${{ matrix.environment }}Release
               echo "::set-output name=artifact-path::$artifact_path"
               ;;
 
             "apk")
-              artifact_path = ${{ github.workspace }}/build/app/outputs/flutter-apk/app-${{ matrix.environment }}-release.apk
+              artifact_path = ${{ github.workspace }}/build/app/outputs/flutter-apk
               echo "::set-output name=artifact-path::$artifact_path"
               ;;
 
             "ipa")
-              artifact_path = ${{ github.workspace }}/build/ios/ipa/app.ipa
+              artifact_path = ${{ github.workspace }}/build/ios/ipa
               echo "::set-output name=artifact-path::$artifact_path"
               ;;
 
@@ -248,7 +248,7 @@ jobs:
               ;;
           esac
 
-          echo $platform
+          echo "$platform"
       - name: "Echo artifact path"
         run: echo "${{ steps.parse-var.outputs.artifact-path }}"
       - id: download-artifact
