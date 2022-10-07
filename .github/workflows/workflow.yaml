@@ -228,7 +228,7 @@ jobs:
         run: |
           platform="${{ matrix.build == 'ipa' && 'ios' || 'android'}}"
 
-          case ${{ matrix.build }} in
+          case "${{ matrix.build }}" in
             "appbundle")
               artifact_path = ${{ github.workspace }}/build/app/outputs/bundle/${{ matrix.environment }}Release/app-${{ matrix.environment }}-release.aab
               echo "::set-output name=artifact-path::$artifact_path"
