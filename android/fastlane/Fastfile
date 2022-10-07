@@ -20,12 +20,10 @@ platform :android do
   lane :distribute_firebase do |options|
       puts options
 
-      # firebase_app_distribution(
-      #     app: ENV["APP_ID"],
-      #     android_artifact_type: :options,
-      #     android_artifact_path: 
-      # )
-
-      # increment_build_number(build_number: options[:build_number])
+      firebase_app_distribution(
+          app: ENV["APP_ID"],
+          android_artifact_type: :options[:artifact_type],
+          android_artifact_path: options[:artifact_path]
+      )
   end
 end
