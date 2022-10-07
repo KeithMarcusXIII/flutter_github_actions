@@ -255,7 +255,11 @@ jobs:
         run: alias fastlane="bundle exec fastlane"
       - name: "Run 'bundle install'"
         working-directory: ${{ github.workspace }}/${{ steps.parse-var.outputs.platform }}
-        run: bundle install
+        run: |
+          echo "${{ steps.parse-var.outputs.platform }}"
+          ls -al
+          pwd
+          bundle install
       - id: download-artifact
         name: Download artifacts
         uses: actions/download-artifact@v3
