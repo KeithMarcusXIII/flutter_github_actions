@@ -249,6 +249,8 @@ jobs:
           esac
 
           echo $platform
+      - name: "Create alias to 'bundle exec fastlane'"
+        run: alias fastlane="bundle exec fastlane"
       - name: "Echo artifact path"
         run: echo "${{ steps.parse-var.outputs.artifact-path }}"
       - id: download-artifact
