@@ -251,6 +251,8 @@ jobs:
           echo $platform
       - name: "Create alias to 'bundle exec fastlane'"
         run: alias fastlane="bundle exec fastlane"
+      - name: "Run 'bundle install'"
+        run: bundle install
       - name: "Echo artifact path"
         run: echo "${{ steps.parse-var.outputs.artifact-path }}"
       - id: download-artifact
