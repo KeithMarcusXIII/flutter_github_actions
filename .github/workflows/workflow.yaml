@@ -249,15 +249,13 @@ jobs:
           esac
 
           echo $platform
+      - name: "Echo artifact path"
+        run: echo "${{ steps.parse-var.outputs.artifact-path }}"
       - name: "Create alias to 'bundle exec fastlane'"
         run: alias fastlane="bundle exec fastlane"
       - name: "Run 'bundle install'"
-        working-directory: ./${{ steps.parse-var.outputs.platform }}
-        run: |
-          pwd
-          bundle install
-      - name: "Echo artifact path"
-        run: echo "${{ steps.parse-var.outputs.artifact-path }}"
+        working-directory: ${{ github.workspace }}/${{ steps.parse-var.outputs.platform }}
+        run: bundle install
       - id: download-artifact
         name: Download artifacts
         uses: actions/download-artifact@v3
@@ -265,7 +263,7 @@ jobs:
           name: ${{ matrix.environment }}-${{ matrix.build }}
           path: ${{ steps.parse-var.outputs.artifact-path }}
       # - if: ${{ steps.parse-var.outputs.platform == 'ios' }}
-      #   working-directory: ./${{ steps.parse-var.outputs.platform }}
+      #   working-directory: ${{ github.workspace }}/${{ steps.parse-var.outputs.platform }}
       #   name: Import Apple UDIDs
       #   env:
       #     APP_ID: ${{ secrets.IOS_FIREBASE_APP_ID }}
@@ -273,7 +271,7 @@ jobs:
       #     FASTLANE_SESSION: ${{ secrets.FASTLANE_SESSION }}
       #   run: fastlane import_udids
       - name: Upload artifact to firebase app distribution
-        working-directory: ./${{ steps.parse-var.outputs.platform }}
+        working-directory: ${{ github.workspace }}/${{ steps.parse-var.outputs.platform }}
         run: fastlane distribute_firebase artifact_type:"${{ matrix.build }}" artifact_path:"${{steps.download-artifact.outputs.download-path}}"
 # build/app/outputs/bundle/release/app-release.aab
 # build/app/outputs/bundle/developmentRelease/app-development-release.aab
