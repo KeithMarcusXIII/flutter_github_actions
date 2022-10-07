@@ -238,7 +238,7 @@ jobs:
           name: ${{ matrix.environment }}-${{ matrix.build }}
           # path: ${{ github.workspace }}/${{ steps.parse-var.outputs.platform }}/artifacts
       - name: "Echo download path"
-        run: echo ${{ toJSON(steps.download-artifact.outputs) }}
+        run: echo "${{ toJSON(steps.download-artifact.outputs) }}"
       # - if: ${{ steps.parse-var.outputs.platform == 'ios' }}
       #   working-directory: ./${{ steps.parse-var.outputs.platform }}
       #   name: Import Apple UDIDs
