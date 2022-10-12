@@ -19,10 +19,11 @@ platform :android do
   desc "Fastlane deploy android"
   lane :distribute_firebase do |options|
       puts options
+      puts ENV
 
       firebase_app_distribution(
           app: ENV["APP_ID"],
-          android_artifact_type: :options[:artifact_type],
+          android_artifact_type: options[:artifact_type],
           android_artifact_path: options[:artifact_path]
       )
   end
