@@ -229,26 +229,25 @@ jobs:
           platform="${{ matrix.build == 'ipa' && 'ios' || 'android'}}"
           artifact_path=${{ github.workspace }}/build
 
+
           echo "::set-output name=platform::$platform"
 
-          # case "${{ matrix.build }}" in
-          #   "appbundle")
-          #     artifact_path=${{ github.workspace }}/build/app/outputs/bundle/${{ matrix.environment }}Release  
-          #     ;;
+          case "${{ matrix.build }}" in
+            "appbundle")
+              artifact_file=${{ github.workspace }}/build/app/outputs/bundle/${{ matrix.environment }}Release/app-${{ matrix.environment }}-release.aab
+              ;;
 
-          #   "apk")
-          #     artifact_path=${{ github.workspace }}/build/app/outputs/flutter-apk
-          #     ;;
+            "apk")
+              artifact_file=${{ github.workspace }}/build/app/outputs/flutter-apk/app-${{ matrix.environment }}-release.apk
+              ;;
 
-          #   "ipa")
-          #     artifact_path=${{ github.workspace }}/build/ios/ipa
-          #     ;;
+            "ipa")
+              artifact_file=${{ github.workspace }}/build/ios/ipa/app-${{ matrix.environment }}-release.ipa
+              ;;
 
-          #   *) 
-          #     ;;
-          # esac
-
-          artifact_file=$artifact_path/app-${{ matrix.environment }}-release.${{ matrix.build == 'appbundle' && 'aab' || matrix.build }}
+            *) 
+              ;;
+          esac
 
           echo "::set-output name=artifact-path::$artifact_path"
           echo "::set-output name=artifact-file::$artifact_file"
@@ -256,8 +255,8 @@ jobs:
           echo $platform
           echo $artifact_path
           echo $artifact_file
-      - name: "Echo artifact path"
-        run: echo "${{ steps.parse-var.outputs.artifact-path }}"
+      - name: "Echo artifact file"
+        run: echo "${{ steps.parse-var.outputs.artifact-file }}"
       - name: "Create alias to 'bundle exec fastlane'"
         run: alias fastlane="bundle exec fastlane"
       - name: "Run 'bundle install'"
