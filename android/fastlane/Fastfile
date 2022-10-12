@@ -22,6 +22,7 @@ platform :android do
 
       firebase_app_distribution(
           app: ENV["APP_ID"],
+          firebase_cli_token: ENV["FIREBASE_TOKEN"],
           android_artifact_type: options[:artifact_type].upcase,
           android_artifact_path: options[:artifact_path]
       )

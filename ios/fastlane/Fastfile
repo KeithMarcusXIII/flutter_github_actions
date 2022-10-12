@@ -43,6 +43,7 @@ platform :ios do
 
     firebase_app_distribution(
         app: ENV["APP_ID"],
+        firebase_cli_token: ENV["FIREBASE_TOKEN"],
         ipa_path: options[:artifact_path]
     )
 
