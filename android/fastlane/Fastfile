@@ -23,7 +23,7 @@ platform :android do
 
       firebase_app_distribution(
           app: ENV["APP_ID"],
-          android_artifact_type: options[:artifact_type],
+          android_artifact_type: options[:artifact_type].upcase,
           android_artifact_path: options[:artifact_path]
       )
   end
