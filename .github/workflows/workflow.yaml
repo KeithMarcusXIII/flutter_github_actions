@@ -260,9 +260,10 @@ jobs:
       - if: ${{ steps.parse-var.outputs.platform == 'android' }}
         id: create-credentials
         name: Create play-store-credentials.json
+        working-directory: ./android
         run: |
-          echo "${{ secrets.PLAY_STORE_CREDENTIALS }}" > android/play-store-credentials.json.asc
-          gpg -d --passphrase ${{ secrets.PLAY_STORE_CREDENTIALS_PASSPHRASE }} --batch android/play-store-credentials.json.asc > android/play-store-credentials.json
+          echo "${{ secrets.PLAY_STORE_CREDENTIALS }}" > play-store-credentials.json.asc
+          gpg -d --passphrase ${{ secrets.PLAY_STORE_CREDENTIALS_PASSPHRASE }} --batch play-store-credentials.json.asc > play-store-credentials.json
           echo "::set-output name=play-store-credentials::$(pwd)/play-store-credentials.json"
       - name: "Create alias to 'bundle exec fastlane'"
         run: alias fastlane="bundle exec fastlane"
