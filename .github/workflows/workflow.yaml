@@ -258,6 +258,7 @@ jobs:
       - name: "Echo artifact file"
         run: echo "${{ steps.parse-var.outputs.artifact-file }}"
       - if: ${{ steps.parse-var.outputs.platform == 'android' }}
+        id: create-credentials
         name: Create play-store-credentials.json
         run: |
           echo "${{ secrets.PLAY_STORE_CREDENTIALS }}" > android/play-store-credentials.json.asc
@@ -288,7 +289,7 @@ jobs:
           APP_ID: ${{ steps.parse-var.outputs.platform == 'ios' && 'IOS' || 'ANDROID' }}_FIREBASE_APP_ID
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
           FASTLANE_SESSION: ${{ secrets.FASTLANE_SESSION }}
-        run: fastlane distribute_firebase artifact_type:${{ matrix.build == 'appbundle' && 'aab' || matrix.build }} artifact_path:${{ steps.parse-var.outputs.artifact-file }} ${{ steps.parse-var.outputs.platform == 'android' && outputs.play-store-credentials, github.workspace) || '' }}
+        run: fastlane distribute_firebase artifact_type:${{ matrix.build == 'appbundle' && 'aab' || matrix.build }} artifact_path:${{ steps.parse-var.outputs.artifact-file }} ${{ steps.parse-var.outputs.platform == 'android' && steps.create-credentials.outputs.play-store-credentials, github.workspace) || '' }}
 # build/app/outputs/bundle/release/app-release.aab
 # build/app/outputs/bundle/developmentRelease/app-development-release.aab
 # build/app/outputs/bundle/stagingRelease/app-staging-release.aab
