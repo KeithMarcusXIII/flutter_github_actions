@@ -19,7 +19,6 @@ platform :android do
   desc "Fastlane deploy android"
   lane :distribute_firebase do |options|
       puts options
-      puts ENV
 
       firebase_app_distribution(
           app: ENV["APP_ID"],
