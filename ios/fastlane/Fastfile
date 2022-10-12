@@ -40,6 +40,8 @@ platform :ios do
   desc "Fastlane deploy ios"
   lane :distribute_firebase do |options|
     puts options
+    ENV["APP_ID"]
+    ENV["FIREBASE_TOKEN"]
 
     firebase_app_distribution(
         app: ENV["APP_ID"],
