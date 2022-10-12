@@ -227,7 +227,7 @@ jobs:
         name: Parse variables
         run: |
           platform="${{ matrix.build == 'ipa' && 'ios' || 'android'}}"
-          artifact_path=${{ github.workspace }}
+          artifact_path=${{ github.workspace }}/build
 
           echo "::set-output name=platform::$platform"
 
