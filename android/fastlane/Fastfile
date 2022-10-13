@@ -30,6 +30,7 @@ platform :android do
           android_artifact_path: options[:artifact_path]
         )
       rescue => ex
+        puts ex.class
         puts ex
       end
 
