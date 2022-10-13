@@ -297,7 +297,8 @@ jobs:
           fastlane distribute_firebase \
           artifact_type:${{ matrix.build == 'appbundle' && 'aab' || matrix.build }} \
           artifact_path:${{ steps.parse-var.outputs.artifact-file }} \
-          ${{ steps.parse-var.outputs.platform == 'android' && format('credentials_file:{0}', steps.create-credentials.outputs.app-dist-credentials) || '' }}
+          credentials_file:${{ steps.create-credentials.outputs.app-dist-credentials }}
+          # ${{ steps.parse-var.outputs.platform == 'android' && format('credentials_file:{0}', steps.create-credentials.outputs.app-dist-credentials) || '' }}
 
 # build/app/outputs/bundle/release/app-release.aab
 # build/app/outputs/bundle/developmentRelease/app-development-release.aab
