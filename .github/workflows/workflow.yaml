@@ -207,8 +207,8 @@ jobs:
           #   environment: development
           # - build: apk
           #   environment: staging
-          # - build: apk
-          #   environment: production
+          - build: apk
+            environment: production
           # - build: appbundle
           #   environment: development
           # - build: appbundle
@@ -247,7 +247,7 @@ jobs:
 
             "ipa")
               # artifact_file=${{ github.workspace }}/build/ios/ipa/app-${{ matrix.environment }}-release.ipa
-              artifact_file=${{ github.workspace }}/build/ios/ipa/*.ipa
+              artifact_file=${{ github.workspace }}/build/ios/ipa/flutter_github_actions.ipa
               ;;
 
             *) 
