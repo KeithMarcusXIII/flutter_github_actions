@@ -31,7 +31,7 @@ platform :android do
         )
       rescue => ex
         puts ex.class
-        puts ex
+        puts ex.response
       end
 
       
