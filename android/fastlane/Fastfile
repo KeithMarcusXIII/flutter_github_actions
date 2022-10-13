@@ -28,12 +28,5 @@ platform :android do
         android_artifact_type: options[:artifact_type].upcase,
         android_artifact_path: options[:artifact_path]
       )
-
-      # begin
-        
-      # rescue => ex
-      #   puts ex.class
-      #   puts ex.response
-      # end
   end
 end
