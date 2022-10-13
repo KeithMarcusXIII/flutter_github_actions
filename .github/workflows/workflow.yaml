@@ -128,18 +128,20 @@ jobs:
           #   environment: development
           # - build: apk
           #   environment: staging
+          - build: apk
+            environment: production
           # - build: appbundle
           #   environment: development
           # - build: appbundle
           #   environment: staging
-          - build: appbundle
-            environment: production
+          # - build: appbundle
+          #   environment: production
           # - build: ipa
           #   environment: development
           # - build: ipa
           #   environment: staging
-          - build: ipa
-            environment: production
+          # - build: ipa
+          #   environment: production
     # runs-on: self-hosted
     runs-on: ${{ matrix.build == 'ipa' && 'self-hosted-macos' || 'self-hosted' }}
     environment: ${{ matrix.environment }}
@@ -205,12 +207,14 @@ jobs:
           #   environment: development
           # - build: apk
           #   environment: staging
+          - build: apk
+            environment: production
           # - build: appbundle
           #   environment: development
           # - build: appbundle
           #   environment: staging
-          - build: appbundle
-            environment: production
+          # - build: appbundle
+          #   environment: production
           # - build: ipa
           #   environment: development
           # - build: ipa
