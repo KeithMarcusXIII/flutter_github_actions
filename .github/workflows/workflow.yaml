@@ -262,10 +262,10 @@ jobs:
           echo $artifact_file
       - name: "Echo artifact file"
         run: echo "${{ steps.parse-var.outputs.artifact-file }}"
-      - if: ${{ steps.parse-var.outputs.platform == 'android' }}
-        id: create-credentials
-        name: Create play-store-credentials.json
-        working-directory: ./android
+      # - if: ${{ steps.parse-var.outputs.platform == 'android' }}
+      - id: create-credentials
+        name: Create google play credentials
+        working-directory: ./${{ steps.parse-var.outputs.platform }}
         run: |
           echo "${{ secrets.APP_DIST_CREDENTIALS }}" > app-dist-credentials.json.asc
           gpg -d --passphrase ${{ secrets.APP_DIST_CREDENTIALS_PASSPHRASE }} --batch app-dist-credentials.json.asc > app-dist-credentials.json

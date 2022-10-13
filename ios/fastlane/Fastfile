@@ -44,6 +44,7 @@ platform :ios do
 
     firebase_app_distribution(
         app: ENV["APP_ID"],
+        service_credentials_file: options[:credentials_file],
         ipa_path: options[:artifact_path]
     )
 
