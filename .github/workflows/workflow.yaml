@@ -140,8 +140,8 @@ jobs:
           #   environment: development
           # - build: ipa
           #   environment: staging
-          # - build: ipa
-          #   environment: production
+          - build: ipa
+            environment: production
     # runs-on: self-hosted
     runs-on: ${{ matrix.build == 'ipa' && 'self-hosted-macos' || 'self-hosted' }}
     environment: ${{ matrix.environment }}
