@@ -262,7 +262,7 @@ jobs:
         name: Create play-store-credentials.json
         working-directory: ./android
         run: |
-          echo "${{ secrets.APP_DIST_CREDENTIALS }}" > play-store-credentials.json.asc
+          echo "${{ secrets.APP_DIST_CREDENTIALS }}" > app-dist-credentials.json.asc
           gpg -d --passphrase ${{ secrets.APP_DIST_CREDENTIALS_PASSPHRASE }} --batch app-dist-credentials.json.asc > app-dist-credentials.json
           echo "::set-output name=app-dist-credentials::$(pwd)/app-dist-credentials.json"
       - name: "Create alias to 'bundle exec fastlane'"
