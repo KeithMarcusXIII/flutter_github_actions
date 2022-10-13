@@ -20,7 +20,6 @@ platform :android do
   lane :distribute_firebase do |options|
       puts options
       puts ENV["APP_ID"]
-      puts ENV["FIREBASE_TOKEN"]
 
       firebase_app_distribution(
           app: ENV["APP_ID"],

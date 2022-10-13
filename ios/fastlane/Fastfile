@@ -41,11 +41,9 @@ platform :ios do
   lane :distribute_firebase do |options|
     puts options
     ENV["APP_ID"]
-    ENV["FIREBASE_TOKEN"]
 
     firebase_app_distribution(
         app: ENV["APP_ID"],
-        firebase_cli_token: ENV["FIREBASE_TOKEN"],
         ipa_path: options[:artifact_path]
     )
 
