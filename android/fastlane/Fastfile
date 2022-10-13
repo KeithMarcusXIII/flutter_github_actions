@@ -21,12 +21,18 @@ platform :android do
       puts options
       puts ENV["APP_ID"]
 
-      firebase_app_distribution(
+      begin
+        firebase_app_distribution(
           app: ENV["APP_ID"],
           # firebase_cli_token: ENV["FIREBASE_TOKEN"],
           service_credentials_file: options[:credentials_file],
           android_artifact_type: options[:artifact_type].upcase,
           android_artifact_path: options[:artifact_path]
-      )
+        )
+      rescue => ex
+        puts ex
+      end
+
+      
   end
 end
