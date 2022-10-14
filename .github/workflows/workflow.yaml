@@ -287,7 +287,7 @@ jobs:
       #   FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
       #   FASTLANE_SESSION: ${{ secrets.FASTLANE_SESSION }}
       #   run: fastlane import_udids
-      - name: Upload artifact to firebase app distribution
+      - name: Deploy with fastlane
         working-directory: ./${{ steps.parse-var.outputs.platform }}
         env:
           APP_ID: ${{ steps.parse-var.outputs.platform == 'ios' && secrets.IOS_FIREBASE_APP_ID || secrets.ANDROID_FIREBASE_APP_ID }}
