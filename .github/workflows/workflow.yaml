@@ -246,8 +246,8 @@ jobs:
               ;;
 
             "ipa")
-              # artifact_file=${{ github.workspace }}/build/ios/ipa/app-${{ matrix.environment }}-release.ipa
-              artifact_file=${{ github.workspace }}/build/ios/ipa/flutter_github_actions.ipa
+              artifact_file=${{ github.workspace }}/build/ios/ipa/app-${{ matrix.environment }}.ipa
+              # artifact_file=${{ github.workspace }}/build/ios/ipa/flutter_github_actions.ipa
               ;;
 
             *) 
