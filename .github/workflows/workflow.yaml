@@ -260,8 +260,6 @@ jobs:
           echo $platform
           echo $artifact_path
           echo $artifact_file
-      - name: "Echo artifact file"
-        run: echo "${{ steps.parse-var.outputs.artifact-file }}"
       # - if: ${{ steps.parse-var.outputs.platform == 'android' }}
       - id: create-credentials
         name: Create google play credentials

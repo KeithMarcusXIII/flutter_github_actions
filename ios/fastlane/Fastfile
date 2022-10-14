@@ -42,11 +42,16 @@ platform :ios do
     puts options
     ENV["APP_ID"]
 
-    firebase_app_distribution(
+    begin
+      firebase_app_distribution(
         app: ENV["APP_ID"],
         service_credentials_file: options[:credentials_file],
         ipa_path: options[:artifact_path]
-    )
+      )
+    rescue ClientError, ConnectionFailed, ParsingError, RetriableResponse, SSLError, ServerError => e
+      puts "Rescued: #{e.inspect}"
+      raise
+    end
 
     # increment_build_number(build_number: options[:build_number])
 end
