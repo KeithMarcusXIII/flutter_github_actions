@@ -29,6 +29,12 @@ platform :android do
           android_artifact_type: options[:artifact_type].upcase,
           android_artifact_path: options[:artifact_path]
         )
+
+        upload_to_play_store(
+          track: 'internal',
+          json_key: options[:credentials_file],
+          aab: android_artifact_path: options[:artifact_path]
+        )
       rescue ClientError, ConnectionFailed, ParsingError, RetriableResponse, SSLError, ServerError => e
         puts "Rescued: #{e.inspect}"
         raise
