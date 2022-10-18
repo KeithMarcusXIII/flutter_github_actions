@@ -33,7 +33,8 @@ platform :android do
         upload_to_play_store(
           track: 'internal',
           json_key: options[:credentials_file],
-          aab: options[:artifact_path]
+          aab: options[:artifact_path],
+          changes_not_sent_for_review: true,
         )
       rescue => e
         puts "Rescued: #{e.inspect}"
