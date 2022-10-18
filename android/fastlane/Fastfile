@@ -31,7 +31,7 @@ platform :android do
         )
 
         upload_to_play_store(
-          track: internal,
+          track: 'internal',
           json_key: options[:credentials_file],
           apk: options[:artifact_path]
         )
