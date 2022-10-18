@@ -48,7 +48,7 @@ platform :ios do
         service_credentials_file: options[:credentials_file],
         ipa_path: options[:artifact_path]
       )
-    rescue ClientError, ConnectionFailed, ParsingError, RetriableResponse, SSLError, ServerError => e
+    rescue => e
       puts "Rescued: #{e.inspect}"
       raise
     end

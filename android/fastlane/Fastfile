@@ -35,7 +35,6 @@ platform :android do
           json_key: options[:credentials_file],
           aab: options[:artifact_path]
         )
-      # rescue ClientError, ConnectionFailed, ParsingError, RetriableResponse, SSLError, ServerError => e
       rescue => e
         puts "Rescued: #{e.inspect}"
         raise
