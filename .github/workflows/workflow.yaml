@@ -128,14 +128,14 @@ jobs:
           #   environment: development
           # - build: apk
           #   environment: staging
-          - build: apk
-            environment: production
+          # - build: apk
+          #   environment: production
           # - build: appbundle
           #   environment: development
           # - build: appbundle
           #   environment: staging
-          # - build: appbundle
-          #   environment: production
+          - build: appbundle
+            environment: production
           # - build: ipa
           #   environment: development
           # - build: ipa
@@ -207,14 +207,14 @@ jobs:
           #   environment: development
           # - build: apk
           #   environment: staging
-          - build: apk
-            environment: production
+          # - build: apk
+          #   environment: production
           # - build: appbundle
           #   environment: development
           # - build: appbundle
           #   environment: staging
-          # - build: appbundle
-          #   environment: production
+          - build: appbundle
+            environment: production
           # - build: ipa
           #   environment: development
           # - build: ipa
