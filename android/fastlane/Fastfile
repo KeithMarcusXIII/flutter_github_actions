@@ -31,6 +31,7 @@ platform :android do
         )
 
         upload_to_play_store(
+          release_status: 'draft',
           track: 'internal',
           json_key: options[:credentials_file],
           aab: options[:artifact_path],
