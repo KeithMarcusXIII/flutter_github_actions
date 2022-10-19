@@ -234,11 +234,19 @@ jobs:
       - id: parse-var
         name: Parse variables
         run: |
+          set -x
+
+          if [[ "${{ github.ref_type }}" == "tag" ]]
+          then
+            version_tag=$(git tag -l --format="%(contents)" ${{ github.ref }})
+            echo $version_tag
+          fi
+
           platform="${{ matrix.build == 'ipa' && 'ios' || 'android'}}"
-          artifact_path=${{ github.workspace }}/build
-
-
           echo "::set-output name=platform::$platform"
+
+          artifact_path=${{ github.workspace }}/build
+          echo "::set-output name=artifact-path::$artifact_path"
 
           case "${{ matrix.build }}" in
             "appbundle")
@@ -257,8 +265,6 @@ jobs:
             *) 
               ;;
           esac
-
-          echo "::set-output name=artifact-path::$artifact_path"
           echo "::set-output name=artifact-file::$artifact_file"
 
           echo $platform
