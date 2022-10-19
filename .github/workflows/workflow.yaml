@@ -1,12 +1,9 @@
 name: github_actions
 on:
-  # push:
-  # branches:
-  #   - master
-  #   - develop
-  # tags:
-  #   - "[0-9]+.[0-9]+.[0-9]+"
-  create:
+  push:
+    branches:
+      - master
+      - develop
     tags:
       - "[0-9]+.[0-9]+.[0-9]+"
   workflow_dispatch:
