@@ -239,8 +239,8 @@ jobs:
           if [[ "${{ github.ref_type }}" == "tag" ]]
           then
             # version_tag=$(git tag -l --format="%(contents)" ${{ github.ref }})
-            echo ${{ GITHUB_REF }}
-            version_tag=${{ GITHUB_REF#refs/*/ }}
+            echo ${{ github.ref }}
+            version_tag=${{ github.ref#refs/*/ }}
             echo $version_tag
           fi
 
