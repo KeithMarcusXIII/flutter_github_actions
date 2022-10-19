@@ -234,10 +234,9 @@ jobs:
       - id: parse-var
         name: Parse variables
         run: |
-          set -x
-
           if [[ "${{ github.ref_type }}" == "tag" ]]
           then
+            git tag -l --format="%(contents)" ${{ github.ref_name }}
             version_tag=$(git tag -l --format="%(contents)" ${{ github.ref_name }})
             echo $version_tag
           fi
