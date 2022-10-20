@@ -87,15 +87,21 @@ jobs:
           jdk_dist="${{ inputs.jdk-dist || 'adopt' }}"
           jdk_version="${{ inputs.jdk-version || '11' }}"
 
+          if [[ "${{ github.ref_type }}" == "tag" ]]
+          then
+            tag_annotation=$(git tag -l --format="%(contents)" ${{ github.ref_name }})
+            echo $tag_annotation
+          fi
+
           # echo "::set-output name=flutter-channel::$flutter_channel"
           # echo "::set-output name=flutter-version::$flutter_version"
           # echo "::set-output name=jdk-dist::$jdk_dist"
           # echo "::set-output name=jdk-version::$jdk_version"
 
-          echo "{flutter-channel}={$flutter_channel}" >> $GITHUB_ENV
-          echo "{flutter-version}={$flutter_version}" >> $GITHUB_ENV
-          echo "{jdk-dist}={$jdk_dist}" >> $GITHUB_ENV
-          echo "{jdk-version}={$jdk_version}" >> $GITHUB_ENV
+          echo "flutter-channel=$flutter_channel" >> $GITHUB_ENV
+          echo "flutter-version=$flutter_version" >> $GITHUB_ENV
+          echo "jdk-dist=$jdk_dist" >> $GITHUB_ENV
+          echo "jdk-version=$jdk_version" >> $GITHUB_ENV
 
           echo $flutter_channel
           echo $flutter_version
@@ -161,29 +167,19 @@ jobs:
       # - analyze
       # - test
     steps:
-      - name: Print setup outputs
-        run: echo "${{ toJSON(needs.setup.outputs) }}"
-      - id: parse-var
-        name: Parse variables
-        run: |
-          if [[ "${{ github.ref_type }}" == "tag" ]]
-          then
-            tag_annotation=$(git tag -l --format="%(contents)" ${{ github.ref_name }})
-            echo $tag_annotation
-          fi
       - name: Setup jdk
         uses: actions/setup-java@v3
         with:
-          distribution: ${{ needs.setup.outputs.jdk-dist }}
-          java-version: ${{ needs.setup.outputs.jdk-version }}
+          distribution: ${{ env.jdk-dist }}
+          java-version: ${{ env.jdk-version }}
       - name: Setup android sdk
         uses: android-actions/setup-android@v2
       - id: flutter-sdk-setup
         name: Setup flutter sdk
         uses: ./.github/actions/setup-flutter
         with:
-          flutter-channel: ${{ needs.setup.outputs.flutter-channel }}
-          flutter-version: ${{ needs.setup.outputs.flutter-version }}
+          flutter-channel: ${{ env.flutter-channel }}
+          flutter-version: ${{ env.flutter-version }}
       - name: Create keystore
         run: |
           echo "${{ secrets.KEYSTORE }}" > android/release.jks.asc
@@ -274,9 +270,9 @@ jobs:
           # echo "::set-output name=artifact-path::$artifact_path"
           # echo "::set-output name=artifact-file::$artifact_file"
 
-          echo "{platform}={$platform}" >> $GITHUB_OUTPUT
-          echo "{artifact-path}={$artifact_path}" >> $GITHUB_OUTPUT
-          echo "{artifact-file}={$artifact_file}" >> $GITHUB_OUTPUT
+          echo "platform=$platform" >> $GITHUB_OUTPUT
+          echo "artifact-path=$artifact_path" >> $GITHUB_OUTPUT
+          echo "artifact-file=$artifact_file" >> $GITHUB_OUTPUT
 
           echo $platform
           echo $artifact_path
