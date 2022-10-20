@@ -98,10 +98,10 @@ jobs:
           # echo "::set-output name=jdk-dist::$jdk_dist"
           # echo "::set-output name=jdk-version::$jdk_version"
 
-          echo "flutter-channel=$flutter_channel" >> $GITHUB_ENV
-          echo "flutter-version=$flutter_version" >> $GITHUB_ENV
-          echo "jdk-dist=$jdk_dist" >> $GITHUB_ENV
-          echo "jdk-version=$jdk_version" >> $GITHUB_ENV
+          echo "flutter_channel=$flutter_channel" >> $GITHUB_ENV
+          echo "flutter_version=$flutter_version" >> $GITHUB_ENV
+          echo "jdk_dist=$jdk_dist" >> $GITHUB_ENV
+          echo "jdk_version=$jdk_version" >> $GITHUB_ENV
 
           echo $flutter_channel
           echo $flutter_version
@@ -172,16 +172,16 @@ jobs:
       - name: Setup jdk
         uses: actions/setup-java@v3
         with:
-          distribution: ${{ env.jdk-dist }}
-          java-version: ${{ env.jdk-version }}
+          distribution: ${{ needs.setup.env.jdk-dist }}
+          java-version: ${{ needs.setup.env.jdk-version }}
       - name: Setup android sdk
         uses: android-actions/setup-android@v2
       - id: flutter-sdk-setup
         name: Setup flutter sdk
         uses: ./.github/actions/setup-flutter
         with:
-          flutter-channel: ${{ env.flutter-channel }}
-          flutter-version: ${{ env.flutter-version }}
+          flutter-channel: ${{ needs.setup.env.flutter-channel }}
+          flutter-version: ${{ needs.setup.env.flutter-version }}
       - name: Create keystore
         run: |
           echo "${{ secrets.KEYSTORE }}" > android/release.jks.asc
