@@ -102,6 +102,11 @@ jobs:
           # echo "::set-output name=jdk-dist::$jdk_dist"
           # echo "::set-output name=jdk-version::$jdk_version"
 
+          echo "flutter_channel=$flutter_channel" >> $GITHUB_ENV
+          echo "flutter_version=$flutter_version" >> $GITHUB_ENV
+          echo "jdk_dist=$jdk_dist" >> $GITHUB_ENV
+          echo "jdk_version=$jdk_version" >> $GITHUB_ENV
+
           echo "flutter_channel=$flutter_channel" >> $GITHUB_OUTPUT
           echo "flutter_version=$flutter_version" >> $GITHUB_OUTPUT
           echo "jdk_dist=$jdk_dist" >> $GITHUB_OUTPUT
@@ -112,14 +117,8 @@ jobs:
           echo $jdk_dist
           echo $jdk_version
         shell: bash
-      - name: Print GITHUB_ENV
-        run: echo $GITHUB_ENV
       - name: Print env
-        run: |
-          echo ${{ env.flutter-channel }}
-          echo ${{ env.flutter-version }}
-          echo ${{ env.jdk-dist }}
-          echo ${{ env.jdk-version }}
+        run: echo ${{ toJSON(env) }}
 
   # analyze:
   #   runs-on: self-hosted
