@@ -63,11 +63,11 @@ jobs:
       matrix:
         os: [self-hosted-ubuntu, self-hosted-macos]
     runs-on: ${{ matrix.os }}
-    outputs:
-      flutter-channel: ${{ steps.parse-var.outputs.flutter-channel }}
-      flutter-version: ${{ steps.parse-var.outputs.flutter-version }}
-      jdk-dist: ${{ steps.parse-var.outputs.jdk-dist }}
-      jdk-version: ${{ steps.parse-var.outputs.jdk-version }}
+    # outputs:
+    #   flutter-channel: ${{ steps.parse-var.outputs.flutter-channel }}
+    #   flutter-version: ${{ steps.parse-var.outputs.flutter-version }}
+    #   jdk-dist: ${{ steps.parse-var.outputs.jdk-dist }}
+    #   jdk-version: ${{ steps.parse-var.outputs.jdk-version }}
     steps:
       # - name: Print github context
       #   run: echo "${{ toJSON(github) }}"
@@ -87,18 +87,23 @@ jobs:
           jdk_dist="${{ inputs.jdk-dist || 'adopt' }}"
           jdk_version="${{ inputs.jdk-version || '11' }}"
 
-          echo "::set-output name=flutter-channel::$flutter_channel"
-          echo "::set-output name=flutter-version::$flutter_version"
-          echo "::set-output name=jdk-dist::$jdk_dist"
-          echo "::set-output name=jdk-version::$jdk_version"
+          # echo "::set-output name=flutter-channel::$flutter_channel"
+          # echo "::set-output name=flutter-version::$flutter_version"
+          # echo "::set-output name=jdk-dist::$jdk_dist"
+          # echo "::set-output name=jdk-version::$jdk_version"
+
+          echo "{flutter-channel}={$flutter_channel}" >> $GITHUB_ENV
+          echo "{flutter-version}={$flutter_version}" >> $GITHUB_ENV
+          echo "{jdk-dist}={$jdk_dist}" >> $GITHUB_ENV
+          echo "{jdk-version}={$jdk_version}" >> $GITHUB_ENV
 
           echo $flutter_channel
           echo $flutter_version
           echo $jdk_dist
           echo $jdk_version
         shell: bash
-      - name: Print parse-var variables
-        run: echo "${{ toJSON(steps.parse-var.outputs) }}"
+      - name: Print GITHUB_ENV
+        run: echo "$GITHUB_ENV"
 
   # analyze:
   #   runs-on: self-hosted
@@ -158,6 +163,14 @@ jobs:
     steps:
       - name: Print setup outputs
         run: echo "${{ toJSON(needs.setup.outputs) }}"
+      - id: parse-var
+        name: Parse variables
+        run: |
+          if [[ "${{ github.ref_type }}" == "tag" ]]
+          then
+            tag_annotation=$(git tag -l --format="%(contents)" ${{ github.ref_name }})
+            echo $tag_annotation
+          fi
       - name: Setup jdk
         uses: actions/setup-java@v3
         with:
@@ -236,17 +249,8 @@ jobs:
       - id: parse-var
         name: Parse variables
         run: |
-          if [[ "${{ github.ref_type }}" == "tag" ]]
-          then
-            tag_annotation=$(git tag -l --format="%(contents)" ${{ github.ref_name }})
-            echo $tag_annotation
-          fi
-
           platform="${{ matrix.build == 'ipa' && 'ios' || 'android'}}"
-          echo "::set-output name=platform::$platform"
-
           artifact_path=${{ github.workspace }}/build
-          echo "::set-output name=artifact-path::$artifact_path"
 
           case "${{ matrix.build }}" in
             "appbundle")
@@ -265,7 +269,14 @@ jobs:
             *) 
               ;;
           esac
-          echo "::set-output name=artifact-file::$artifact_file"
+
+          # echo "::set-output name=platform::$platform"
+          # echo "::set-output name=artifact-path::$artifact_path"
+          # echo "::set-output name=artifact-file::$artifact_file"
+
+          echo "{platform}={$platform}" >> $GITHUB_OUTPUT
+          echo "{artifact-path}={$artifact_path}" >> $GITHUB_OUTPUT
+          echo "{artifact-file}={$artifact_file}" >> $GITHUB_OUTPUT
 
           echo $platform
           echo $artifact_path
