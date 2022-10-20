@@ -241,6 +241,9 @@ jobs:
       - id: parse-var
         name: Parse variables
         run: |
+          # force fetch tag annotations
+          git fetch --tags --force
+
           if [[ "${{ github.ref_type }}" == "tag" ]]
           then
             git tag -l --format="%(contents)" ${{ github.ref_name }}
