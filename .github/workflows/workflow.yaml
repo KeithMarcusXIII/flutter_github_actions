@@ -64,10 +64,14 @@ jobs:
         os: [self-hosted-ubuntu, self-hosted-macos]
     runs-on: ${{ matrix.os }}
     outputs:
-      flutter-channel: ${{ env.flutter-channel }}
-      flutter-version: ${{ env.flutter-version }}
-      jdk-dist: ${{ env.jdk-dist }}
-      jdk-version: ${{ env.jdk-version }}
+      # flutter-channel: ${{ env.flutter-channel }}
+      # flutter-version: ${{ env.flutter-version }}
+      # jdk-dist: ${{ env.jdk-dist }}
+      # jdk-version: ${{ env.jdk-version }}
+      flutter-channel: ${{ steps.parse-var.outputs.flutter-channel }}
+      flutter-version: ${{ steps.parse-var.outputs.flutter-version }}
+      jdk-dist: ${{ steps.parse-var.outputs.jdk-dist }}
+      jdk-version: ${{ steps.parse-var.outputs.jdk-version }}
     steps:
       # - name: Print github context
       #   run: echo "${{ toJSON(github) }}"
@@ -98,10 +102,10 @@ jobs:
           # echo "::set-output name=jdk-dist::$jdk_dist"
           # echo "::set-output name=jdk-version::$jdk_version"
 
-          echo "flutter_channel=$flutter_channel" >> $GITHUB_ENV
-          echo "flutter_version=$flutter_version" >> $GITHUB_ENV
-          echo "jdk_dist=$jdk_dist" >> $GITHUB_ENV
-          echo "jdk_version=$jdk_version" >> $GITHUB_ENV
+          echo "flutter_channel=$flutter_channel" >> $GITHUB_OUTPUT
+          echo "flutter_version=$flutter_version" >> $GITHUB_OUTPUT
+          echo "jdk_dist=$jdk_dist" >> $GITHUB_OUTPUT
+          echo "jdk_version=$jdk_version" >> $GITHUB_OUTPUT
 
           echo $flutter_channel
           echo $flutter_version
@@ -109,7 +113,7 @@ jobs:
           echo $jdk_version
         shell: bash
       - name: Print GITHUB_ENV
-        run: echo "$GITHUB_ENV"
+        run: echo $GITHUB_ENV
       - name: Print env
         run: |
           echo ${{ env.flutter-channel }}
