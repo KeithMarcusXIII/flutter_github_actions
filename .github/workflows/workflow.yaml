@@ -167,6 +167,8 @@ jobs:
       # - analyze
       # - test
     steps:
+      - name: Print GITHUB_ENV
+        run: echo "$GITHUB_ENV"
       - name: Setup jdk
         uses: actions/setup-java@v3
         with:
