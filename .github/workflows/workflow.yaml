@@ -167,8 +167,8 @@ jobs:
       # - analyze
       # - test
     steps:
-      - name: Print GITHUB_ENV
-        run: echo "${{ toJSON(needs.setup.env) }}"
+      - name: Print setup outputs
+        run: echo "${{ toJSON(needs.setup.parse-var.outputs) }}"
       - name: Setup jdk
         uses: actions/setup-java@v3
         with:
