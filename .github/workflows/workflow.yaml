@@ -110,6 +110,12 @@ jobs:
         shell: bash
       - name: Print GITHUB_ENV
         run: echo "$GITHUB_ENV"
+      - name: Print env
+        run: |
+          echo ${{ env.flutter-channel }}
+          echo ${{ env.flutter-version }}
+          echo ${{ env.jdk-dist }}
+          echo ${{ env.jdk-version }}
 
   # analyze:
   #   runs-on: self-hosted
