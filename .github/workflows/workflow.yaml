@@ -177,7 +177,7 @@ jobs:
       # - test
     steps:
       - name: Print setup outputs
-        run: echo "${{ toJSON(needs.setup.parse-var.outputs) }}"
+        run: echo "${{ toJSON(needs.setup.outputs) }}"
       - name: Setup jdk
         uses: actions/setup-java@v3
         with:
