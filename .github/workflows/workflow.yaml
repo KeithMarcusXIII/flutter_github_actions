@@ -82,13 +82,6 @@ jobs:
       - id: parse-var
         name: Parse variables
         run: |
-          if [[ "${{ github.ref_type }}" == "tag" ]]
-          then
-            git tag -l --format="%(contents)" ${{ github.ref_name }}
-            version_tag=$(git tag -l --format="%(contents)" ${{ github.ref_name }})
-            echo $version_tag
-          fi
-
           flutter_channel="${{ inputs.flutter-channel || 'stable' }}"
           flutter_version="${{ inputs.flutter-version || '3.3.2' }}"
           jdk_dist="${{ inputs.jdk-dist || 'adopt' }}"
@@ -243,14 +236,10 @@ jobs:
       - id: parse-var
         name: Parse variables
         run: |
-          # force fetch tag annotations
-          # git fetch --tags --force
-
           if [[ "${{ github.ref_type }}" == "tag" ]]
           then
-            git tag -l --format="%(contents)" ${{ github.ref_name }}
-            version_tag=$(git tag -l --format="%(contents)" ${{ github.ref_name }})
-            echo $version_tag
+            tag_annotation=$(git tag -l --format="%(contents)" ${{ github.ref_name }})
+            echo $tag_annotation
           fi
 
           platform="${{ matrix.build == 'ipa' && 'ios' || 'android'}}"
