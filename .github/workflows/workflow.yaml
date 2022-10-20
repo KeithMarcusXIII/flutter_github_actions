@@ -118,7 +118,7 @@ jobs:
           echo $jdk_version
         shell: bash
       - name: Print env
-        run: echo ${{ toJSON(env) }}
+        run: echo "${{ toJSON(env) }}"
 
   # analyze:
   #   runs-on: self-hosted
