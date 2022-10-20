@@ -181,16 +181,16 @@ jobs:
       - name: Setup jdk
         uses: actions/setup-java@v3
         with:
-          distribution: ${{ needs.setup.parse-var.outputs.jdk-dist }}
-          java-version: ${{ needs.setup.parse-var.outputs.jdk-version }}
+          distribution: ${{ needs.setup.outputs.jdk-dist }}
+          java-version: ${{ needs.setup.outputs.jdk-version }}
       - name: Setup android sdk
         uses: android-actions/setup-android@v2
       - id: flutter-sdk-setup
         name: Setup flutter sdk
         uses: ./.github/actions/setup-flutter
         with:
-          flutter-channel: ${{ needs.setup.parse-var.outputs.flutter-channel }}
-          flutter-version: ${{ needs.setup.parse-var.outputs.flutter-version }}
+          flutter-channel: ${{ needs.setup.outputs.flutter-channel }}
+          flutter-version: ${{ needs.setup.outputs.flutter-version }}
       - name: Create keystore
         run: |
           echo "${{ secrets.KEYSTORE }}" > android/release.jks.asc
