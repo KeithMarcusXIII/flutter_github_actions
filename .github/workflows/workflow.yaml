@@ -194,8 +194,8 @@ jobs:
           keyAlias=${{ secrets.KEYSTORE_ALIAS }}
           storeFile=${{ github.workspace }}/android/release.jks
           EOF
-      - name: Sync version with tag
-        run: fastlane
+      # - name: Sync version with tag
+      #   run: fastlane
       - name: Build ${{ matrix.environment }} ${{ matrix.build }}
         run: |
           flutter build ${{ matrix.build }} \
