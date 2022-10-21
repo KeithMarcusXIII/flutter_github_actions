@@ -102,11 +102,12 @@ jobs:
           echo $flutter_version
           echo $jdk_dist
           echo $jdk_version
-        shell: bash
-      - name: Print env
+      - name: "Create alias to 'bundle exec fastlane'"
+        run: alias fastlane="bundle exec fastlane"
+      - name: "Run 'bundle install' for both platforms"
         run: |
-          echo $GITHUB_ENV
-          echo "${{ toJSON(env) }}"
+          bundle install --gemfile=android/Gemfile
+          bundle install --gemfile=ios/Gemfile
 
   # analyze:
   #   runs-on: self-hosted
@@ -193,6 +194,8 @@ jobs:
           keyAlias=${{ secrets.KEYSTORE_ALIAS }}
           storeFile=${{ github.workspace }}/android/release.jks
           EOF
+      - name: Sync version with tag
+        run: fastlane
       - name: Build ${{ matrix.environment }} ${{ matrix.build }}
         run: |
           flutter build ${{ matrix.build }} \
@@ -282,11 +285,11 @@ jobs:
           echo "${{ secrets.APP_DIST_CREDENTIALS }}" > app-dist-credentials.json.asc
           gpg -d --passphrase ${{ secrets.APP_DIST_CREDENTIALS_PASSPHRASE }} --batch app-dist-credentials.json.asc > app-dist-credentials.json
           echo "::set-output name=app-dist-credentials::$(pwd)/app-dist-credentials.json"
-      - name: "Create alias to 'bundle exec fastlane'"
-        run: alias fastlane="bundle exec fastlane"
-      - name: "Run 'bundle install'"
-        working-directory: ./${{ steps.parse-var.outputs.platform }}
-        run: bundle install
+      # - name: "Create alias to 'bundle exec fastlane'"
+      #   run: alias fastlane="bundle exec fastlane"
+      # - name: "Run 'bundle install'"
+      #   working-directory: ./${{ steps.parse-var.outputs.platform }}
+      #   run: bundle install
       - id: download-artifact
         name: Download artifacts
         uses: actions/download-artifact@v3
