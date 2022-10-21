@@ -68,10 +68,6 @@ jobs:
       flutter-version: ${{ env.flutter_version }}
       jdk-dist: ${{ env.jdk_dist }}
       jdk-version: ${{ env.jdk_version }}
-      # flutter-channel: ${{ steps.parse-var.outputs.flutter_channel }}
-      # flutter-version: ${{ steps.parse-var.outputs.flutter_version }}
-      # jdk-dist: ${{ steps.parse-var.outputs.jdk_dist }}
-      # jdk-version: ${{ steps.parse-var.outputs.jdk_version }}
     steps:
       # - name: Print github context
       #   run: echo "${{ toJSON(github) }}"
@@ -97,20 +93,10 @@ jobs:
             echo $tag_annotation
           fi
 
-          # echo "::set-output name=flutter-channel::$flutter_channel"
-          # echo "::set-output name=flutter-version::$flutter_version"
-          # echo "::set-output name=jdk-dist::$jdk_dist"
-          # echo "::set-output name=jdk-version::$jdk_version"
-
           echo "flutter_channel=$flutter_channel" >> $GITHUB_ENV
           echo "flutter_version=$flutter_version" >> $GITHUB_ENV
           echo "jdk_dist=$jdk_dist" >> $GITHUB_ENV
           echo "jdk_version=$jdk_version" >> $GITHUB_ENV
-
-          # echo "flutter_channel=$flutter_channel" >> $GITHUB_OUTPUT
-          # echo "flutter_version=$flutter_version" >> $GITHUB_OUTPUT
-          # echo "jdk_dist=$jdk_dist" >> $GITHUB_OUTPUT
-          # echo "jdk_version=$jdk_version" >> $GITHUB_OUTPUT
 
           echo $flutter_channel
           echo $flutter_version
@@ -118,7 +104,9 @@ jobs:
           echo $jdk_version
         shell: bash
       - name: Print env
-        run: echo "${{ toJSON(env) }}"
+        run: |
+          echo $GITHUB_ENV
+          echo "${{ toJSON(env) }}"
 
   # analyze:
   #   runs-on: self-hosted
@@ -279,13 +267,9 @@ jobs:
               ;;
           esac
 
-          # echo "::set-output name=platform::$platform"
-          # echo "::set-output name=artifact-path::$artifact_path"
-          # echo "::set-output name=artifact-file::$artifact_file"
-
           echo "platform=$platform" >> $GITHUB_OUTPUT
-          echo "artifact-path=$artifact_path" >> $GITHUB_OUTPUT
-          echo "artifact-file=$artifact_file" >> $GITHUB_OUTPUT
+          echo "artifact_path=$artifact_path" >> $GITHUB_OUTPUT
+          echo "artifact_file=$artifact_file" >> $GITHUB_OUTPUT
 
           echo $platform
           echo $artifact_path
@@ -308,7 +292,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: ${{ matrix.environment }}-${{ matrix.build }}
-          path: ${{ steps.parse-var.outputs.artifact-path }}
+          path: ${{ steps.parse-var.outputs.artifact_path }}
       # - if: ${{ steps.parse-var.outputs.platform == 'ios' }}
       #   working-directory: ./${{ steps.parse-var.outputs.platform }}
       #   name: Import Apple UDIDs
@@ -324,7 +308,7 @@ jobs:
       #   run: |
       #     fastlane distribute_firebase \
       #     artifact_type:${{ matrix.build == 'appbundle' && 'aab' || matrix.build }} \
-      #     artifact_path:${{ steps.parse-var.outputs.artifact-file }} \
+      #     artifact_path:${{ steps.parse-var.outputs.artifact_file }} \
       #     credentials_file:${{ steps.create-credentials.outputs.app-dist-credentials }}
       #     # ${{ steps.parse-var.outputs.platform == 'android' && format('credentials_file:{0}', steps.create-credentials.outputs.app-dist-credentials) || '' }}
 # build/app/outputs/bundle/release/app-release.aab
