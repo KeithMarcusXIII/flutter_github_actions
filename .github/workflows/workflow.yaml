@@ -61,7 +61,9 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        os: [self-hosted-ubuntu, self-hosted-macos]
+        os:
+          - self-hosted-ubuntu
+          - self-hosted-macos
     runs-on: ${{ matrix.os }}
     outputs:
       flutter-channel: ${{ env.flutter_channel }}
