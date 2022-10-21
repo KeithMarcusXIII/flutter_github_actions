@@ -194,9 +194,11 @@ jobs:
         run: alias fastlane="bundle exec fastlane"
       - name: "Run 'bundle install'"
         # working-directory: ./${{ steps.parse-var.outputs.platform }}
-        run: bundle install
+        run: |
+          bundle install
+          fastlane add_plugin flutter_version_manager
       - name: Sync version with tag
-        run: fastlane
+        run: fastlane run
       - name: Build ${{ matrix.environment }} ${{ matrix.build }}
         run: |
           flutter build ${{ matrix.build }} \
