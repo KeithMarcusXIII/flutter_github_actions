@@ -45,4 +45,20 @@ platform :android do
         raise
       end
   end
+
+  desc "Fastlane apply version"
+  lane :apply_version do
+      begin
+        sh "fastlane run flutter_version_manager yml:./version.yml pubspec:./pubspec.yaml arguments:-apply"
+
+        # flutter_version_manager(
+        #   arguments: "-apply",
+        #   yml: "./version.yml",
+        #   pubspec: "./example_pubspec.yaml"
+        # )
+      rescue => e
+        puts "Rescued: #{e.inspect}"
+        raise
+      end
+  end
 end
