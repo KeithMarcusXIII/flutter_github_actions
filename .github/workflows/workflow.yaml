@@ -71,6 +71,7 @@ jobs:
       jdk-dist: ${{ env.jdk_dist }}
       jdk-version: ${{ env.jdk_version }}
       tag-annotation: ${{ env.tag_annotation }}
+      platform: ${{ platform }}
     steps:
       # - name: Print github context
       #   run: echo "${{ toJSON(github) }}"
