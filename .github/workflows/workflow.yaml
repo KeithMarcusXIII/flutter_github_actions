@@ -224,7 +224,7 @@ jobs:
         run: bundle install
       - name: Sync version with tag
         working-directory: ./${{ needs.setup.outputs.platform }}
-        run: fastlane run flutter_version_manager yml:${{ github.workspace }}/version.yml pubspec:${{ github.workspace }}/pubspec.yml arguments:-apply
+        run: fastlane run flutter_version_manager yml:${{ github.workspace }}/version.yml pubspec:${{ github.workspace }}/pubspec.yaml arguments:-apply
       - name: Build ${{ matrix.environment }} ${{ matrix.build }}
         run: |
           flutter build ${{ matrix.build }} \
