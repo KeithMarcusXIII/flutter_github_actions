@@ -71,7 +71,7 @@ jobs:
       jdk-dist: ${{ env.jdk_dist }}
       jdk-version: ${{ env.jdk_version }}
       tag-annotation: ${{ env.tag_annotation }}
-      platform: ${{ platform }}
+      platform: ${{ env.platform }}
     steps:
       # - name: Print github context
       #   run: echo "${{ toJSON(github) }}"
@@ -103,6 +103,7 @@ jobs:
           echo "flutter_version=$flutter_version" >> $GITHUB_ENV
           echo "jdk_dist=$jdk_dist" >> $GITHUB_ENV
           echo "jdk_version=$jdk_version" >> $GITHUB_ENV
+          echo "platform=$platform" >> $GITHUB_ENV
 
           echo $flutter_channel
           echo $flutter_version
