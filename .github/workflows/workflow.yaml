@@ -220,10 +220,10 @@ jobs:
       - name: "Create alias to 'bundle exec fastlane'"
         run: alias fastlane="bundle exec fastlane"
       - name: "Run 'bundle install'"
-        working-directory: ./${{ steps.parse-var.outputs.platform }}
+        working-directory: ./${{ needs.setup.outputs.platform }}
         run: bundle install
       - name: Sync version with tag
-        working-directory: ./${{ steps.parse-var.outputs.platform }}
+        working-directory: ./${{ needs.setup.outputs.platform }}
         run: fastlane run flutter_version_manager yml:${{ github.workspace }}/version.yml pubspec:${{ github.workspace }}/pubspec.yml arguments:-apply
       - name: Build ${{ matrix.environment }} ${{ matrix.build }}
         run: |
