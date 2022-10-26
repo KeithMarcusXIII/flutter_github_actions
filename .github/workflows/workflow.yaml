@@ -70,6 +70,7 @@ jobs:
       flutter-version: ${{ env.flutter_version }}
       jdk-dist: ${{ env.jdk_dist }}
       jdk-version: ${{ env.jdk_version }}
+      tag-annotation: ${{ env.tag_annotation }}
     steps:
       # - name: Print github context
       #   run: echo "${{ toJSON(github) }}"
@@ -92,6 +93,7 @@ jobs:
           if [[ "${{ github.ref_type }}" == "tag" ]]
           then
             tag_annotation=$(git tag -l --format="%(contents)" ${{ github.ref_name }})
+            echo "tag_annotation=$tag_annotation" >> $GITHUB_ENV
             echo $tag_annotation
           fi
 
@@ -178,6 +180,28 @@ jobs:
         with:
           flutter-channel: ${{ needs.setup.outputs.flutter-channel }}
           flutter-version: ${{ needs.setup.outputs.flutter-version }}
+      - name: Create version.yml
+        run: |
+          major=0
+          minor=0
+          patch=0
+
+          if [[ "${{ github.ref_type }}" == "tag" ]]
+          then
+            if [[ ${{ github.ref_name }} =~ ([0-9]+)+.([0-9]+)+.([0-9]+)+ ]]
+            then
+              major=${BASH_REMATCH[1]}
+              minor=${BASH_REMATCH[2]}
+              patch=${BASH_REMATCH[3]}
+            fi
+          fi
+
+          cat << EOF > version.yml
+          ---
+          major: $major
+          minor: $minor
+          patch: $patch
+          EOF
       - name: Create keystore
         run: |
           echo "${{ secrets.KEYSTORE }}" > android/release.jks.asc
@@ -193,12 +217,11 @@ jobs:
       - name: "Create alias to 'bundle exec fastlane'"
         run: alias fastlane="bundle exec fastlane"
       - name: "Run 'bundle install'"
-        # working-directory: ./${{ steps.parse-var.outputs.platform }}
-        run: |
-          bundle install
-          fastlane add_plugin flutter_version_manager
+        working-directory: ./${{ steps.parse-var.outputs.platform }}
+        run: bundle install
       - name: Sync version with tag
-        run: fastlane run
+        working-directory: ./${{ steps.parse-var.outputs.platform }}
+        run: fastlane run flutter_version_manager
       - name: Build ${{ matrix.environment }} ${{ matrix.build }}
         run: |
           flutter build ${{ matrix.build }} \
