@@ -89,6 +89,7 @@ jobs:
           flutter_version="${{ inputs.flutter-version || '3.3.2' }}"
           jdk_dist="${{ inputs.jdk-dist || 'adopt' }}"
           jdk_version="${{ inputs.jdk-version || '11' }}"
+          platform="${{ matrix.build == 'ipa' && 'ios' || 'android'}}"
 
           if [[ "${{ github.ref_type }}" == "tag" ]]
           then
@@ -106,7 +107,7 @@ jobs:
           echo $flutter_version
           echo $jdk_dist
           echo $jdk_version
-
+          echo $platform
   # analyze:
   #   runs-on: self-hosted
   #   needs: setup
