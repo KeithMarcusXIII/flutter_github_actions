@@ -61,8 +61,9 @@ platform :android do
         version = release[:displayVersion]
         build = release[:buildVersion]
 
+        current_directory = Dir.chdir("..")
         sh(
-          "#{Dir.pwd}/parse_semvar.sh",
+          "#{current_directory}/parse_semvar.sh",
           version
         )
 
