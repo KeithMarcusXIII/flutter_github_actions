@@ -219,7 +219,7 @@ jobs:
           fastlane get_appdist_latest_release \
           credentials_file:${{ steps.create-credentials.outputs.app-dist-credentials }}
 
-          echo "${{ env.version }}"
+          echo $GITHUB_ENV
 
           # if [[ ${{ env.version }} =~ ([0-9]+)+.([0-9]+)+.([0-9]+)+ ]]
           # then
