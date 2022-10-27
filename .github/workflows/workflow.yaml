@@ -220,6 +220,8 @@ jobs:
           credentials_file:${{ steps.create-credentials.outputs.app-dist-credentials }}
 
           echo $GITHUB_ENV
+          echo ${{ env.version }}
+          echo ${{ env.build }}
 
           # if [[ ${{ env.version }} =~ ([0-9]+)+.([0-9]+)+.([0-9]+)+ ]]
           # then
@@ -229,6 +231,10 @@ jobs:
           # fi
       - name: Apply version
         run: |
+          echo $GITHUB_ENV
+          echo ${{ env.version }}
+          echo ${{ env.build }}
+
           major=${{ env.major }}
           minor=${{ env.minor }}
           patch=${{ env.patch }}
