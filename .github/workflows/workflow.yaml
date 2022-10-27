@@ -220,6 +220,7 @@ jobs:
           credentials_file:${{ steps.create-credentials.outputs.app-dist-credentials }}
 
           echo $GITHUB_ENV
+          cat $GITHUB_ENV
           echo ${{ env.version }}
           echo ${{ env.build }}
 
