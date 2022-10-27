@@ -51,9 +51,7 @@ platform :android do
       begin
         puts options
         puts ENV["APP_ID"]
-        
-        
-
+                
         release = firebase_app_distribution_get_latest_release(
           app: ENV['APP_ID'],
           service_credentials_file: options[:credentials_file], 
@@ -64,7 +62,7 @@ platform :android do
         build = release[:buildVersion]
 
         sh(
-          "$(pwd)/parse_semvar.sh",
+          "#{Dir.pwd}/parse_semvar.sh",
           version
         )
 
