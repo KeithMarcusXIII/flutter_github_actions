@@ -170,6 +170,8 @@ jobs:
         run: |
           echo "outputs: ${{ toJSON(needs.setup.outputs) }}"
           echo "env: ${{ toJSON(needs.setup.env) }}"
+      - name: Install cider
+        run: dart pub global activate cider
       - name: Setup jdk
         uses: actions/setup-java@v3
         with:
@@ -183,28 +185,30 @@ jobs:
         with:
           flutter-channel: ${{ needs.setup.outputs.flutter-channel }}
           flutter-version: ${{ needs.setup.outputs.flutter-version }}
-      - name: Create version.yml
-        run: |
-          major=0
-          minor=0
-          patch=0
+      # - name: Create version.yml
+      #   run: |
+      #     major=0
+      #     minor=0
+      #     patch=0
 
-          if [[ "${{ github.ref_type }}" == "tag" ]]
-          then
-            if [[ ${{ github.ref_name }} =~ ([0-9]+)+.([0-9]+)+.([0-9]+)+ ]]
-            then
-              major=${BASH_REMATCH[1]}
-              minor=${BASH_REMATCH[2]}
-              patch=${BASH_REMATCH[3]}
-            fi
-          fi
+      #     if [[ "${{ github.ref_type }}" == "tag" ]]
+      #     then
+      #       if [[ ${{ github.ref_name }} =~ ([0-9]+)+.([0-9]+)+.([0-9]+)+ ]]
+      #       then
+      #         major=${BASH_REMATCH[1]}
+      #         minor=${BASH_REMATCH[2]}
+      #         patch=${BASH_REMATCH[3]}
+      #       fi
+      #     fi
 
-          cat << EOF > version.yml
-          ---
-          major: $major
-          minor: $minor
-          patch: $patch
-          EOF
+      #     cat << EOF > version.yml
+      #     ---
+      #     major: $major
+      #     minor: $minor
+      #     patch: $patch
+      #     EOF
+
+      #     cider version $major.$minor.$patch+
       - name: Create keystore
         run: |
           echo "${{ secrets.KEYSTORE }}" > android/release.jks.asc
@@ -222,14 +226,13 @@ jobs:
       - name: "Run 'bundle install'"
         working-directory: ./${{ needs.setup.outputs.platform }}
         run: bundle install
-      - name: Test pwd
-        run: |
-          cd ${{ needs.setup.outputs.platform }}
-          pwd
-          ls -al
-      - name: Sync version with tag
+      - name: Get app distribution latest release info
         working-directory: ./${{ needs.setup.outputs.platform }}
-        run: fastlane run flutter_version_manager yml:${{ github.workspace }}/version.yml pubspec:${{ github.workspace }}/pubspec.yaml git_repo:${{ github.workspace }} arguments:-apply
+        env:
+          APP_ID: ${{ steps.parse-var.outputs.platform == 'ios' && secrets.IOS_FIREBASE_APP_ID || secrets.ANDROID_FIREBASE_APP_ID }}
+        run: |
+          fastlane get_appdist_latest_release \
+          credentials_file:${{ steps.create-credentials.outputs.app-dist-credentials }}
       - name: Build ${{ matrix.environment }} ${{ matrix.build }}
         run: |
           flutter build ${{ matrix.build }} \

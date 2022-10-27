@@ -46,16 +46,18 @@ platform :android do
       end
   end
 
-  desc "Fastlane apply version"
-  lane :apply_version do
+  desc "Fastlane get app distribution latest release"
+  lane :get_appdist_latest_release do |options|
       begin
-        # sh "fastlane run flutter_version_manager yml:#{}/version.yml pubspec:#{}/pubspec.yaml arguments:-apply"
+        puts options
+        puts ENV["APP_ID"]
 
-        flutter_version_manager(
-          arguments: "-apply",
-          yml: "./version.yml",
-          pubspec: "./pubspec.yaml"
+        list = firebase_app_distribution_get_latest_release(
+          app: ENV['APP_ID'],
+          service_credentials_file: options[:credentials_file], 
         )
+
+        puts list
       rescue => e
         puts "Rescued: #{e.inspect}"
         raise
