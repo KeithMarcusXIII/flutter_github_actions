@@ -52,12 +52,15 @@ platform :android do
         puts options
         puts ENV["APP_ID"]
 
-        list = firebase_app_distribution_get_latest_release(
+        release = firebase_app_distribution_get_latest_release(
           app: ENV['APP_ID'],
           service_credentials_file: options[:credentials_file], 
         )
 
-        puts list
+        puts release
+
+        sh "echo 'version=#{release[:displayVersion]}' >> $GITHUB_OUTPUT"
+        sh "echo 'build=#{release[:buildVersion]}' >> $GITHUB_OUTPUT"
       rescue => e
         puts "Rescued: #{e.inspect}"
         raise
