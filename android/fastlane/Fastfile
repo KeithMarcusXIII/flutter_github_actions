@@ -51,6 +51,8 @@ platform :android do
       begin
         puts options
         puts ENV["APP_ID"]
+        
+        
 
         release = firebase_app_distribution_get_latest_release(
           app: ENV['APP_ID'],
@@ -58,10 +60,17 @@ platform :android do
         )
 
         puts release
+        version = release[:displayVersion]
+        build = release[:buildVersion]
+
+        sh(
+          "$PWD/parse_semvar.sh",
+          version
+        )
 
         sh("echo $GITHUB_ENV")
-        sh("echo version=#{release[:displayVersion]} >> $GITHUB_OUTPUT")
-        sh("echo build=#{release[:buildVersion]} >> $GITHUB_OUTPUT")
+        sh("echo \"version=#{version}\" >> $GITHUB_ENV")
+        sh("echo \"build=#{build}\" >> $GITHUB_ENV")
       rescue => e
         puts "Rescued: #{e.inspect}"
         raise

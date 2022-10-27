@@ -215,20 +215,18 @@ jobs:
         env:
           APP_ID: ${{ steps.parse-var.outputs.platform == 'ios' && secrets.IOS_FIREBASE_APP_ID || secrets.ANDROID_FIREBASE_APP_ID }}
         run: |
-          set -x
+          cat << EOF > parse_semvar.sh
+          if [[ $1 =~ ([0-9]+)+.([0-9]+)+.([0-9]+)+ ]]
+          then
+            echo "major=${BASH_REMATCH[1]} >> $GITHUB_ENV
+            echo "minor=${BASH_REMATCH[2]} >> $GITHUB_ENV
+            echo "patch=${BASH_REMATCH[3]} >> $GITHUB_ENV
+          fi
+          EOF
+          chmod +x parse_semvar.sh
 
           fastlane get_appdist_latest_release \
           credentials_file:${{ steps.create-credentials.outputs.app-dist-credentials }}
-
-          echo ${{ steps.appdist-release.outputs.version }}
-          echo ${{ steps.appdist-release.outputs.build }}
-
-          # if [[ ${{ env.version }} =~ ([0-9]+)+.([0-9]+)+.([0-9]+)+ ]]
-          # then
-          #   echo "major=${BASH_REMATCH[1]} >> $GITHUB_ENV
-          #   echo "minor=${BASH_REMATCH[2]} >> $GITHUB_ENV
-          #   echo "patch=${BASH_REMATCH[3]} >> $GITHUB_ENV
-          # fi
       - name: Apply version
         run: |
           echo $GITHUB_ENV
