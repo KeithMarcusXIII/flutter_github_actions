@@ -60,8 +60,8 @@ platform :android do
         puts release
 
         sh("echo $GITHUB_ENV")
-        sh("echo version=#{release[:displayVersion]} >> $GITHUB_ENV")
-        sh("echo build=#{release[:buildVersion]} >> $GITHUB_ENV")
+        sh("echo version=#{release[:displayVersion]} >> $GITHUB_OUTPUT")
+        sh("echo build=#{release[:buildVersion]} >> $GITHUB_OUTPUT")
       rescue => e
         puts "Rescued: #{e.inspect}"
         raise
