@@ -64,7 +64,7 @@ platform :android do
         build = release[:buildVersion]
 
         sh(
-          "$PWD/parse_semvar.sh",
+          "$(pwd)/parse_semvar.sh",
           version
         )
 
