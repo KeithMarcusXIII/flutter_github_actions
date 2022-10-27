@@ -214,12 +214,11 @@ jobs:
         env:
           APP_ID: ${{ steps.parse-var.outputs.platform == 'ios' && secrets.IOS_FIREBASE_APP_ID || secrets.ANDROID_FIREBASE_APP_ID }}
         run: |
-          set -x
 
           fastlane get_appdist_latest_release \
           credentials_file:${{ steps.create-credentials.outputs.app-dist-credentials }}
 
-          echo ${{ toJSON(env) }}
+          echo "${{ toJSON(env) }}"
 
           if [[ ${{ env.version }} =~ ([0-9]+)+.([0-9]+)+.([0-9]+)+ ]]
           then
