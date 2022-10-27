@@ -228,7 +228,7 @@ jobs:
           pwd
           ls -al
       - name: Sync version with tag
-        # working-directory: ./${{ needs.setup.outputs.platform }}
+        working-directory: ./${{ needs.setup.outputs.platform }}
         run: fastlane run flutter_version_manager yml:${{ github.workspace }}/version.yml pubspec:${{ github.workspace }}/pubspec.yaml git_repo:${{ github.workspace }} arguments:-apply
       - name: Build ${{ matrix.environment }} ${{ matrix.build }}
         run: |
