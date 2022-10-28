@@ -61,11 +61,14 @@ platform :android do
         version = release[:displayVersion]
         build = release[:buildVersion]
 
-        current_directory = Dir.chdir("..")
-        sh(
-          "#{current_directory}/parse_semvar.sh",
-          version
-        )
+        # current_directory = Dir.chdir("..")
+        # sh(
+        #   "#{current_directory}/parse_semvar.sh",
+        #   version
+        # )
+
+        sh("version=#{version}")
+        sh("build=#{build}")
 
         sh("echo $GITHUB_ENV")
         sh("echo \"version=#{version}\" >> $GITHUB_ENV")
