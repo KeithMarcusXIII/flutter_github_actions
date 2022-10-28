@@ -77,11 +77,11 @@ platform :android do
                 
         version = google_play_track_release_names(
           app: ENV['APP_ID'],
-          service_credentials_file: options[:credentials_file], 
+          json_key: options[:credentials_file], 
         )
         build = google_play_track_version_codes(
           app: ENV['APP_ID'],
-          service_credentials_file: options[:credentials_file], 
+          json_key: options[:credentials_file], 
         )
 
         puts version
