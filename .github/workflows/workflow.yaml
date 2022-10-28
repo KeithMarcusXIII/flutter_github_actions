@@ -180,7 +180,7 @@ jobs:
           java-version: ${{ needs.setup.outputs.jdk-version }}
       - name: Setup bundletool
         run: |
-          wget -O $HOME/bundletool-all.jar https://github.com/google/bundletool/releases/download/${bundletool_version}/bundletool-all-${{ needs.setup.outputs.bundletool }}.jar
+          wget -O $HOME/bundletool-all.jar https://github.com/google/bundletool/releases/download/${{ needs.setup.outputs.bundletool }}/bundletool-all-${{ needs.setup.outputs.bundletool }}.jar
           alias bundletool="java -jar $HOME/bundletool-all.jar"
       - name: Setup android sdk
         uses: android-actions/setup-android@v2
