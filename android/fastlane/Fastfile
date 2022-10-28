@@ -76,11 +76,11 @@ platform :android do
         puts ENV["APP_ID"]
                 
         version = google_play_track_release_names(
-          app: ENV['APP_ID'],
+          track: internal,
           json_key: options[:credentials_file], 
         )
         build = google_play_track_version_codes(
-          app: ENV['APP_ID'],
+          track: internal,
           json_key: options[:credentials_file], 
         )
 
