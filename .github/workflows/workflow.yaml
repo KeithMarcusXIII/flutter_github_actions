@@ -209,27 +209,27 @@ jobs:
       - name: "Run 'bundle install'"
         working-directory: ./${{ needs.setup.outputs.platform }}
         run: bundle install
-      - name: Get app distribution latest release
+      - id: get-appdist-release
+        name: Get app distribution latest release
         working-directory: ./${{ needs.setup.outputs.platform }}
         env:
           APP_ID: ${{ steps.parse-var.outputs.platform == 'ios' && secrets.IOS_FIREBASE_APP_ID || secrets.ANDROID_FIREBASE_APP_ID }}
         run: |
-          set -x
-
           fastlane get_appdist_latest_release \
           credentials_file:${{ steps.create-credentials.outputs.app-dist-credentials }}
-
-          echo $version
-          echo $build
       - name: Apply version
         run: |
           echo $GITHUB_ENV
           echo ${{ env.version }}
           echo ${{ env.build }}
 
-          major=${{ env.major }}
-          minor=${{ env.minor }}
-          patch=${{ env.patch }}
+          if [[ ${{ env.version }} =~ ([0-9]+)+.([0-9]+)+.([0-9]+)+ ]]
+          then
+            major=${BASH_REMATCH[1]}
+            minor=${BASH_REMATCH[2]}
+            patch=${BASH_REMATCH[3]}
+          fi
+
           code=$((${{ env.build }}+1))
 
           if [[ ${{ github.ref_type }} == "tag" ]]
@@ -244,12 +244,7 @@ jobs:
 
           version=$major.$minor.$patch+$code
 
-          echo "major=$major >> $GITHUB_ENV
-          echo "minor=$minor >> $GITHUB_ENV
-          echo "patch=$patch >> $GITHUB_ENV
-          echo "build=$code >> $GITHUB_ENV
-
-          echo ${{ toJSON(env) }}
+          echo $version
 
           cider version $version
       - name: Build ${{ matrix.environment }} ${{ matrix.build }}
