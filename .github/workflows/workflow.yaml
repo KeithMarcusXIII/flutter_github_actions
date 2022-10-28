@@ -225,8 +225,8 @@ jobs:
           #   echo "patch=${BASH_REMATCH[3]} >> $GITHUB_ENV
           # fi
 
-          echo ${{ version }}
-          echo ${{ build }}
+          # echo ${{ version }}
+          # echo ${{ build }}
       - name: Apply version
         run: |
           echo $GITHUB_ENV
