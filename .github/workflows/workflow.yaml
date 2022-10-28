@@ -216,6 +216,9 @@ jobs:
         run: |
           fastlane get_appdist_latest_release \
           credentials_file:${{ steps.create-credentials.outputs.app-dist-credentials }}
+
+          echo $version
+          echo $build
       - name: Apply version
         run: |
           echo $GITHUB_ENV
