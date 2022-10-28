@@ -69,6 +69,8 @@ platform :android do
 
         sh("version=#{version}")
         sh("build=#{build}")
+        sh("echo $version")
+        sh("echo $build")
 
         sh("echo $GITHUB_ENV")
         sh("echo \"version=#{version}\" >> $GITHUB_ENV")
