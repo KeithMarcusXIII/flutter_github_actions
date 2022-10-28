@@ -219,6 +219,8 @@ jobs:
           credentials_file:${{ steps.create-credentials.outputs.app-dist-credentials }}
       - name: Apply version
         run: |
+          set -x 
+
           if [[ ${{ env.version }} =~ ([0-9]+)+.([0-9]+)+.([0-9]+)+ ]]
           then
             major=${BASH_REMATCH[1]}
