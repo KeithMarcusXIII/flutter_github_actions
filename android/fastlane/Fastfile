@@ -68,4 +68,30 @@ platform :android do
         raise
       end
   end
+
+  desc "Fastlane get google play track latest release"
+  lane :get_playstore_latest_release do |options|
+      begin
+        puts options
+        puts ENV["APP_ID"]
+                
+        version = google_play_track_release_names(
+          app: ENV['APP_ID'],
+          service_credentials_file: options[:credentials_file], 
+        )
+        build = google_play_track_version_codes(
+          app: ENV['APP_ID'],
+          service_credentials_file: options[:credentials_file], 
+        )
+
+        puts version
+        puts build
+
+        sh("echo \"version=#{version}\" >> $GITHUB_ENV")
+        sh("echo \"build=#{build}\" >> $GITHUB_ENV")
+      rescue => e
+        puts "Rescued: #{e.inspect}"
+        raise
+      end
+  end
 end

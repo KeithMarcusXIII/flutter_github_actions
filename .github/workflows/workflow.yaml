@@ -72,6 +72,7 @@ jobs:
       jdk-version: ${{ env.jdk_version }}
       tag-annotation: ${{ env.tag_annotation }}
       platform: ${{ env.platform }}
+      bundletool: ${{ env.bundletool }}
     steps:
       # - name: Print github context
       #   run: echo "${{ toJSON(github) }}"
@@ -91,6 +92,7 @@ jobs:
           jdk_dist="${{ inputs.jdk-dist || 'adopt' }}"
           jdk_version="${{ inputs.jdk-version || '11' }}"
           platform="${{ matrix.build == 'ipa' && 'ios' || 'android'}}"
+          bundletool="${{ inputs.bundletool || '1.12.1'}}"
 
           if [[ "${{ github.ref_type }}" == "tag" ]]
           then
@@ -110,6 +112,7 @@ jobs:
           echo $jdk_dist
           echo $jdk_version
           echo $platform
+          echo $bundletool
   # analyze:
   #   runs-on: self-hosted
   #   needs: setup
@@ -175,6 +178,10 @@ jobs:
         with:
           distribution: ${{ needs.setup.outputs.jdk-dist }}
           java-version: ${{ needs.setup.outputs.jdk-version }}
+      - name: Setup bundletool
+        run: |
+          wget -O $HOME/bundletool-all.jar https://github.com/google/bundletool/releases/download/${bundletool_version}/bundletool-all-${{ needs.setup.outputs.bundletool }}.jar
+          alias bundletool="java -jar $HOME/bundletool-all.jar"
       - name: Setup android sdk
         uses: android-actions/setup-android@v2
       - id: flutter-sdk-setup
@@ -199,7 +206,7 @@ jobs:
           EOF
       - id: create-credentials
         name: Create google play credentials
-        working-directory: ./${{ steps.parse-var.outputs.platform }}
+        working-directory: ./${{ needs.setup.outputs.platform }}
         run: |
           echo "${{ secrets.APP_DIST_CREDENTIALS }}" > app-dist-credentials.json.asc
           gpg -d --passphrase ${{ secrets.APP_DIST_CREDENTIALS_PASSPHRASE }} --batch app-dist-credentials.json.asc > app-dist-credentials.json
@@ -210,17 +217,22 @@ jobs:
         working-directory: ./${{ needs.setup.outputs.platform }}
         run: bundle install
       - id: get-appdist-release
-        name: Get app distribution latest release
+        if: ${{ needs.setup.outputs.platform }} == "android"
+        name: Get latest release info
         working-directory: ./${{ needs.setup.outputs.platform }}
         env:
-          APP_ID: ${{ steps.parse-var.outputs.platform == 'ios' && secrets.IOS_FIREBASE_APP_ID || secrets.ANDROID_FIREBASE_APP_ID }}
+          APP_ID: ${{ needs.setup.outputs.platform == 'ios' && secrets.IOS_FIREBASE_APP_ID || secrets.ANDROID_FIREBASE_APP_ID }}
         run: |
-          fastlane get_appdist_latest_release \
-          credentials_file:${{ steps.create-credentials.outputs.app-dist-credentials }}
+          if [[ ${{ matrix.environment }} == "production" ]]
+          then
+            fastlane get_playstore_latest_release \
+            credentials_file:${{ steps.create-credentials.outputs.app-dist-credentials }}
+          else
+            fastlane get_appdist_latest_release \
+            credentials_file:${{ steps.create-credentials.outputs.app-dist-credentials }}
+          fi
       - name: Apply version
         run: |
-          set -x 
-
           if [[ ${{ env.version }} =~ ([0-9]+)+.([0-9]+)+.([0-9]+)+ ]]
           then
             major=${BASH_REMATCH[1]}
@@ -229,6 +241,7 @@ jobs:
           fi
 
           code=$((${{ env.build }}+1))
+          echo "build=$code" >> $GITHUB_ENV
 
           if [[ ${{ github.ref_type }} == "tag" ]]
           then
@@ -241,8 +254,6 @@ jobs:
           fi
 
           version=$major.$minor.$patch+$code
-
-          echo $version
 
           cider version $version
       - name: Build ${{ matrix.environment }} ${{ matrix.build }}
