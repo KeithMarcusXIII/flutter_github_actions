@@ -219,10 +219,6 @@ jobs:
           credentials_file:${{ steps.create-credentials.outputs.app-dist-credentials }}
       - name: Apply version
         run: |
-          echo $GITHUB_ENV
-          echo ${{ env.version }}
-          echo ${{ env.build }}
-
           if [[ ${{ env.version }} =~ ([0-9]+)+.([0-9]+)+.([0-9]+)+ ]]
           then
             major=${BASH_REMATCH[1]}
@@ -245,6 +241,8 @@ jobs:
           version=$major.$minor.$patch+$code
 
           echo $version
+
+          cider
 
           cider version $version
       - name: Build ${{ matrix.environment }} ${{ matrix.build }}
