@@ -171,7 +171,9 @@ jobs:
           echo "outputs: ${{ toJSON(needs.setup.outputs) }}"
           echo "env: ${{ toJSON(needs.setup.env) }}"
       - name: Install cider
-        run: dart pub global activate cider
+        run: |
+          which dart
+          dart pub global activate cider
       - name: Setup jdk
         uses: actions/setup-java@v3
         with:
@@ -244,6 +246,7 @@ jobs:
 
           echo $version
 
+          which dart
           cider
 
           cider version $version
