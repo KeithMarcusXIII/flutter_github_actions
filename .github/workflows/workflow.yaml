@@ -170,10 +170,6 @@ jobs:
         run: |
           echo "outputs: ${{ toJSON(needs.setup.outputs) }}"
           echo "env: ${{ toJSON(needs.setup.env) }}"
-      - name: Install cider
-        run: |
-          which dart
-          dart pub global activate cider
       - name: Setup jdk
         uses: actions/setup-java@v3
         with:
@@ -187,6 +183,8 @@ jobs:
         with:
           flutter-channel: ${{ needs.setup.outputs.flutter-channel }}
           flutter-version: ${{ needs.setup.outputs.flutter-version }}
+      - name: Install cider
+        run: dart pub global activate cider
       - name: Create keystore
         run: |
           echo "${{ secrets.KEYSTORE }}" > android/release.jks.asc
@@ -245,9 +243,6 @@ jobs:
           version=$major.$minor.$patch+$code
 
           echo $version
-
-          which dart
-          cider
 
           cider version $version
       - name: Build ${{ matrix.environment }} ${{ matrix.build }}
