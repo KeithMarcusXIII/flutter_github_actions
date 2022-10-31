@@ -240,11 +240,10 @@ jobs:
             patch=${BASH_REMATCH[3]}
           fi
 
-
-          code=$((${{ env.build }}+1))
-
-          echo ${{ env.build }}
-          echo $code
+          if [[ ${{ env.build }} =~ [0-9]+ ]]
+          then
+            code=$((${BASH_REMATCH[0]}+1))
+          fi
 
           echo "build=$code" >> $GITHUB_ENV
 
