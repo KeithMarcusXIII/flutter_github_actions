@@ -72,7 +72,7 @@ jobs:
       jdk-version: ${{ env.jdk_version }}
       tag-annotation: ${{ env.tag_annotation }}
       platform: ${{ env.platform }}
-      bundletool: ${{ env.bundletool }}
+      # bundletool: ${{ env.bundletool }}
     steps:
       # - name: Print github context
       #   run: echo "${{ toJSON(github) }}"
@@ -92,7 +92,7 @@ jobs:
           jdk_dist="${{ inputs.jdk-dist || 'adopt' }}"
           jdk_version="${{ inputs.jdk-version || '11' }}"
           platform="${{ matrix.build == 'ipa' && 'ios' || 'android'}}"
-          bundletool="${{ inputs.bundletool || '1.12.1'}}"
+          # bundletool="${{ inputs.bundletool || '1.12.1'}}"
 
           if [[ "${{ github.ref_type }}" == "tag" ]]
           then
@@ -112,7 +112,7 @@ jobs:
           echo $jdk_dist
           echo $jdk_version
           echo $platform
-          echo $bundletool
+          # echo $bundletool
   # analyze:
   #   runs-on: self-hosted
   #   needs: setup
