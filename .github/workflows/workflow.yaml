@@ -240,7 +240,12 @@ jobs:
             patch=${BASH_REMATCH[3]}
           fi
 
+
           code=$((${{ env.build }}+1))
+
+          echo ${{ env.build }}
+          echo $code
+
           echo "build=$code" >> $GITHUB_ENV
 
           if [[ ${{ github.ref_type }} == "tag" ]]
