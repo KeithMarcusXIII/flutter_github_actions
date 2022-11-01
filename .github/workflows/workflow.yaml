@@ -352,7 +352,7 @@ jobs:
         run: alias fastlane="bundle exec fastlane"
       - name: Create bundletool alias
         run: |
-          ls -al $HOME
+          java -jar $HOME/bundletool-all.jar
           alias bundletool="java -jar $HOME/bundletool-all.jar"
           bundletool
       - name: Run 'bundle install'
