@@ -379,7 +379,9 @@ jobs:
       - name: Create release metadata
         working-directory: ./${{ env.platform }}/fastlane/metadata/android
         run: |
-          find ./*/changelogs -type f -name "${{ env.version_code }}.txt" -execdir sh -c 'echo "${{ needs.setup.outputs.tag_annotation }}" > $0' {} +
+          find ./*/changelogs -type f -name "${{ env.version_code }}.txt" -execdir sh -c 'echo "${{ needs.setup.outputs.tag-annotation }}" > $0' {} +
+          ls ./*/changelogs/
+          find ./*/changelogs -type f -name "${{ env.version_code }}.txt" -execdir sh -c 'cat $0' {} +
       # - if: ${{ env.platform == 'ios' }}
       #   working-directory: ./${{ env.platform }}
       #   name: Import Apple UDIDs
