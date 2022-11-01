@@ -348,11 +348,15 @@ jobs:
           echo "${{ secrets.APP_DIST_CREDENTIALS }}" > app-dist-credentials.json.asc
           gpg -d --passphrase ${{ secrets.APP_DIST_CREDENTIALS_PASSPHRASE }} --batch app-dist-credentials.json.asc > app-dist-credentials.json
           echo "::set-output name=app-dist-credentials::$(pwd)/app-dist-credentials.json"
-      - name: Create alias to 'bundle exec fastlane'
-        run: alias fastlane="bundle exec fastlane"
-      - name: Create bundletool alias
+      # - name: Create alias to 'bundle exec fastlane'
+      #   run: alias fastlane="bundle exec fastlane"
+      - name: Create bundletool shim
         run: |
-          alias bundletool="java -jar $HOME/bundletool-all.jar"
+          echo << EOF > /usr/local/bin/bundletool
+          exec "${JAVA_HOME}/bin/java"  -jar "/opt/homebrew/Cellar/bundletool/1.12.1/libexec/bundletool-all.jar" "$@"
+          EOF
+
+          bundletool version
       - name: Run 'bundle install'
         working-directory: ./${{ env.platform }}
         run: bundle install
