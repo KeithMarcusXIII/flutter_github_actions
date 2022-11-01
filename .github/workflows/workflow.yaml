@@ -354,7 +354,7 @@ jobs:
         run: |
           ls -al $HOME
           alias bundletool="java -jar $HOME/bundletool-all.jar"
-          type bundletool
+          bundletool
       - name: Run 'bundle install'
         working-directory: ./${{ env.platform }}
         run: bundle install
