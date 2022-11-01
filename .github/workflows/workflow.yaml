@@ -356,7 +356,7 @@ jobs:
           exec "${JAVA_HOME}/bin/java" -jar "$HOME/bundletool-all.jar" "\$@"
           EOF
 
-          export PATH=$PATH=$HOME/bin
+          export PATH="$PATH:$HOME/bin"
 
           bundletool version
       - name: Run 'bundle install'
