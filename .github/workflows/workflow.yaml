@@ -106,6 +106,7 @@ jobs:
           echo "jdk_dist=$jdk_dist" >> $GITHUB_ENV
           echo "jdk_version=$jdk_version" >> $GITHUB_ENV
           echo "platform=$platform" >> $GITHUB_ENV
+          echo "bundletool=$bundletool" >> $GITHUB_ENV
 
           echo $flutter_channel
           echo $flutter_version
@@ -180,7 +181,6 @@ jobs:
           java-version: ${{ needs.setup.outputs.jdk-version }}
       - name: Setup bundletool
         run: |
-          echo "${{ toJSON(needs.setup.outputs) }}"
           wget -O $HOME/bundletool-all.jar https://github.com/google/bundletool/releases/download/${{ needs.setup.outputs.bundletool }}/bundletool-all-${{ needs.setup.outputs.bundletool }}.jar
           alias bundletool="java -jar $HOME/bundletool-all.jar"
       - name: Setup android sdk
