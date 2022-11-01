@@ -352,9 +352,11 @@ jobs:
       #   run: alias fastlane="bundle exec fastlane"
       - name: Create bundletool shim
         run: |
-          { echo "134652"; } | sudo -S cat << EOF > /usr/local/bin/bundletool
+          cat << EOF > $HOME/bin/bundletool
           exec "${JAVA_HOME}/bin/java" -jar "$HOME/bundletool-all.jar" "\$@"
           EOF
+
+          export PATH=$PATH=$HOME/bin
 
           bundletool version
       - name: Run 'bundle install'
