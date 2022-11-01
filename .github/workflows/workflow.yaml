@@ -376,10 +376,11 @@ jobs:
 
           echo "version_name=$versionName" >> $GITHUB_ENV
           echo "version_code=$versionCode" >> $GITHUB_ENV
-      - name: Create release metadata
+      - if: ${{ github.ref_type }} == "tag"
+        name: Create release metadata
         working-directory: ./${{ env.platform }}/fastlane/metadata/android
         run: |
-          find ./*/changelogs -type f -name "${{ env.version_code }}.txt" -execdir sh -c 'echo "${{ needs.setup.outputs.tag-annotation }}" > $0' {} +
+          find ./* -type d -name "changelogs" -execdir sh -c 'echo "${{ needs.setup.outputs.tag-annotation }}" > $0/${{ env.version_code }}.txt' {} +
           ls ./*/changelogs/
           find ./*/changelogs -type f -name "${{ env.version_code }}.txt" -execdir sh -c 'cat $0' {} +
       # - if: ${{ env.platform == 'ios' }}
