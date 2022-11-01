@@ -371,8 +371,8 @@ jobs:
         run: |
           export PATH="$PATH:$HOME/bin"
 
-          versionName=$(bundletool dump manifest --bundle ${{ env.artifact_path }} --xpath /manifest/@android:versionName)
-          versionCode=$(bundletool dump manifest --bundle ${{ env.artifact_path }} --xpath /manifest/@android:versionCode)
+          versionName=$(bundletool dump manifest --bundle ${{ env.artifact_file }} --xpath /manifest/@android:versionName)
+          versionCode=$(bundletool dump manifest --bundle ${{ env.artifact_file }} --xpath /manifest/@android:versionCode)
 
           echo "version_name=$versionName" >> $GITHUB_ENV
           echo "version_code=$versionCode" >> $GITHUB_ENV
