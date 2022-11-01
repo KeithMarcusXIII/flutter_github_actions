@@ -351,7 +351,9 @@ jobs:
       - name: Create alias to 'bundle exec fastlane'
         run: alias fastlane="bundle exec fastlane"
       - name: Create bundletool alias
-        run: alias bundletool="java -jar $HOME/bundletool-all.jar"
+        run: |
+          alias bundletool="java -jar $HOME/bundletool-all.jar"
+          type -t bundletool
       - name: Run 'bundle install'
         working-directory: ./${{ env.platform }}
         run: bundle install
@@ -364,6 +366,8 @@ jobs:
       - if: ${{ env.platform }} == "android"
         name: Dump aab manifest attributes
         run: |
+          type -t bundletool
+
           versionName=$(bundletool dump manifest --bundle ${{ env.artifact_path }} --xpath /manifest/@android:versionName)
           versionCode=$(bundletool dump manifest --bundle ${{ env.artifact_path }} --xpath /manifest/@android:versionCode)
 
