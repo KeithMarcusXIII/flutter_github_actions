@@ -63,7 +63,7 @@ jobs:
       matrix:
         os:
           - self-hosted-ubuntu
-          - self-hosted-macos
+          # - self-hosted-macos
     runs-on: ${{ matrix.os }}
     outputs:
       flutter-channel: ${{ env.flutter_channel }}
@@ -72,7 +72,7 @@ jobs:
       jdk-version: ${{ env.jdk_version }}
       tag-annotation: ${{ env.tag_annotation }}
       platform: ${{ env.platform }}
-      # bundletool: ${{ env.bundletool }}
+      bundletool: ${{ env.bundletool }}
     steps:
       # - name: Print github context
       #   run: echo "${{ toJSON(github) }}"
@@ -92,7 +92,7 @@ jobs:
           jdk_dist="${{ inputs.jdk-dist || 'adopt' }}"
           jdk_version="${{ inputs.jdk-version || '11' }}"
           platform="${{ matrix.build == 'ipa' && 'ios' || 'android'}}"
-          # bundletool="${{ inputs.bundletool || '1.12.1'}}"
+          bundletool="${{ inputs.bundletool || '1.12.1'}}"
 
           if [[ "${{ github.ref_type }}" == "tag" ]]
           then
@@ -112,7 +112,7 @@ jobs:
           echo $jdk_dist
           echo $jdk_version
           echo $platform
-          # echo $bundletool
+          echo $bundletool
   # analyze:
   #   runs-on: self-hosted
   #   needs: setup
@@ -178,10 +178,10 @@ jobs:
         with:
           distribution: ${{ needs.setup.outputs.jdk-dist }}
           java-version: ${{ needs.setup.outputs.jdk-version }}
-      # - name: Setup bundletool
-      #   run: |
-      #     wget -O $HOME/bundletool-all.jar https://github.com/google/bundletool/releases/download/${{ needs.setup.outputs.bundletool }}/bundletool-all-${{ needs.setup.outputs.bundletool }}.jar
-      #     alias bundletool="java -jar $HOME/bundletool-all.jar"
+      - name: Setup bundletool
+        run: |
+          wget -O $HOME/bundletool-all.jar https://github.com/google/bundletool/releases/download/${{ needs.setup.outputs.bundletool }}/bundletool-all-${{ needs.setup.outputs.bundletool }}.jar
+          alias bundletool="java -jar $HOME/bundletool-all.jar"
       - name: Setup android sdk
         uses: android-actions/setup-android@v2
       - id: flutter-sdk-setup
@@ -334,17 +334,16 @@ jobs:
               ;;
           esac
 
-          echo "platform=$platform" >> $GITHUB_OUTPUT
-          echo "artifact_path=$artifact_path" >> $GITHUB_OUTPUT
-          echo "artifact_file=$artifact_file" >> $GITHUB_OUTPUT
+          echo "platform=$platform" >> $GITHUB_ENV
+          echo "artifact_path=$artifact_path" >> $GITHUB_ENV
+          echo "artifact_file=$artifact_file" >> $GITHUB_ENV
 
           echo $platform
           echo $artifact_path
           echo $artifact_file
-      # - if: ${{ steps.parse-var.outputs.platform == 'android' }}
       - id: create-credentials
         name: Create google play credentials
-        working-directory: ./${{ steps.parse-var.outputs.platform }}
+        working-directory: ./${{ env.platform }}
         run: |
           echo "${{ secrets.APP_DIST_CREDENTIALS }}" > app-dist-credentials.json.asc
           gpg -d --passphrase ${{ secrets.APP_DIST_CREDENTIALS_PASSPHRASE }} --batch app-dist-credentials.json.asc > app-dist-credentials.json
@@ -352,16 +351,29 @@ jobs:
       - name: "Create alias to 'bundle exec fastlane'"
         run: alias fastlane="bundle exec fastlane"
       - name: "Run 'bundle install'"
-        working-directory: ./${{ steps.parse-var.outputs.platform }}
+        working-directory: ./${{ env.platform }}
         run: bundle install
       - id: download-artifact
         name: Download artifacts
         uses: actions/download-artifact@v3
         with:
           name: ${{ matrix.environment }}-${{ matrix.build }}
-          path: ${{ steps.parse-var.outputs.artifact_path }}
-      # - if: ${{ steps.parse-var.outputs.platform == 'ios' }}
-      #   working-directory: ./${{ steps.parse-var.outputs.platform }}
+          path: ${{ env.artifact_path }}
+      - if: ${{ env.platform }} == "android"
+        name: Dump aab manifest attributes
+        run: |
+          versionName=$(bundletool dump manifest --bundle ${{ env.artifact_path }} --xpath /manifest/@android:versionName)
+          versionCode=$(bundletool dump manifest --bundle ${{ env.artifact_path }} --xpath /manifest/@android:versionCode)
+
+          echo "version_name=$versionName" >> $GITHUB_ENV
+          echo "version_code=$versionCode" >> $GITHUB_ENV
+      # - name: Create release metadata
+      #   working-directory: ./${{ env.platform }}/fastlane/metadata/android
+      #   run: |
+      #     find . -type d ./?/${{ env.version_code }}.txt
+      #     echo ${{ needs.setup.outputs.tag_annotation }} > ${{ env.version_code }}.txt
+      # - if: ${{ env.platform == 'ios' }}
+      #   working-directory: ./${{ env.platform }}
       #   name: Import Apple UDIDs
       # env:
       #   APP_ID: ${{ secrets.IOS_FIREBASE_APP_ID }}
@@ -369,22 +381,12 @@ jobs:
       #   FASTLANE_SESSION: ${{ secrets.FASTLANE_SESSION }}
       #   run: fastlane import_udids
       # - name: Deploy with fastlane
-      #   working-directory: ./${{ steps.parse-var.outputs.platform }}
+      #   working-directory: ./${{ env.platform }}
       #   env:
-      #     APP_ID: ${{ steps.parse-var.outputs.platform == 'ios' && secrets.IOS_FIREBASE_APP_ID || secrets.ANDROID_FIREBASE_APP_ID }}
+      #     APP_ID: ${{ env.platform == 'ios' && secrets.IOS_FIREBASE_APP_ID || secrets.ANDROID_FIREBASE_APP_ID }}
       #   run: |
       #     fastlane distribute_firebase \
       #     artifact_type:${{ matrix.build == 'appbundle' && 'aab' || matrix.build }} \
-      #     artifact_path:${{ steps.parse-var.outputs.artifact_file }} \
+      #     artifact_path:${{ env.artifact_file }} \
       #     credentials_file:${{ steps.create-credentials.outputs.app-dist-credentials }}
-      #     # ${{ steps.parse-var.outputs.platform == 'android' && format('credentials_file:{0}', steps.create-credentials.outputs.app-dist-credentials) || '' }}
-# build/app/outputs/bundle/release/app-release.aab
-# build/app/outputs/bundle/developmentRelease/app-development-release.aab
-# build/app/outputs/bundle/stagingRelease/app-staging-release.aab
-# build/app/outputs/bundle/productionRelease/app-production-release.aab
-# build/app/outputs/flutter-apk/app-release.apk
-# build/app/outputs/flutter-apk/app-development-release.apk
-# build/app/outputs/flutter-apk/app-staging-release.apk
-# build/app/outputs/flutter-apk/app-production-release.apk
-# build/ios/archive/Runner.xcarchive
-# build/ios/ipa/*.ipa
+      #     # ${{ env.platform == 'android' && format('credentials_file:{0}', steps.create-credentials.outputs.app-dist-credentials) || '' }}
