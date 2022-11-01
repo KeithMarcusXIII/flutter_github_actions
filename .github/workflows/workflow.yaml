@@ -357,10 +357,6 @@ jobs:
           EOF
 
           chmod +x $HOME/bin/bundletool
-
-          export PATH="$PATH:$HOME/bin"
-
-          bundletool version
       - name: Run 'bundle install'
         working-directory: ./${{ env.platform }}
         run: bundle install
@@ -373,7 +369,7 @@ jobs:
       - if: ${{ env.platform }} == "android"
         name: Dump aab manifest attributes
         run: |
-          bundletool version
+          export PATH="$PATH:$HOME/bin"
 
           versionName=$(bundletool dump manifest --bundle ${{ env.artifact_path }} --xpath /manifest/@android:versionName)
           versionCode=$(bundletool dump manifest --bundle ${{ env.artifact_path }} --xpath /manifest/@android:versionCode)
