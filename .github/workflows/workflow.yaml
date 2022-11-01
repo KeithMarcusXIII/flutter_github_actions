@@ -63,7 +63,7 @@ jobs:
       matrix:
         os:
           - self-hosted-ubuntu
-          # - self-hosted-macos
+          - self-hosted-macos
     runs-on: ${{ matrix.os }}
     outputs:
       flutter-channel: ${{ env.flutter_channel }}
@@ -367,11 +367,10 @@ jobs:
 
           echo "version_name=$versionName" >> $GITHUB_ENV
           echo "version_code=$versionCode" >> $GITHUB_ENV
-      # - name: Create release metadata
-      #   working-directory: ./${{ env.platform }}/fastlane/metadata/android
-      #   run: |
-      #     find . -type d ./?/${{ env.version_code }}.txt
-      #     echo ${{ needs.setup.outputs.tag_annotation }} > ${{ env.version_code }}.txt
+      - name: Create release metadata
+        working-directory: ./${{ env.platform }}/fastlane/metadata/android
+        run: |
+          find ./*/changelogs -type f -name "${{ env.version_code }}.txt" -execdir sh -c 'echo "${{ needs.setup.outputs.tag_annotation }}" > $0' {} +
       # - if: ${{ env.platform == 'ios' }}
       #   working-directory: ./${{ env.platform }}
       #   name: Import Apple UDIDs
