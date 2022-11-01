@@ -182,7 +182,6 @@ jobs:
       - name: Setup bundletool
         run: |
           wget -O $HOME/bundletool-all.jar https://github.com/google/bundletool/releases/download/${{ needs.setup.outputs.bundletool }}/bundletool-all-${{ needs.setup.outputs.bundletool }}.jar
-          alias bundletool="java -jar $HOME/bundletool-all.jar"
       - name: Setup android sdk
         uses: android-actions/setup-android@v2
       - id: flutter-sdk-setup
@@ -349,9 +348,11 @@ jobs:
           echo "${{ secrets.APP_DIST_CREDENTIALS }}" > app-dist-credentials.json.asc
           gpg -d --passphrase ${{ secrets.APP_DIST_CREDENTIALS_PASSPHRASE }} --batch app-dist-credentials.json.asc > app-dist-credentials.json
           echo "::set-output name=app-dist-credentials::$(pwd)/app-dist-credentials.json"
-      - name: "Create alias to 'bundle exec fastlane'"
+      - name: Create alias to 'bundle exec fastlane'
         run: alias fastlane="bundle exec fastlane"
-      - name: "Run 'bundle install'"
+      - name: Create bundletool alias
+        run: alias bundletool="java -jar $HOME/bundletool-all.jar"
+      - name: Run 'bundle install'
         working-directory: ./${{ env.platform }}
         run: bundle install
       - id: download-artifact
