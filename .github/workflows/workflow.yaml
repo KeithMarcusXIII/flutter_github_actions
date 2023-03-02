@@ -1,404 +1,58 @@
 name: github_actions
 on:
   push:
-    branches:
-      - master
-      - develop
     tags:
       - "[0-9]+.[0-9]+.[0-9]+"
-  workflow_dispatch:
-    inputs:
-      environment:
-        description: "Environment"
-        type: environment
-        required: true
-      flutter-channel:
-        description: "Flutter channel"
-        type: choice
-        default: stable
-        required: false
-        options:
-          - master
-          - beta
-          - stable
-      flutter-version:
-        description: "Flutter version"
-        type: string
-        default: "3.3.2"
-        required: false
-      jdk-dist:
-        description: "JDK distribution"
-        required: false
-        default: "adopt"
-      jdk-version:
-        description: "JDK version"
-        required: false
-        default: "11"
-  workflow_call:
-    inputs:
-      environment:
-        required: true
-        type: string
-      flutter-channel:
-        required: false
-        type: string
-        default: "stable"
-      flutter-version:
-        required: false
-        type: string
-        default: "3.3.2"
-      jdk-dist:
-        required: false
-        type: string
-        default: "adopt"
-      jdk-version:
-        required: false
-        type: string
-        default: "11"
 
 jobs:
-  setup:
+  matrix:
+    runs-on: self-hosted
     strategy:
-      fail-fast: true
+      fail-fast: false
       matrix:
-        os:
-          - self-hosted-ubuntu
-          - self-hosted-macos
-    runs-on: ${{ matrix.os }}
+        include:
+          - target: mafiapigs-macos
+            metaId: 2177361
+            otherId: 2177360
+          - target: project-windows
+            metaId: 2177362
+            otherId: 2177360
+    steps:
+      - run: |
+          matrix=$((
+            echo '${{ toJSON(matrix) }}'
+          ) | jq -c .)
+          echo "$matrix" > matrix
+          echo "::set-output name=matrix::$matrix"
+        id: matrix
+        if: github.event_name == 'workflow_dispatch' && (github.event.inputs.build_target == matrix.target || github.event.inputs.build_target == '*' || github.event.inputs.build_target == '')
+      - uses: actions/upload-artifact@v3
+        with:
+          name: ${{ hashFiles('matrix') || 'none' }}
+          path: matrix
+          if-no-files-found: warn
+
+  check-matrix:
+    runs-on: self-hosted
+    needs: [matrix]
     outputs:
-      flutter-channel: ${{ env.flutter_channel }}
-      flutter-version: ${{ env.flutter_version }}
-      jdk-dist: ${{ env.jdk_dist }}
-      jdk-version: ${{ env.jdk_version }}
-      tag-annotation: ${{ env.tag_annotation }}
-      platform: ${{ env.platform }}
-      bundletool: ${{ env.bundletool }}
+      matrix: ${{ steps.matrix.outputs.matrix }}
     steps:
-      # - name: Print github context
-      #   run: echo "${{ toJSON(github) }}"
-      - name: Print env
-        run: echo "${{ toJSON(env) }}"
-      - name: Print secrets
-        run: echo "${{ toJSON(secrets) }}"
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Force fetch tag annotations
-        run: git fetch --tags --force
-      - id: parse-var
-        name: Parse variables
-        run: |
-          flutter_channel="${{ inputs.flutter-channel || 'stable' }}"
-          flutter_version="${{ inputs.flutter-version || '3.3.2' }}"
-          jdk_dist="${{ inputs.jdk-dist || 'adopt' }}"
-          jdk_version="${{ inputs.jdk-version || '11' }}"
-          platform="${{ matrix.build == 'ipa' && 'ios' || 'android'}}"
-          bundletool="${{ inputs.bundletool || '1.12.1'}}"
+      - uses: actions/download-artifact@v3
+      - run: |
+          matrix="$(cat */matrix | jq -c --slurp .)"
+          echo "::set-output name=matrix::$matrix"
+        id: matrix
 
-          if [[ "${{ github.ref_type }}" == "tag" ]]
-          then
-            tag_annotation=$(git tag -l --format="%(contents)" ${{ github.ref_name }})
-            echo "tag_annotation=$tag_annotation" >> $GITHUB_ENV
-            echo $tag_annotation
-          fi
-
-          echo "flutter_channel=$flutter_channel" >> $GITHUB_ENV
-          echo "flutter_version=$flutter_version" >> $GITHUB_ENV
-          echo "jdk_dist=$jdk_dist" >> $GITHUB_ENV
-          echo "jdk_version=$jdk_version" >> $GITHUB_ENV
-          echo "platform=$platform" >> $GITHUB_ENV
-          echo "bundletool=$bundletool" >> $GITHUB_ENV
-
-          echo $flutter_channel
-          echo $flutter_version
-          echo $jdk_dist
-          echo $jdk_version
-          echo $platform
-          echo $bundletool
-  # analyze:
-  #   runs-on: self-hosted
-  #   needs: setup
-  #   steps:
-  #     - name: Print setup outputs
-  #       run: echo "${{ toJSON(needs.setup.outputs) }}"
-  #     - id: flutter-sdk-setup
-  #       name: Setup flutter sdk
-  #       uses: ./.github/actions/setup-flutter
-  #       with:
-  #         flutter-channel: ${{ needs.setup.outputs.flutter-channel }}
-  #         flutter-version: ${{ needs.setup.outputs.flutter-version }}
-  #     - name: Check formatting
-  #       # run: flutter format --set-exit-if-changed lib test
-  #       run: flutter format lib test
-  #     - name: Analyze
-  #       run: flutter analyze lib test
-
-  # test:
-  #   runs-on: self-hosted
-  #   needs: setup
-  #   steps:
-  #     - name: Run Tests
-  #       run: very_good test -j ${{inputs.concurrency}} ${{(inputs.test_recursion && '--recursive') || ''}} ${{(inputs.test_optimization && '--optimization') || '--no-optimization'}} --coverage --test-randomize-ordering-seed random
-
-  build:
+  steam:
+    name: "Release ${{ matrix.includes.target }}"
+    needs: [check-matrix]
+    runs-on: self-hosted
     strategy:
-      fail-fast: true
+      fail-fast: false
       matrix:
-        include:
-          # - build: apk
-          #   environment: development
-          # - build: apk
-          #   environment: staging
-          # - build: apk
-          #   environment: production
-          # - build: appbundle
-          #   environment: development
-          # - build: appbundle
-          #   environment: staging
-          - build: appbundle
-            environment: production
-          # - build: ipa
-          #   environment: development
-          # - build: ipa
-          #   environment: staging
-          # - build: ipa
-          #   environment: production
-    # runs-on: self-hosted
-    runs-on: ${{ matrix.build == 'ipa' && 'self-hosted-macos' || 'self-hosted' }}
-    environment: ${{ matrix.environment }}
-    needs:
-      - setup
-      # - analyze
-      # - test
+        includes: ${{ fromJSON(needs.check-matrix.outputs.matrix) }}
     steps:
-      - name: Print setup outputs
+      - name: Print matrix
         run: |
-          echo "outputs: ${{ toJSON(needs.setup.outputs) }}"
-          echo "env: ${{ toJSON(needs.setup.env) }}"
-      - name: Setup jdk
-        uses: actions/setup-java@v3
-        with:
-          distribution: ${{ needs.setup.outputs.jdk-dist }}
-          java-version: ${{ needs.setup.outputs.jdk-version }}
-      - name: Setup bundletool
-        run: |
-          wget -O $HOME/bundletool-all.jar https://github.com/google/bundletool/releases/download/${{ needs.setup.outputs.bundletool }}/bundletool-all-${{ needs.setup.outputs.bundletool }}.jar
-      - name: Setup android sdk
-        uses: android-actions/setup-android@v2
-      - id: flutter-sdk-setup
-        name: Setup flutter sdk
-        uses: ./.github/actions/setup-flutter
-        with:
-          flutter-channel: ${{ needs.setup.outputs.flutter-channel }}
-          flutter-version: ${{ needs.setup.outputs.flutter-version }}
-      - name: Install cider
-        run: dart pub global activate cider
-      - name: Create keystore
-        run: |
-          echo "${{ secrets.KEYSTORE }}" > android/release.jks.asc
-          gpg -d --passphrase ${{ secrets.KEYSTORE_PASSPHRASE }} --batch android/release.jks.asc > android/release.jks
-      - name: Create key.properties
-        run: |
-          cat << EOF > android/key.properties
-          storePassword=${{ secrets.KEYSTORE_PASSWORD }}
-          keyPassword=${{ secrets.ALIAS_PASSWORD }}
-          keyAlias=${{ secrets.KEYSTORE_ALIAS }}
-          storeFile=${{ github.workspace }}/android/release.jks
-          EOF
-      - id: create-credentials
-        name: Create google play credentials
-        working-directory: ./${{ needs.setup.outputs.platform }}
-        run: |
-          echo "${{ secrets.APP_DIST_CREDENTIALS }}" > app-dist-credentials.json.asc
-          gpg -d --passphrase ${{ secrets.APP_DIST_CREDENTIALS_PASSPHRASE }} --batch app-dist-credentials.json.asc > app-dist-credentials.json
-          echo "::set-output name=app-dist-credentials::$(pwd)/app-dist-credentials.json"
-      - name: "Create alias to 'bundle exec fastlane'"
-        run: alias fastlane="bundle exec fastlane"
-      - name: "Run 'bundle install'"
-        working-directory: ./${{ needs.setup.outputs.platform }}
-        run: bundle install
-      - id: get-appdist-release
-        if: ${{ needs.setup.outputs.platform }} == "android"
-        name: Get latest release info
-        working-directory: ./${{ needs.setup.outputs.platform }}
-        env:
-          APP_ID: ${{ needs.setup.outputs.platform == 'ios' && secrets.IOS_FIREBASE_APP_ID || secrets.ANDROID_FIREBASE_APP_ID }}
-        run: |
-          if [[ ${{ matrix.environment }} == "production" ]]
-          then
-            fastlane get_playstore_latest_release \
-            credentials_file:${{ steps.create-credentials.outputs.app-dist-credentials }}
-          else
-            fastlane get_appdist_latest_release \
-            credentials_file:${{ steps.create-credentials.outputs.app-dist-credentials }}
-          fi
-      - name: Apply version
-        run: |
-          if [[ ${{ env.version }} =~ ([0-9]+)+.([0-9]+)+.([0-9]+)+ ]]
-          then
-            major=${BASH_REMATCH[1]}
-            minor=${BASH_REMATCH[2]}
-            patch=${BASH_REMATCH[3]}
-          fi
-
-          if [[ ${{ env.build }} =~ [0-9]+ ]]
-          then
-            code=$((${BASH_REMATCH[0]}+1))
-          fi
-
-          echo "build=$code" >> $GITHUB_ENV
-
-          if [[ ${{ github.ref_type }} == "tag" ]]
-          then
-            if [[ ${{ github.ref_name }} =~ ([0-9]+)+.([0-9]+)+.([0-9]+)+ ]]
-            then
-              major=${BASH_REMATCH[1]}
-              minor=${BASH_REMATCH[2]}
-              patch=${BASH_REMATCH[3]}
-            fi
-          fi
-
-          version=$major.$minor.$patch+$code
-
-          cider version $version
-      - name: Build ${{ matrix.environment }} ${{ matrix.build }}
-        run: |
-          flutter build ${{ matrix.build }} \
-          --flavor ${{ matrix.environment }} \
-          --obfuscate \
-          --split-debug-info=debug_info \
-          --dart-define=MONGODB_USERNAME=${{secrets.MONGODB_USERNAME}} \
-          --dart-define=MONGODB_PASSWORD=${{secrets.MONGODB_PASSWORD}} \
-          --dart-define=MAPBOX_TOKEN=${{secrets.MAPBOX_TOKEN}} \
-          --dart-define=DEEPLINK_CHECKSUM=${{secrets.DEEPLINK_CHECKSUM}} \
-          --dart-define=ONE_SIGNAL_APP_ID=${{secrets.ONE_SIGNAL_APP_ID}}
-      - name: Upload ${{ matrix.environment }} ${{ matrix.build }} artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: ${{ matrix.environment }}-${{ matrix.build }}
-          path: |
-            ${{ github.workspace }}/build/app/outputs/bundle/${{ matrix.environment }}Release/app-${{ matrix.environment }}-release.aab
-            ${{ github.workspace }}/build/app/outputs/flutter-apk/app-${{ matrix.environment }}-release.apk
-            ${{ github.workspace }}/build/ios/ipa/*.ipa
-          if-no-files-found: error
-
-  deploy:
-    strategy:
-      fail-fast: true
-      matrix:
-        include:
-          # - build: apk
-          #   environment: development
-          # - build: apk
-          #   environment: staging
-          # - build: apk
-          #   environment: production
-          # - build: appbundle
-          #   environment: development
-          # - build: appbundle
-          #   environment: staging
-          - build: appbundle
-            environment: production
-          # - build: ipa
-          #   environment: development
-          # - build: ipa
-          #   environment: staging
-          # - build: ipa
-          #   environment: production
-    runs-on: ${{ matrix.build == 'ipa' && 'self-hosted-macos' || 'self-hosted' }}
-    environment: ${{ matrix.environment }}
-    needs:
-      - setup
-      - build
-    steps:
-      - id: parse-var
-        name: Parse variables
-        run: |
-          platform="${{ matrix.build == 'ipa' && 'ios' || 'android'}}"
-          artifact_path=${{ github.workspace }}/build
-
-          case "${{ matrix.build }}" in
-            "appbundle")
-              artifact_file=${{ github.workspace }}/build/app/outputs/bundle/${{ matrix.environment }}Release/app-${{ matrix.environment }}-release.aab
-              ;;
-
-            "apk")
-              artifact_file=${{ github.workspace }}/build/app/outputs/flutter-apk/app-${{ matrix.environment }}-release.apk
-              ;;
-
-            "ipa")
-              artifact_file=${{ github.workspace }}/build/ios/ipa/app-${{ matrix.environment }}.ipa
-              # artifact_file=${{ github.workspace }}/build/ios/ipa/flutter_github_actions.ipa
-              ;;
-
-            *) 
-              ;;
-          esac
-
-          echo "platform=$platform" >> $GITHUB_ENV
-          echo "artifact_path=$artifact_path" >> $GITHUB_ENV
-          echo "artifact_file=$artifact_file" >> $GITHUB_ENV
-
-          echo $platform
-          echo $artifact_path
-          echo $artifact_file
-      - id: create-credentials
-        name: Create google play credentials
-        working-directory: ./${{ env.platform }}
-        run: |
-          echo "${{ secrets.APP_DIST_CREDENTIALS }}" > app-dist-credentials.json.asc
-          gpg -d --passphrase ${{ secrets.APP_DIST_CREDENTIALS_PASSPHRASE }} --batch app-dist-credentials.json.asc > app-dist-credentials.json
-          echo "::set-output name=app-dist-credentials::$(pwd)/app-dist-credentials.json"
-      # - name: Create alias to 'bundle exec fastlane'
-      #   run: alias fastlane="bundle exec fastlane"
-      - name: Create bundletool shim
-        run: |
-          cat << EOF > $HOME/bin/bundletool
-          exec "${JAVA_HOME}/bin/java" -jar "$HOME/bundletool-all.jar" "\$@"
-          EOF
-
-          chmod +x $HOME/bin/bundletool
-      - name: Run 'bundle install'
-        working-directory: ./${{ env.platform }}
-        run: bundle install
-      - id: download-artifact
-        name: Download artifacts
-        uses: actions/download-artifact@v3
-        with:
-          name: ${{ matrix.environment }}-${{ matrix.build }}
-          path: ${{ env.artifact_path }}
-      - if: ${{ env.platform }} == "android"
-        name: Dump aab manifest attributes
-        run: |
-          export PATH="$PATH:$HOME/bin"
-
-          versionName=$(bundletool dump manifest --bundle ${{ env.artifact_file }} --xpath /manifest/@android:versionName)
-          versionCode=$(bundletool dump manifest --bundle ${{ env.artifact_file }} --xpath /manifest/@android:versionCode)
-
-          echo "version_name=$versionName" >> $GITHUB_ENV
-          echo "version_code=$versionCode" >> $GITHUB_ENV
-      - if: ${{ github.ref_type }} == "tag"
-        name: Create release metadata
-        working-directory: ./${{ env.platform }}/fastlane/metadata/android
-        run: |
-          find ./* -type d -name "changelogs" -execdir sh -c 'echo "${{ needs.setup.outputs.tag-annotation }}" > $0/${{ env.version_code }}.txt' {} +
-          ls ./*/changelogs/
-          find ./*/changelogs -type f -name "${{ env.version_code }}.txt" -execdir sh -c 'cat $0' {} +
-      # - if: ${{ env.platform == 'ios' }}
-      #   working-directory: ./${{ env.platform }}
-      #   name: Import Apple UDIDs
-      # env:
-      #   APP_ID: ${{ secrets.IOS_FIREBASE_APP_ID }}
-      #   FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
-      #   FASTLANE_SESSION: ${{ secrets.FASTLANE_SESSION }}
-      #   run: fastlane import_udids
-      # - name: Deploy with fastlane
-      #   working-directory: ./${{ env.platform }}
-      #   env:
-      #     APP_ID: ${{ env.platform == 'ios' && secrets.IOS_FIREBASE_APP_ID || secrets.ANDROID_FIREBASE_APP_ID }}
-      #   run: |
-      #     fastlane distribute_firebase \
-      #     artifact_type:${{ matrix.build == 'appbundle' && 'aab' || matrix.build }} \
-      #     artifact_path:${{ env.artifact_file }} \
-      #     credentials_file:${{ steps.create-credentials.outputs.app-dist-credentials }}
-      #     # ${{ env.platform == 'android' && format('credentials_file:{0}', steps.create-credentials.outputs.app-dist-credentials) || '' }}
-      #
+          echo "${{ toJSON(matrix) }}"
