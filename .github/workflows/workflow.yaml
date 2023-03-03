@@ -18,15 +18,20 @@ jobs:
             metaId: 2177362
             otherId: 2177360
     steps:
-      - name: Print conditions
-        run: |
-          echo "github.event.inputs.build_target: ${{ github.event.inputs.build_target }}"
-          echo "github.event_name: ${{ github.event_name }}"
+      # - name: Print conditions
+      #   run: |
+      #     echo "github.event.inputs.build_target: ${{ github.event.inputs.build_target }}"
+      #     echo "github.event_name: ${{ github.event_name }}"
       - run: |
+          echo "${{ toJSON(matrix) }}"
+
           matrix=$((
             echo '${{ toJSON(matrix) }}'
           ) | jq -c .)
+
+          echo "$matrix"
           echo "$matrix" > matrix
+          cat matrix
           echo "matrix=$matrix" >> $GITHUB_OUTPUT
         id: matrix
         # if: github.event_name == 'workflow_dispatch' && (github.event.inputs.build_target == matrix.target || github.event.inputs.build_target == '*' || github.event.inputs.build_target == '')
@@ -45,6 +50,7 @@ jobs:
       - uses: actions/download-artifact@v3
       - run: |
           matrix="$(cat */matrix | jq -c --slurp .)"
+          echo "$matrix"
           echo "matrix=$matrix" >> $GITHUB_OUTPUT
         id: matrix
 
