@@ -18,14 +18,18 @@ jobs:
             metaId: 2177362
             otherId: 2177360
     steps:
+      - name: Print conditions
+        run: |
+          echo "github.event.inputs.build_target: ${{ github.event.inputs.build_target }}"
+          echo "github.event_name: ${{ github.event_name }}"
       - run: |
           matrix=$((
             echo '${{ toJSON(matrix) }}'
           ) | jq -c .)
           echo "$matrix" > matrix
-          echo "::set-output name=matrix::$matrix"
+          echo "matrix=$matrix" > $GITHUB_OUTPUT
         id: matrix
-        if: github.event_name == 'workflow_dispatch' && (github.event.inputs.build_target == matrix.target || github.event.inputs.build_target == '*' || github.event.inputs.build_target == '')
+        # if: github.event_name == 'workflow_dispatch' && (github.event.inputs.build_target == matrix.target || github.event.inputs.build_target == '*' || github.event.inputs.build_target == '')
       - uses: actions/upload-artifact@v3
         with:
           name: ${{ hashFiles('matrix') || 'none' }}
