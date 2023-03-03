@@ -27,7 +27,7 @@ jobs:
             echo '${{ toJSON(matrix) }}'
           ) | jq -c .)
           echo "$matrix" > matrix
-          echo "matrix=$matrix" > $GITHUB_OUTPUT
+          echo "matrix=$matrix" >> $GITHUB_OUTPUT
         id: matrix
         # if: github.event_name == 'workflow_dispatch' && (github.event.inputs.build_target == matrix.target || github.event.inputs.build_target == '*' || github.event.inputs.build_target == '')
       - uses: actions/upload-artifact@v3
@@ -45,7 +45,7 @@ jobs:
       - uses: actions/download-artifact@v3
       - run: |
           matrix="$(cat */matrix | jq -c --slurp .)"
-          echo "::set-output name=matrix::$matrix"
+          echo "matrix=$matrix" >> $GITHUB_OUTPUT
         id: matrix
 
   steam:
