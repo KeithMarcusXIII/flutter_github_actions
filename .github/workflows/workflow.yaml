@@ -34,16 +34,12 @@ jobs:
         id: matrix
         # if: github.event_name == 'workflow_dispatch' && (github.event.inputs.build_target == matrix.target || github.event.inputs.build_target == '*' || github.event.inputs.build_target == '')
       - run: |
-          touch random-file1 random-file2
+          mkdir random-folder
+          touch random-folder/random-file-${{ runner.name }}
       - uses: actions/upload-artifact@v3
         with:
-          name: random-file1
-          path: random-file1
-          if-no-files-found: warn
-      - uses: actions/upload-artifact@v3
-        with:
-          name: random-file2
-          path: random-file2
+          name: random-file
+          path: random-folder/random-file-${{ runner.name }}
           if-no-files-found: warn
       - uses: actions/upload-artifact@v3
         with:
@@ -63,7 +59,7 @@ jobs:
           name: matrix
       - run: |
           ls -al
-          matrix="$(cat */matrix | jq -c --slurp .)"
+          matrix="$(cat */*matrix | jq -c --slurp .)"
           echo "$matrix"
           echo "matrix=$matrix" >> $GITHUB_OUTPUT
         id: matrix
