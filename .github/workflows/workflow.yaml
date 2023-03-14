@@ -57,7 +57,7 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: matrix
-          path: matrix/matrix
+          path: matrix
       - run: |
           ls -al
           matrix="$(cat */matrix | jq -c --slurp .)"
