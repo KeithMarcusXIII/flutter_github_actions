@@ -48,8 +48,8 @@ jobs:
       - uses: actions/upload-artifact@v3
         with:
           # name: ${{ hashFiles('matrix') || 'none' }}
-          name: ${{ matrix.target }}-${{ matrix.metaId }}-${{ matrix.otherId }}-matrix
-          path: matrix
+          name: matrix
+          path: ${{ matrix.target }}-${{ matrix.metaId }}-${{ matrix.otherId }}-matrix
           if-no-files-found: warn
 
   check-matrix:
@@ -60,7 +60,7 @@ jobs:
     steps:
       - uses: actions/download-artifact@v3
         with:
-          name: "random*"
+          name: matrix
       - run: |
           matrix="$(cat */matrix | jq -c --slurp .)"
           echo "$matrix"
