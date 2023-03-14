@@ -33,6 +33,18 @@ jobs:
           echo "matrix=$matrix" >> $GITHUB_OUTPUT
         id: matrix
         # if: github.event_name == 'workflow_dispatch' && (github.event.inputs.build_target == matrix.target || github.event.inputs.build_target == '*' || github.event.inputs.build_target == '')
+      - run: |
+          touch random-file1 random-file2
+      - uses: actions/upload-artifact@v3
+        with:
+          name: random-file1
+          path: random-file1
+          if-no-files-found: warn
+      - uses: actions/upload-artifact@v3
+        with:
+          name: random-file2
+          path: random-file2
+          if-no-files-found: warn
       - uses: actions/upload-artifact@v3
         with:
           # name: ${{ hashFiles('matrix') || 'none' }}
@@ -48,7 +60,7 @@ jobs:
     steps:
       - uses: actions/download-artifact@v3
         with:
-          name: "*-2177360-*"
+          name: "random*"
       - run: |
           matrix="$(cat */matrix | jq -c --slurp .)"
           echo "$matrix"
