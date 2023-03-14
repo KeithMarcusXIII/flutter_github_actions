@@ -57,9 +57,10 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: matrix
+          path: matrix/matrix
       - run: |
           ls -al
-          matrix="$(cat */*matrix | jq -c --slurp .)"
+          matrix="$(cat */matrix | jq -c --slurp .)"
           echo "$matrix"
           echo "matrix=$matrix" >> $GITHUB_OUTPUT
         id: matrix
