@@ -25,10 +25,6 @@ jobs:
       - run: |
           echo "${{ toJSON(matrix) }}"
 
-          # matrix=$((
-          #   echo '${{ toJSON(matrix) }}'
-          # ) | jq -c .)
-
           matrix=$(jq -c . <<<'${{ toJSON(matrix) }}')
 
           echo "$matrix"
