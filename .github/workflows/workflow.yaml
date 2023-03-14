@@ -35,7 +35,8 @@ jobs:
         # if: github.event_name == 'workflow_dispatch' && (github.event.inputs.build_target == matrix.target || github.event.inputs.build_target == '*' || github.event.inputs.build_target == '')
       - uses: actions/upload-artifact@v3
         with:
-          name: ${{ hashFiles('matrix') || 'none' }}
+          # name: ${{ hashFiles('matrix') || 'none' }}
+          name: ${{ matrix.target }}-${{ matrix.metaId }}-${{ matrix.otherId }}-matrix
           path: matrix
           if-no-files-found: warn
 
@@ -46,12 +47,14 @@ jobs:
       matrix: ${{ steps.matrix.outputs.matrix }}
     steps:
       - uses: actions/download-artifact@v3
+        with:
+          name: "*-2177360-*"
       - run: |
           matrix="$(cat */matrix | jq -c --slurp .)"
           echo "$matrix"
           echo "matrix=$matrix" >> $GITHUB_OUTPUT
         id: matrix
-      - uses: lhotari/action-upterm@v1
+      # - uses: lhotari/action-upterm@v1
 
   steam:
     name: "Release ${{ matrix.includes.target }}"
