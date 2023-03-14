@@ -27,8 +27,9 @@ jobs:
 
           matrix=$(jq -c . <<<'${{ toJSON(matrix) }}')
 
+          mkdir matrix
           echo "$matrix"
-          echo "$matrix" > matrix
+          echo "$matrix" > matrix/matrix
           cat matrix
           echo "matrix=$matrix" >> $GITHUB_OUTPUT
         id: matrix
