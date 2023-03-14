@@ -46,7 +46,7 @@ jobs:
         with:
           # name: ${{ hashFiles('matrix') || 'none' }}
           name: matrix
-          path: ${{ matrix.target }}-${{ matrix.metaId }}-${{ matrix.otherId }}/matrix
+          path: ${{ matrix.target }}-${{ matrix.metaId }}-${{ matrix.otherId }}
           if-no-files-found: warn
 
   check-matrix:
@@ -58,6 +58,7 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: matrix
+          path: matrix
       - run: |
           ls -al
           matrix="$(cat */matrix | jq -c --slurp .)"
