@@ -62,6 +62,7 @@ jobs:
         with:
           name: matrix
       - run: |
+          ls -al
           matrix="$(cat */matrix | jq -c --slurp .)"
           echo "$matrix"
           echo "matrix=$matrix" >> $GITHUB_OUTPUT
