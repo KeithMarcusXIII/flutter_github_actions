@@ -28,8 +28,8 @@ jobs:
           matrix=$(jq -c . <<<'${{ toJSON(matrix) }}')
 
           echo "$matrix"
-          echo "$matrix" > matrix
-          cat matrix
+          echo "$matrix" > ${{ matrix.target }}-${{ matrix.metaId }}-${{ matrix.otherId }}-matrix
+          cat ${{ matrix.target }}-${{ matrix.metaId }}-${{ matrix.otherId }}-matrix
           echo "matrix=$matrix" >> $GITHUB_OUTPUT
         id: matrix
         # if: github.event_name == 'workflow_dispatch' && (github.event.inputs.build_target == matrix.target || github.event.inputs.build_target == '*' || github.event.inputs.build_target == '')
