@@ -46,7 +46,7 @@ jobs:
         with:
           # name: ${{ hashFiles('matrix') || 'none' }}
           name: matrix
-          path: ${{ matrix.target }}-${{ matrix.metaId }}-${{ matrix.otherId }}
+          path: ${{ matrix.target }}-${{ matrix.metaId }}-${{ matrix.otherId }}/matrix
           if-no-files-found: warn
 
   check-matrix:
@@ -64,7 +64,7 @@ jobs:
           echo "$matrix"
           echo "matrix=$matrix" >> $GITHUB_OUTPUT
         id: matrix
-      # - uses: lhotari/action-upterm@v1
+      - uses: lhotari/action-upterm@v1
 
   steam:
     name: "Release ${{ matrix.includes.target }}"
