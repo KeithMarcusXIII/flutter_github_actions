@@ -32,6 +32,8 @@ jobs:
           echo "$matrix" > ${{ matrix.target }}-${{ matrix.metaId }}-${{ matrix.otherId }}/matrix
           cat ${{ matrix.target }}-${{ matrix.metaId }}-${{ matrix.otherId }}/matrix
           echo "matrix=$matrix" >> $GITHUB_OUTPUT
+
+          ls -al
         id: matrix
         # if: github.event_name == 'workflow_dispatch' && (github.event.inputs.build_target == matrix.target || github.event.inputs.build_target == '*' || github.event.inputs.build_target == '')
       - run: |
@@ -48,6 +50,8 @@ jobs:
           name: matrix
           path: ${{ matrix.target }}-${{ matrix.metaId }}-${{ matrix.otherId }}/matrix
           if-no-files-found: warn
+      - run: |
+          rm -rf ${{ matrix.target }}-${{ matrix.metaId }}-${{ matrix.otherId }}
 
   check-matrix:
     runs-on: self-hosted
